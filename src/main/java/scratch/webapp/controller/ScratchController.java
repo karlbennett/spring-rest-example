@@ -23,8 +23,8 @@ public class ScratchController {
     /**
      * Map any request to the servlet root to this method.
      *
-     * @param request  - the servlet request object.
-     * @param response - the servlet response object.
+     * @param request  the servlet request object.
+     * @param response the servlet response object.
      * @return a map that will be converted by Spring into JSON because of the {@code produces} value in
      *         {@code @RequestMapping}.
      */
