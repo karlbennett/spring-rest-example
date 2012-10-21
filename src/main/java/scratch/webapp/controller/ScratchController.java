@@ -1,5 +1,6 @@
 package scratch.webapp.controller;
 
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -28,7 +29,7 @@ public class ScratchController {
      * @return a map that will be converted by Spring into JSON because of the {@code produces} value in
      *         {@code @RequestMapping}.
      */
-    @RequestMapping(value = "/", method = GET, produces = "application/json")
+    @RequestMapping(value = "/", method = GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Map<Object, Object> handle(HttpServletRequest request, HttpServletResponse response) {
 
