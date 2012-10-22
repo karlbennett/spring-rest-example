@@ -4,6 +4,10 @@
 
     <name>scratch-webapp</name>
 
+    <description>
+        A simple pre-baked Spring webapp to play with.
+    </description>
+
     <groupId>scratch</groupId>
 
     <artifactId>scratch-webapp</artifactId>
