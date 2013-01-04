@@ -19,7 +19,7 @@ It is also possible to carry out CRUD operation on simple users:
     }'
 
 ###### Retrieve
-    $ curl http://localhost:8080/scratch-webapp/scratch/users/1
+    $ curl http://localhost:8080/scratch-webapp/scratch/users
     $ curl http://localhost:8080/scratch-webapp/scratch/users/1
 
 ###### Update
@@ -37,19 +37,19 @@ The  webapp contains only four classes:
 
 The controller class that handles the `/scratch-webapp/scratch/`, `/scratch-webapp/scratch/users`, and `/scratch-webapp/scratch/users/{id}` request mappings.
 
-    [scratch.webapp.controller.ScratchController](https://github.com/karlbennett/scratch-webapp/blob/master/src/main/java/scratch/webapp/controller/ScratchController.java "ScratchController")
+[`scratch.webapp.controller.ScratchController`](https://github.com/karlbennett/scratch-webapp/blob/master/src/main/java/scratch/webapp/controller/ScratchController.java "ScratchController")
 
 The the configuration class that configures Spring MVC and Spring Data.
 
-    [scratch.webapp.config.ScratchConfiguration](https://github.com/karlbennett/scratch-webapp/blob/master/src/main/java/scratch/webapp/config/ScratchConfiguration.java "ScratchConfiguration")
+[`scratch.webapp.config.ScratchConfiguration`](https://github.com/karlbennett/scratch-webapp/blob/master/src/main/java/scratch/webapp/config/ScratchConfiguration.java "ScratchConfiguration")
     
 The the domain class that can be persisted into an in memory database using the CRUD endpoints.
 
-    [scratch.webapp.data.User](https://github.com/karlbennett/scratch-webapp/blob/master/src/main/java/scratch/webapp/data/User.java "User")
+[`scratch.webapp.data.User`](https://github.com/karlbennett/scratch-webapp/blob/master/src/main/java/scratch/webapp/data/User.java "User")
 
 And lastly the repository class that is used to persisted the User class.
 
-    [scratch.webapp.data.UserRepository](https://github.com/karlbennett/scratch-webapp/blob/master/src/main/java/scratch/webapp/data/UserRepository.java "UserRepository")
+[`scratch.webapp.data.UserRepository`](https://github.com/karlbennett/scratch-webapp/blob/master/src/main/java/scratch/webapp/data/UserRepository.java "UserRepository")
 
 There are also three configuration files:
 
