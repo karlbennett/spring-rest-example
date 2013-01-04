@@ -79,7 +79,15 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <version>3.1.2.RELEASE</version>
+            <version>3.2.0.RELEASE</version>
+        </dependency>
+
+        <!-- Spring Data for easy database access. The JPA libraries for allowing Spring Data to connect to a normal SQL-->
+        <!-- database.-->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <version>1.2.0.RELEASE</version>
         </dependency>
 
         <!-- JEE API so that the servlet interfaces can be accessed. -->
@@ -88,6 +96,36 @@
             <artifactId>javaee-web-api</artifactId>
             <version>6.0</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- Hibernate is used to map the domain objects into SQL.-->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>4.1.9.Final</version>
+        </dependency>
+
+        <!-- Hibernate Entity Manager is required because Spring Data just uses the JPA Entity Manager API for object -->
+        <!-- persistence.-->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>4.1.9.Final</version>
+        </dependency>
+
+        <!-- The HSQL in memory database where all the data is persisted.-->
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>2.2.9</version>
+        </dependency>
+
+        <!-- Hibernate Validation is used as the javax.validation implementation to handle HTTP input and persistence -->
+        <!-- validation.-->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>5.0.0.Alpha2</version>
         </dependency>
 
         <!-- Jackson JSON object mapping library for converting request and response data. -->
@@ -111,6 +149,21 @@
             <version>1.2.17</version>
         </dependency>
 
+        <!-- SLF4J is required for Hibernate logging.-->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.6.6</version>
+        </dependency>
+
+        <!-- The SLF4J Log4j implementation.-->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.6.6</version>
+        </dependency>
+
+        <!-- JUnit 4 is used for the unit tests.-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
