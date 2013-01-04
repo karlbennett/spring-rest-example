@@ -1,10 +1,12 @@
 package scratch.webapp.data;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * A simple user class that contains an email, first, and last names. The email has been annotated to indicate it should
@@ -39,6 +41,18 @@ public class User extends AbstractPersistable<Long> {
         this.lastName = lastName;
     }
 
+
+    /**
+     * {@inheritDoc}
+     * <p/>
+     * Have overridden this method to annotate it to tell Jackson to ignore it on serialisation to JSON.
+     */
+    @JsonIgnore
+    @Override
+    public boolean isNew() {
+
+        return super.isNew();
+    }
 
     public void setId(Long id) {
 
