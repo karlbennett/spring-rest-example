@@ -56,14 +56,14 @@ public class ScratchController {
         return userRepository.save(user);
     }
 
-    @RequestMapping(value = "/users/{id}", method = GET, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/users/{id}", method = GET, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public User retrieve(@PathVariable Long id) {
 
         return userRepository.findOne(id);
     }
 
-    @RequestMapping(value = "/users", method = GET, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/users", method = GET, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public Iterable<User> retrieve() {
 
@@ -79,7 +79,7 @@ public class ScratchController {
         return userRepository.save(user);
     }
 
-    @RequestMapping(value = "/users/{id}", method = DELETE, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/users/{id}", method = DELETE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public User delete(@PathVariable Long id) {
 
