@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import scratch.webapp.data.User;
 import scratch.webapp.data.UserRepository;
 
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -19,9 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
-import static org.springframework.web.bind.annotation.RequestMethod.PUT;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
  * A simple controller with a request mapping to the root of the servlet.
@@ -55,7 +52,7 @@ public class ScratchController {
 
     @RequestMapping(value = "/users", method = POST, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public User create(@RequestBody User user) {
+    public User create(@Valid @RequestBody User user) {
 
         return userRepository.save(user);
     }
@@ -67,12 +64,30 @@ public class ScratchController {
         return userRepository.findOne(id);
     }
 
+    @RequestMapping(value = "/users", method = GET, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Iterable<User> retrieve() {
+
+        return userRepository.findAll();
+    }
+
     @RequestMapping(value = "/users/{id}", method = PUT, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public User retrieve(@PathVariable Long id, @RequestBody User user) {
+    public User update(@PathVariable Long id, @Valid @RequestBody User user) {
 
         user.setId(id);
 
         return userRepository.save(user);
+    }
+
+    @RequestMapping(value = "/users/{id}", method = DELETE, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public User delete(@PathVariable Long id) {
+
+        User user = userRepository.findOne(id);
+
+        userRepository.delete(id);
+
+        return user;
     }
 }
