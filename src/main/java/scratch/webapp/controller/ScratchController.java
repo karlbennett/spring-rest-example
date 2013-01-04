@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import scratch.webapp.data.User;
 import scratch.webapp.data.UserRepository;
 
+import javax.persistence.EntityExistsException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -52,6 +53,8 @@ public class ScratchController {
     @RequestMapping(value = "/users", method = POST, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public User create(@Valid @RequestBody User user) {
+
+        if (!user.isNew() && null != userRepository.findOne(user.getId())) throw new EntityExistsException();
 
         return userRepository.save(user);
     }
