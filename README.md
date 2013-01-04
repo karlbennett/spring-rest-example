@@ -9,16 +9,48 @@ The webapp can be run with the following command:
 
 This will start the server which can be accessed at [http://localhost:8080/scratch-webapp/scratch/](http://localhost:8080/scratch-webapp/scratch/ "scratch-webapp")
 
-The  webapp contains only two classes:
+It is also possible to carry out CRUD operation on simple users:
 
-The controller class that handles the `/scratch-webapp/scratch/` request mapping.
+###### Create
+    $ curl -XPOST http://localhost:8080/scratch-webapp/scratch/users -d '{
+        "email": "some.one@there.com",
+        "firstName": "Some",
+        "lastName": "One",
+    }'
 
-    scratch.webapp.controller.ScratchController
+###### Retrieve
+    $ curl http://localhost:8080/scratch-webapp/scratch/users/1
+    $ curl http://localhost:8080/scratch-webapp/scratch/users/1
 
-And the configuration class that configures Spring.
+###### Update
+    $ curl -XPUT http://localhost:8080/scratch-webapp/scratch/users/1 -d '{
+        "email": "some.one@there.com",
+        "firstName": "Some",
+        "lastName": "Two",
+    }'
 
-    scratch.webapp.config.ScratchConfiguration
+###### Delete
+    $ curl -XDELETE http://localhost:8080/scratch-webapp/scratch/users/1
+
+
+The  webapp contains only four classes:
+
+The controller class that handles the `/scratch-webapp/scratch/`, `/scratch-webapp/scratch/users`, and `/scratch-webapp/scratch/users/{id}` request mappings.
+
+    [scratch.webapp.controller.ScratchController](https://github.com/karlbennett/scratch-webapp/blob/master/src/main/java/scratch/webapp/controller/ScratchController.java "ScratchController")
+
+The the configuration class that configures Spring MVC and Spring Data.
+
+    [scratch.webapp.config.ScratchConfiguration](https://github.com/karlbennett/scratch-webapp/blob/master/src/main/java/scratch/webapp/config/ScratchConfiguration.java "ScratchConfiguration")
     
+The the domain class that can be persisted into an in memory database using the CRUD endpoints.
+
+    [scratch.webapp.data.User](https://github.com/karlbennett/scratch-webapp/blob/master/src/main/java/scratch/webapp/data/User.java "User")
+
+And lastly the repository class that is used to persisted the User class.
+
+    [scratch.webapp.data.UserRepository](https://github.com/karlbennett/scratch-webapp/blob/master/src/main/java/scratch/webapp/data/UserRepository.java "UserRepository")
+
 There are also three configuration files:
 
 The maven `pom.xml` file, this contains the Jetty plugin configuration and the dependencies for the project.
