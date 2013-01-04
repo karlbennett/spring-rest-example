@@ -6,7 +6,6 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * A simple user class that contains an email, first, and last names. The email has been annotated to indicate it should
