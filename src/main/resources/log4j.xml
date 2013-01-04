@@ -9,12 +9,20 @@
         </layout>
     </appender>
 
-    <logger name="org.mortbay.log">
+    <logger name="org.mortbay">
+        <level value="FATAL"/>
+    </logger>
+
+    <logger name="org.springframework">
+        <level value="FATAL"/>
+    </logger>
+
+    <logger name="org.hibernate">
         <level value="FATAL"/>
     </logger>
 
     <root>
-        <priority value="INFO" />
+        <priority value="FATAL" />
         <appender-ref ref="CONSOLE"/>
     </root>
 </log4j:configuration>
