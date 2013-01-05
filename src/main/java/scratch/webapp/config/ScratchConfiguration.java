@@ -3,6 +3,7 @@ package scratch.webapp.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.aspectj.EnableSpringConfigured;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
@@ -13,6 +14,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import scratch.webapp.controller.ScratchController;
 import scratch.webapp.data.UserRepository;
 
@@ -25,6 +27,8 @@ import javax.sql.DataSource;
  * @author Karl Bennett
  */
 @Configuration
+// Enable the Spring configuration phase that will configure the Spring AspectJ components.
+@EnableSpringConfigured
 @EnableWebMvc // Enable the Spring Web MVC environment, this includes support for XML/JSON conversion and validation.
 // Tell Spring which package to look in for controller classes. This has been done by providing a class from the
 // required package.
@@ -41,7 +45,7 @@ public class ScratchConfiguration {
      * @return the {@code HibernateExceptionTranslator} that will be used to map Hibernate exceptions.
      */
     @Bean
-    public HibernateExceptionTranslator hibernateExceptionTranslator(){
+    public HibernateExceptionTranslator hibernateExceptionTranslator() {
         return new HibernateExceptionTranslator();
     }
 
