@@ -14,13 +14,17 @@ import javax.validation.constraints.NotNull;
  *
  * @author Karl Bennett
  */
+// This is a Spring Aspect annotation which will cause any dependencies annotated with @Autowired to be weaved into the
+// classes definition so that it will contain the dependencies in every instantiation.
+// The dependencies will be wired in before the constructor execution so that the dependency is available in
+// constructors.
 @Configurable(preConstruction = true)
 @Entity
 public class User extends AbstractPersistable<Long> {
 
     @JsonIgnore
     @Transient
-    @Autowired
+    @Autowired // Tell Spring to weave this dependency into the classes runtime definition.
     private UserRepository repository;
 
     @NotNull(message = "email.null")
@@ -36,6 +40,9 @@ public class User extends AbstractPersistable<Long> {
     private String lastName;
 
 
+    /**
+     * A default constructor is required by serialisation and ORM API's.
+     */
     public User() {
     }
 
@@ -51,6 +58,11 @@ public class User extends AbstractPersistable<Long> {
         this.lastName = lastName;
     }
 
+    /**
+     * Copy constructor.
+     *
+     * @param user the user to copy.
+     */
     public User(User user) {
 
         setId(user.getId());
@@ -59,6 +71,12 @@ public class User extends AbstractPersistable<Long> {
         setLastName(user.getLastName());
     }
 
+    /**
+     * Instantiate a new {@code User} and populate it from a persisted user with the same ID.
+     *
+     * @param id the ID of the persisted user that will be used to populate this users fields.
+     * @throws EntityNotFoundException if there is no persisted user with the supplied ID.
+     */
     public User(Long id) {
 
         if (!repository.exists(id)) throwNotFound();
@@ -72,6 +90,12 @@ public class User extends AbstractPersistable<Long> {
     }
 
 
+    /**
+     * Persist this user and populate it with a new ID.
+     *
+     * @return this user with a newly populated ID.
+     * @throws EntityExistsException if the user ID clashes with an already persisted user.
+     */
     @JsonIgnore
     @Transient
     public User create() {
@@ -81,6 +105,11 @@ public class User extends AbstractPersistable<Long> {
         return repository.save(new User(getId(), getEmail(), getFirstName(), getLastName()));
     }
 
+    /**
+     * Check if this user has been previously persisted.
+     *
+     * @return this user.
+     */
     @JsonIgnore
     @Transient
     public boolean exists() {
@@ -88,6 +117,11 @@ public class User extends AbstractPersistable<Long> {
         return !isNew() && repository.exists(getId());
     }
 
+    /**
+     * Retrieve all the users that have been persisted.
+     *
+     * @return all the persisted users.
+     */
     @JsonIgnore
     @Transient
     public Iterable<User> all() {
@@ -95,6 +129,12 @@ public class User extends AbstractPersistable<Long> {
         return repository.findAll();
     }
 
+    /**
+     * Persist any updates to this user.
+     *
+     * @return the updated user.
+     * @throws EntityNotFoundException if the user hasn't already been persisted.
+     */
     @JsonIgnore
     @Transient
     public User update() {
@@ -104,6 +144,12 @@ public class User extends AbstractPersistable<Long> {
         return repository.save(this);
     }
 
+    /**
+     * Delete this user.
+     *
+     * @return the deleted user.
+     * @throws EntityNotFoundException if the user hasn't already been persisted.
+     */
     @JsonIgnore
     @Transient
     public User delete() {
