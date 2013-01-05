@@ -30,7 +30,7 @@ public class ScratchController {
      *
      * @param request  the servlet request object.
      * @param response the servlet response object.
-     * @return a map that will be converted by Spring into JSON because of the {@code produces} value in
+     * @return a map that will be converted by Spring into {@code JSON} because of the {@code produces} value in
      *         {@code @RequestMapping}.
      */
     @RequestMapping(value = "/", method = GET, produces = APPLICATION_JSON_VALUE)
@@ -44,6 +44,16 @@ public class ScratchController {
         return body;
     }
 
+    /**
+     * Persist a new user using the user object that has been deserialised from the {@code JSON} in the body of the
+     * {@code POST} request.
+     *
+     * This operation will fail if a user exists with the emil supplied in the new user. Also if an ID is supplied it
+     * will be ignored unless it is an ID for an existing user at which point the persistence will fail.
+     *
+     * @param user the user to persist.
+     * @return the newly persisted user.
+     */
     @RequestMapping(value = "/users", method = POST, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public User create(@Valid @RequestBody User user) {
@@ -51,6 +61,13 @@ public class ScratchController {
         return user.create();
     }
 
+    /**
+     * Retrieve the user with the supplied ID. The is throw a {@link javax.persistence.EntityNotFoundException} if no
+     * user exists with the supplied ID.
+     *
+     * @param id the is of the user to retrieve.
+     * @return the requested user.
+     */
     @RequestMapping(value = "/users/{id}", method = GET, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public User retrieve(@PathVariable Long id) {
@@ -58,6 +75,11 @@ public class ScratchController {
         return new User(id);
     }
 
+    /**
+     * Retrieve all the persisted user.
+     *
+     * @return all the users that have been persisted.
+     */
     @RequestMapping(value = "/users", method = GET, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public Iterable<User> retrieve() {
@@ -65,6 +87,13 @@ public class ScratchController {
         return new User().all();
     }
 
+    /**
+     * Updated the user that has been deserialised from the {@code JSON} in the body of the {@code PUT} request.
+     *
+     * @param id the ID of the user to update.
+     * @param user the deserialised user minus the ID.
+     * @return the updated user.
+     */
     @RequestMapping(value = "/users/{id}", method = PUT, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public User update(@PathVariable Long id, @Valid @RequestBody User user) {
@@ -74,6 +103,11 @@ public class ScratchController {
         return user.update();
     }
 
+    /**
+     * Delete the user with the supplied ID.
+     * @param id the ID of the user to delete.
+     * @return the delete user.
+     */
     @RequestMapping(value = "/users/{id}", method = DELETE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public User delete(@PathVariable Long id) {
