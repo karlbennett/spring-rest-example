@@ -19,8 +19,8 @@ It is also possible to carry out CRUD operation on simple users:
     }'
 
 ###### Retrieve
-    $ curl http://localhost:8080/scratch-webapp/scratch/users
-    $ curl http://localhost:8080/scratch-webapp/scratch/users/1
+    $ curl -XGET http://localhost:8080/scratch-webapp/scratch/users
+    $ curl -XGET http://localhost:8080/scratch-webapp/scratch/users/1
 
 ###### Update
     $ curl -XPUT http://localhost:8080/scratch-webapp/scratch/users/1 -d '{
