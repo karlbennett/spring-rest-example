@@ -1,10 +1,11 @@
 package scratch.webapp.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -13,8 +14,14 @@ import javax.validation.constraints.NotNull;
  *
  * @author Karl Bennett
  */
+@Configurable(preConstruction = true)
 @Entity
 public class User extends AbstractPersistable<Long> {
+
+    @JsonIgnore
+    @Transient
+    @Autowired
+    private UserRepository repository;
 
     @NotNull(message = "email.null")
     @Column(unique = true, nullable = false)
@@ -32,12 +39,80 @@ public class User extends AbstractPersistable<Long> {
     public User() {
     }
 
+    public User(UserRepository repository) {
+        this.repository = repository;
+    }
+
     public User(Long id, String email, String firstName, String lastName) {
 
         this.setId(id);
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public User(User user) {
+
+        setId(user.getId());
+        setEmail(user.getEmail());
+        setFirstName(user.getFirstName());
+        setLastName(user.getLastName());
+    }
+
+    public User(Long id) {
+
+        if (!repository.exists(id)) throwNotFound();
+
+        User user = repository.findOne(id);
+
+        setId(user.getId());
+        setEmail(user.getEmail());
+        setFirstName(user.getFirstName());
+        setLastName(user.getLastName());
+    }
+
+
+    @JsonIgnore
+    @Transient
+    public User create() {
+
+        if (exists()) throwExists();
+
+        return repository.save(new User(getId(), getEmail(), getFirstName(), getLastName()));
+    }
+
+    @JsonIgnore
+    @Transient
+    public boolean exists() {
+
+        return !isNew() && repository.exists(getId());
+    }
+
+    @JsonIgnore
+    @Transient
+    public Iterable<User> all() {
+
+        return repository.findAll();
+    }
+
+    @JsonIgnore
+    @Transient
+    public User update() {
+
+        if (!exists()) throwNotFound();
+
+        return repository.save(this);
+    }
+
+    @JsonIgnore
+    @Transient
+    public User delete() {
+
+        if (!exists()) throwNotFound();
+
+        repository.delete(this);
+
+        return this;
     }
 
 
@@ -52,6 +127,7 @@ public class User extends AbstractPersistable<Long> {
 
         return super.isNew();
     }
+
 
     public void setId(Long id) {
 
@@ -86,5 +162,16 @@ public class User extends AbstractPersistable<Long> {
     public void setLastName(String lastName) {
 
         this.lastName = lastName;
+    }
+
+
+    public void throwNotFound() {
+
+        throw new EntityNotFoundException("A user with id " + getId() + " does not exist.");
+    }
+
+    public void throwExists() {
+
+        throw new EntityExistsException("A user with id " + getId() + " already exists.");
     }
 }
