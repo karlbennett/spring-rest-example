@@ -1,15 +1,12 @@
 package scratch.webapp.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import scratch.webapp.data.User;
-import scratch.webapp.data.UserRepository;
 
-import javax.persistence.EntityExistsException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -27,9 +24,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
  */
 @Controller
 public class ScratchController {
-
-    @Autowired
-    private UserRepository userRepository;
 
     /**
      * Map any request to the servlet root to this method.
@@ -54,23 +48,21 @@ public class ScratchController {
     @ResponseBody
     public User create(@Valid @RequestBody User user) {
 
-        if (!user.isNew() && null != userRepository.findOne(user.getId())) throw new EntityExistsException();
-
-        return userRepository.save(user);
+        return user.create();
     }
 
     @RequestMapping(value = "/users/{id}", method = GET, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public User retrieve(@PathVariable Long id) {
 
-        return userRepository.findOne(id);
+        return new User(id);
     }
 
     @RequestMapping(value = "/users", method = GET, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public Iterable<User> retrieve() {
 
-        return userRepository.findAll();
+        return new User().all();
     }
 
     @RequestMapping(value = "/users/{id}", method = PUT, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
@@ -79,17 +71,13 @@ public class ScratchController {
 
         user.setId(id);
 
-        return userRepository.save(user);
+        return user.update();
     }
 
     @RequestMapping(value = "/users/{id}", method = DELETE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public User delete(@PathVariable Long id) {
 
-        User user = userRepository.findOne(id);
-
-        userRepository.delete(id);
-
-        return user;
+        return new User(id).delete();
     }
 }
