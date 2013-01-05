@@ -47,12 +47,14 @@ public class ScratchController {
     /**
      * Persist a new user using the user object that has been deserialised from the {@code JSON} in the body of the
      * {@code POST} request.
-     *
+     * <p/>
      * This operation will fail if a user exists with the emil supplied in the new user. Also if an ID is supplied it
      * will be ignored unless it is an ID for an existing user at which point the persistence will fail.
      *
      * @param user the user to persist.
      * @return the newly persisted user.
+     * @throws javax.persistence.EntityExistsException if the deserialised user contains an ID that is contained by an
+     *          existing user.
      */
     @RequestMapping(value = "/users", method = POST, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -62,11 +64,11 @@ public class ScratchController {
     }
 
     /**
-     * Retrieve the user with the supplied ID. The is throw a {@link javax.persistence.EntityNotFoundException} if no
-     * user exists with the supplied ID.
+     * Retrieve the user with the supplied ID.
      *
      * @param id the is of the user to retrieve.
      * @return the requested user.
+     * @throws javax.persistence.EntityNotFoundException if no user exists with the supplied id.
      */
     @RequestMapping(value = "/users/{id}", method = GET, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -90,9 +92,10 @@ public class ScratchController {
     /**
      * Updated the user that has been deserialised from the {@code JSON} in the body of the {@code PUT} request.
      *
-     * @param id the ID of the user to update.
+     * @param id   the ID of the user to update.
      * @param user the deserialised user minus the ID.
      * @return the updated user.
+     * @throws javax.persistence.EntityNotFoundException if no user exists with the supplied id.
      */
     @RequestMapping(value = "/users/{id}", method = PUT, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -105,8 +108,10 @@ public class ScratchController {
 
     /**
      * Delete the user with the supplied ID.
+     *
      * @param id the ID of the user to delete.
      * @return the delete user.
+     * @throws javax.persistence.EntityNotFoundException if no user exists with the supplied id.
      */
     @RequestMapping(value = "/users/{id}", method = DELETE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
