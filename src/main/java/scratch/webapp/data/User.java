@@ -49,10 +49,6 @@ public class User extends AbstractPersistable<Long> {
     public User() {
     }
 
-    public User(UserRepository repository) {
-        repository = repository;
-    }
-
     public User(Long id, String email, String firstName, String lastName) {
 
         this.setId(id);
