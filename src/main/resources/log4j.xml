@@ -14,11 +14,11 @@
     </logger>
 
     <logger name="org.springframework">
-        <level value="FATAL"/>
+        <level value="WARN"/>
     </logger>
 
     <logger name="org.hibernate">
-        <level value="FATAL"/>
+        <level value="WARN"/>
     </logger>
 
     <root>
