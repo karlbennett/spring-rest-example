@@ -86,7 +86,7 @@ public class ScratchController {
     @ResponseBody
     public Iterable<User> retrieve() {
 
-        return new User().all();
+        return User.all();
     }
 
     /**
