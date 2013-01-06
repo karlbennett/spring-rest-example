@@ -19,8 +19,8 @@ It is also possible to carry out CRUD operation on simple users:
     }'
 
 ###### Retrieve
-    $ curl http://localhost:8080/scratch-webapp/scratch/users
-    $ curl http://localhost:8080/scratch-webapp/scratch/users/1
+    $ curl -XGET http://localhost:8080/scratch-webapp/scratch/users
+    $ curl -XGET http://localhost:8080/scratch-webapp/scratch/users/1
 
 ###### Update
     $ curl -XPUT http://localhost:8080/scratch-webapp/scratch/users/1 -d '{
@@ -53,10 +53,10 @@ And lastly the repository class that is used to persisted the User class.
 
 There are also three configuration files:
 
-The maven `pom.xml` file, this contains the Jetty plugin configuration and the dependencies for the project.
+The maven [`pom.xml`](https://github.com/karlbennett/scratch-webapp/blob/master/pom.xml "pom.xml") file, this contains the Jetty plugin configuration and the dependencies for the project.
 
-The `log4j.xml` file that defines the log levels for the webapp and it's libraries. It's currently set to INFO.
+The [`log4j.xml`](https://github.com/karlbennett/scratch-webapp/blob/master/src/main/resources/log4j.xml "log4j.xml") file that defines the log levels for the webapp and it's libraries. It's currently set to INFO.
 
-The `web.xml` file that configures the Spring dispatcher servlet to use the `ScratchConfiguration` class which in turn registers the `ScratchController`.
+The [`web.xml`](https://github.com/karlbennett/scratch-webapp/blob/master/src/main/webapp/WEB-INF/web.xml "web.xml") file that configures the Spring dispatcher servlet to use the `ScratchConfiguration` class which in turn registers the `ScratchController`.
 
 That is the entire project, have fun :)
