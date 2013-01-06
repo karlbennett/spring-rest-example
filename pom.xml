@@ -113,6 +113,7 @@
             <version>3.2.0.RELEASE</version>
         </dependency>
 
+        <!-- Spring Aspects are used weave in dependency injection at compile time. -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aspects</artifactId>
