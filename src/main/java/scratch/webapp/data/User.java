@@ -14,18 +14,21 @@ import javax.validation.constraints.NotNull;
  *
  * @author Karl Bennett
  */
-// This is a Spring Aspect annotation which will cause any dependencies annotated with @Autowired to be weaved into the
-// classes definition so that it will contain the dependencies in every instantiation.
-// The dependencies will be wired in before the constructor execution so that the dependency is available in
-// constructors.
-@Configurable(preConstruction = true)
 @Entity
 public class User extends AbstractPersistable<Long> {
 
+    private static class RepositoryHolder {
+
+        public static final UserRepository REPOSITORY = new RepositoryInjector();
+    }
+
     @JsonIgnore
     @Transient
-    @Autowired // Tell Spring to weave this dependency into the classes runtime definition.
-    private UserRepository repository;
+    private static UserRepository repository() {
+
+        return RepositoryHolder.REPOSITORY;
+    }
+
 
     @NotNull(message = "email.null")
     @Column(unique = true, nullable = false)
@@ -47,7 +50,7 @@ public class User extends AbstractPersistable<Long> {
     }
 
     public User(UserRepository repository) {
-        this.repository = repository;
+        repository = repository;
     }
 
     public User(Long id, String email, String firstName, String lastName) {
@@ -79,9 +82,9 @@ public class User extends AbstractPersistable<Long> {
      */
     public User(Long id) {
 
-        if (!repository.exists(id)) throwNotFound();
+        if (!repository().exists(id)) throwNotFound();
 
-        User user = repository.findOne(id);
+        User user = repository().findOne(id);
 
         setId(user.getId());
         setEmail(user.getEmail());
@@ -102,7 +105,7 @@ public class User extends AbstractPersistable<Long> {
 
         if (exists()) throwExists();
 
-        return repository.save(new User(getId(), getEmail(), getFirstName(), getLastName()));
+        return repository().save(new User(getId(), getEmail(), getFirstName(), getLastName()));
     }
 
     /**
@@ -114,7 +117,7 @@ public class User extends AbstractPersistable<Long> {
     @Transient
     public boolean exists() {
 
-        return !isNew() && repository.exists(getId());
+        return !isNew() && repository().exists(getId());
     }
 
     /**
@@ -124,9 +127,9 @@ public class User extends AbstractPersistable<Long> {
      */
     @JsonIgnore
     @Transient
-    public Iterable<User> all() {
+    public static Iterable<User> all() {
 
-        return repository.findAll();
+        return repository().findAll();
     }
 
     /**
@@ -141,7 +144,7 @@ public class User extends AbstractPersistable<Long> {
 
         if (!exists()) throwNotFound();
 
-        return repository.save(this);
+        return repository().save(this);
     }
 
     /**
@@ -156,7 +159,7 @@ public class User extends AbstractPersistable<Long> {
 
         if (!exists()) throwNotFound();
 
-        repository.delete(this);
+        repository().delete(this);
 
         return this;
     }
@@ -219,5 +222,86 @@ public class User extends AbstractPersistable<Long> {
     public void throwExists() {
 
         throw new EntityExistsException("A user with id " + getId() + " already exists.");
+    }
+
+
+    /**
+     * A wrapper class for the {@link UserRepository} that will be injected with the actual {@code UserRepository}.
+     */
+    // This is a Spring Aspect annotation which will cause any dependencies annotated with @Autowired to be weaved into the
+    // classes definition so that it will contain the dependencies in every instantiation.
+    // The dependencies will be wired in before the constructor execution so that the dependency is available in
+    // constructors.
+    @Configurable(preConstruction = true)
+    private static class RepositoryInjector implements UserRepository {
+
+        @Autowired // Tell Spring to weave this dependency into the classes runtime definition.
+        private UserRepository repository;
+
+        @Override
+        public <S extends User> S save(S user) {
+
+            return repository.save(user);
+        }
+
+        @Override
+        public <S extends User> Iterable<S> save(Iterable<S> users) {
+
+            return repository.save(users);
+        }
+
+        @Override
+        public User findOne(Long id) {
+
+            return repository.findOne(id);
+        }
+
+        @Override
+        public boolean exists(Long id) {
+
+            return repository.exists(id);
+        }
+
+        @Override
+        public Iterable<User> findAll() {
+
+            return repository.findAll();
+        }
+
+        @Override
+        public Iterable<User> findAll(Iterable<Long> ids) {
+
+            return repository.findAll(ids);
+        }
+
+        @Override
+        public long count() {
+
+            return repository.count();
+        }
+
+        @Override
+        public void delete(Long id) {
+
+            repository.delete(id);
+        }
+
+        @Override
+        public void delete(User user) {
+
+            repository.delete(user);
+        }
+
+        @Override
+        public void delete(Iterable<? extends User> users) {
+
+            repository.delete(users);
+        }
+
+        @Override
+        public void deleteAll() {
+
+            repository.deleteAll();
+        }
     }
 }
