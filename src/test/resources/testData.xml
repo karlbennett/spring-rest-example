@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE dataset SYSTEM "./user.dtd">
+<dataset>
+  <USER ID="1" EMAIL="test_user_one@test.com" FIRSTNAME="One" LASTNAME="Test"/>
+  <USER ID="2" EMAIL="test_user_two@test.com" FIRSTNAME="Two" LASTNAME="Test"/>
+  <USER ID="3" EMAIL="test_user_three@test.com" FIRSTNAME="Three" LASTNAME="Test"/>
+</dataset>
