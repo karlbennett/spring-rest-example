@@ -145,7 +145,7 @@ public class UserTest {
 
         DatabaseOperation.TRUNCATE_TABLE.execute(connection, dataSet);
 
-        assertEquals("no persisted users should be returned.", Collections.emptyList(), User.all());
+        assertEquals("no persisted users should be returned.", Collections.<User>emptyList(), User.all());
     }
 
     @Test
