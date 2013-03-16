@@ -99,7 +99,7 @@ public class ScratchController {
      */
     @RequestMapping(value = "/users", method = GET, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Callable<Iterable<User>> retrieve() {
+    public Callable<Iterable<User>> retrieveAll() {
 
         return new Callable<Iterable<User>>() {
 
