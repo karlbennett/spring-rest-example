@@ -13,6 +13,7 @@ import javax.validation.Valid;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -58,9 +59,16 @@ public class ScratchController {
      */
     @RequestMapping(value = "/users", method = POST, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public User create(@Valid @RequestBody User user) {
+    public Callable<User> create(@Valid @RequestBody final User user) {
 
-        return user.create();
+        return new Callable<User>() {
+
+            @Override
+            public User call() throws Exception {
+
+                return user.create();
+            }
+        };
     }
 
     /**
@@ -72,9 +80,16 @@ public class ScratchController {
      */
     @RequestMapping(value = "/users/{id}", method = GET, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public User retrieve(@PathVariable Long id) {
+    public Callable<User> retrieve(@PathVariable final Long id) {
 
-        return new User(id);
+        return new Callable<User>() {
+
+            @Override
+            public User call() throws Exception {
+
+                return new User(id);
+            }
+        };
     }
 
     /**
@@ -84,9 +99,16 @@ public class ScratchController {
      */
     @RequestMapping(value = "/users", method = GET, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Iterable<User> retrieve() {
+    public Callable<Iterable<User>> retrieve() {
 
-        return User.all();
+        return new Callable<Iterable<User>>() {
+
+            @Override
+            public Iterable<User> call() throws Exception {
+
+                return User.all();
+            }
+        };
     }
 
     /**
@@ -99,11 +121,18 @@ public class ScratchController {
      */
     @RequestMapping(value = "/users/{id}", method = PUT, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public User update(@PathVariable Long id, @Valid @RequestBody User user) {
+    public Callable<User> update(@PathVariable Long id, @Valid @RequestBody final User user) {
 
         user.setId(id);
 
-        return user.update();
+        return new Callable<User>() {
+
+            @Override
+            public User call() throws Exception {
+
+                return user.update();
+            }
+        };
     }
 
     /**
@@ -115,8 +144,15 @@ public class ScratchController {
      */
     @RequestMapping(value = "/users/{id}", method = DELETE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public User delete(@PathVariable Long id) {
+    public Callable<User> delete(@PathVariable final Long id) {
 
-        return new User(id).delete();
+        return new Callable<User>() {
+
+            @Override
+            public User call() throws Exception {
+
+                return new User(id).delete();
+            }
+        };
     }
 }
