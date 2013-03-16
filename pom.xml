@@ -16,8 +16,14 @@
 
     <version>1.0-SNAPSHOT</version>
 
-
     <url>https://github.com/karlbennett/scratch-webapp</url>
+
+    <properties>
+        <spring.agent.version>2.5.6</spring.agent.version>
+        <spring.version>3.2.2.RELEASE</spring.version>
+        <hibernate.version>4.1.9.Final</hibernate.version>
+        <slf4j.version>1.6.6</slf4j.version>
+    </properties>
 
     <build>
         <finalName>scratch-webapp</finalName>
@@ -61,6 +67,18 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>aspectj-maven-plugin</artifactId>
                 <version>1.4</version>
+                <configuration>
+                    <!-- Make sure that AspectJ knows it is compiled against Java 1.6 code. -->
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <aspectLibraries>
+                        <!-- Register the Spring aspect classes for weaving. -->
+                        <aspectLibrary>
+                            <groupId>org.springframework</groupId>
+                            <artifactId>spring-aspects</artifactId>
+                        </aspectLibrary>
+                    </aspectLibraries>
+                </configuration>
                 <executions>
                     <execution>
                         <!-- Get the AspectJ weaving to be carried out during the main and test compile phases. -->
@@ -68,18 +86,6 @@
                             <goal>compile</goal>
                             <goal>test-compile</goal>
                         </goals>
-                        <configuration>
-                            <!-- Make sure that AspectJ knows it is compiled against Java 1.6 code. -->
-                            <source>1.6</source>
-                            <target>1.6</target>
-                            <aspectLibraries>
-                                <!-- Register the Spring aspect classes for weaving. -->
-                                <aspectLibrary>
-                                    <groupId>org.springframework</groupId>
-                                    <artifactId>spring-aspects</artifactId>
-                                </aspectLibrary>
-                            </aspectLibraries>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -91,14 +97,14 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <version>3.2.0.RELEASE</version>
+            <version>${spring.version}</version>
         </dependency>
 
         <!-- Spring Aspects are used weave in dependency injection at compile time. -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aspects</artifactId>
-            <version>3.2.0.RELEASE</version>
+            <version>${spring.version}</version>
         </dependency>
 
         <!-- Spring Data for easy database access. The JPA libraries for allowing Spring Data to connect to a normal SQL-->
@@ -106,7 +112,7 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
-            <version>1.2.0.RELEASE</version>
+            <version>1.3.0.RELEASE</version>
             <!-- We must exclude the Spring DATA AOP dependencies because they are currently version 3.1.x which clash -->
             <!-- with the version 3.2.x Spring dependencies that are being used for this proejct. -->
             <exclusions>
@@ -124,14 +130,14 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
-            <version>3.2.0.RELEASE</version>
+            <version>${spring.version}</version>
         </dependency>
 
         <!-- JEE API so that the servlet interfaces can be accessed. -->
         <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-web-api</artifactId>
-            <version>6.0</version>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>3.0-alpha-1</version>
             <scope>provided</scope>
         </dependency>
 
@@ -139,7 +145,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>4.1.9.Final</version>
+            <version>${hibernate.version}</version>
         </dependency>
 
         <!-- Hibernate Entity Manager is required because Spring Data just uses the JPA Entity Manager API for object -->
@@ -147,7 +153,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
-            <version>4.1.9.Final</version>
+            <version>${hibernate.version}</version>
         </dependency>
 
         <!-- The HSQL in memory database where all the data is persisted.-->
@@ -195,14 +201,14 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.6.6</version>
+            <version>${slf4j.version}</version>
         </dependency>
 
         <!-- The SLF4J Log4j implementation.-->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>1.6.6</version>
+            <version>${slf4j.version}</version>
         </dependency>
 
         <!-- JUnit 4 is used for the unit tests.-->
@@ -210,6 +216,22 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.8.2</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Helper classes for testing the Spring framework. -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Tools for importing and deleting data test data from a database. -->
+        <dependency>
+            <groupId>org.dbunit</groupId>
+            <artifactId>dbunit</artifactId>
+            <version>2.4.9</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
