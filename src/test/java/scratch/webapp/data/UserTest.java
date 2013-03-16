@@ -1,5 +1,6 @@
 package scratch.webapp.data;
 
+import org.dbunit.Assertion;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
@@ -18,13 +19,16 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import scratch.webapp.config.ScratchConfiguration;
 
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
 import javax.sql.DataSource;
-import org.dbunit.Assertion;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
-import java.util.*;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.util.ResourceUtils.getFile;
-import static org.junit.Assert.*;
 
 /**
  * @author Karl Bennett
@@ -59,34 +63,71 @@ public class UserTest {
 
     private static final List<User> USERS = Arrays.asList(USER_ONE, USER_TWO, USER_THREE);
 
-    private static final ITable USER_FOUR_TABLE = new DefaultTable("user_four_table", new Column[]{
+    private static final Column[] COLUMNS = {
             new Column("id", DataType.BIGINT),
             new Column("email", DataType.VARCHAR),
             new Column("firstName", DataType.VARCHAR),
             new Column("lastName", DataType.VARCHAR)
-    }) {{
-        try {
+    };
 
-            addRow(new Object[]{ID_FOUR, EMAIL_NAME_FOUR, FIRST_NAME_FOUR, LAST_NAME});
-
-        } catch (DataSetException e) {
-
-            throw new RuntimeException(e);
-        }
+    private static final ITable USER_FOUR_TABLE = new DefaultTestTable("user_four_table", COLUMNS) {{
+        addRow(ID_FOUR, EMAIL_NAME_FOUR, FIRST_NAME_FOUR, LAST_NAME);
     }};
 
+    private static final ITable UPDATE_USER_TABLE = new DefaultTestTable("user_four_table", COLUMNS) {{
+        addRow(ID_TWO, EMAIL_NAME_FOUR, FIRST_NAME_TWO, LAST_NAME);
+    }};
+
+
+    private static class DefaultTestTable extends DefaultTable {
+
+        private DefaultTestTable(String tableName, Column[] columns) {
+            super(tableName, columns);
+        }
+
+        public void addRow(Object... values) {
+
+            try {
+
+                super.addRow(values);
+
+            } catch (DataSetException e) {
+
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private static ITable getTableRow(IDatabaseConnection connection, long id) throws Exception {
+
+        final String tableName = "table";
+
+        QueryDataSet dataSet = new QueryDataSet(connection);
+        dataSet.addTable(tableName, "SELECT * FROM user WHERE id = " + id);
+
+        return dataSet.getTable(tableName);
+    }
 
     /**
      * Convenience method that wraps the {@link Assertion#assertEquals(ITable, ITable)} method to differentiate it from
      * the JUnit assertions.
      *
+     * @param message       the assertion message that will be displayed on a failure.
      * @param expectedTable the table data that is expected.
-     * @param actualTable the actual table data.
+     * @param actualTable   the actual table data.
      * @throws DatabaseUnitException when the tables don't match.
      */
-    public static void assertTableEquals(ITable expectedTable, ITable actualTable) throws DatabaseUnitException {
+    public static void assertTableEquals(String message, ITable expectedTable, ITable actualTable)
+            throws DatabaseUnitException {
 
-        Assertion.assertEquals(expectedTable, actualTable);
+        try {
+
+            Assertion.assertEquals(expectedTable, actualTable);
+
+        } catch (DatabaseUnitException e) {
+
+            throw new DatabaseUnitException(message, e);
+        }
     }
 
 
@@ -112,6 +153,21 @@ public class UserTest {
         connection.close();
     }
 
+
+    @Test
+    public void testConstructUserExistingId() throws Exception {
+
+        assertEquals("user one should be populated correctly.", USER_ONE, new User(1L));
+        assertEquals("user two should be populated correctly.", USER_TWO, new User(2L));
+        assertEquals("user three should be populated correctly.", USER_THREE, new User(3L));
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void testConstructUserUnknownId() throws Exception {
+
+        new User(-1L);
+    }
+
     @Test
     public void testCreate() throws Exception {
 
@@ -122,12 +178,13 @@ public class UserTest {
 
         user.create();
 
-        QueryDataSet dataSet = new QueryDataSet(connection);
-        dataSet.addTable("new_user", "SELECT * FROM user WHERE id = 4");
+        assertTableEquals("the new user should be persisted.", USER_FOUR_TABLE, getTableRow(connection, 4L));
+    }
 
-        ITable table = dataSet.getTable("new_user");
+    @Test(expected = EntityExistsException.class)
+    public void testCreateExistingUser() throws Exception {
 
-        assertTableEquals(USER_FOUR_TABLE, table);
+        USER_ONE.create();
     }
 
     @Test
@@ -151,25 +208,48 @@ public class UserTest {
     @Test
     public void testUpdate() throws Exception {
 
+        User user = new User(2L);
+
+        user.setEmail(EMAIL_NAME_FOUR);
+
+        user.update();
+
+        assertTableEquals("the user should be updated.", UPDATE_USER_TABLE, getTableRow(connection, 2L));
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void testUpdateUnknownUser() throws Exception {
+
+        User user = new User(-1L);
+
+        user.update();
     }
 
     @Test
     public void testDelete() throws Exception {
 
+        new User(3L).delete();
+
+        ITable table = getTableRow(connection, 3L);
+
+        assertEquals("the row with user three should not exists.", 0, table.getRowCount());
     }
 
-    @Test
-    public void testIsNew() throws Exception {
+    @Test(expected = EntityNotFoundException.class)
+    public void testDeleteUnkownUser() throws Exception {
 
+        new User(-1L).delete();
     }
 
-    @Test
+    @Test(expected = EntityNotFoundException.class)
     public void testThrowNotFound() throws Exception {
 
+        new User().throwNotFound();
     }
 
-    @Test
+    @Test(expected = EntityExistsException.class)
     public void testThrowExists() throws Exception {
 
+        new User().throwExists();
     }
 }
