@@ -221,13 +221,44 @@ public class User extends AbstractPersistable<Long> {
     }
 
 
+    @Override
+    public boolean equals(Object o) {
+
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        User user = (User) o;
+
+        return (getId() == null ? user.getId() == null : getId().equals(user.getId())) &&
+                (email == null ? user.email == null : email.equals(user.email)) &&
+                (firstName == null ? user.firstName == null : firstName.equals(user.firstName)) &&
+                (lastName == null ? user.lastName != null : lastName.equals(user.lastName));
+    }
+
+    @Override
+    public int hashCode() {
+
+        int result = super.hashCode();
+
+        result = 31 * result + (getId() != null ? getId().hashCode() : 0);
+
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+
+        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
+
+        result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
+
+        return result;
+    }
+
+
     /**
      * A wrapper class for the {@link UserRepository} that will be injected with the actual {@code UserRepository}.
      */
-    // This is a Spring Aspect annotation which will cause any dependencies annotated with @Autowired to be weaved into the
-    // classes definition so that it will contain the dependencies in every instantiation.
-    // The dependencies will be wired in before the constructor execution so that the dependency is available in
-    // constructors.
+    // This is a Spring Aspect annotation which will cause any dependencies annotated with @Autowired to be weaved into
+    // the classes definition so that it will contain the dependencies in every instantiation. The dependencies will be
+    // wired in before the constructor execution so that the dependency is available in constructors.
     @Configurable(preConstruction = true)
     private static class RepositoryInjector implements UserRepository {
 
