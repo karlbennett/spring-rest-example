@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -21,6 +22,7 @@ import scratch.webapp.config.ScratchConfiguration;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.PersistenceException;
 import javax.sql.DataSource;
 import java.util.Arrays;
 import java.util.Collections;
@@ -187,6 +189,17 @@ public class UserTest {
         USER_ONE.create();
     }
 
+    @Test(expected = PersistenceException.class)
+    public void testCreateUserWithExistingEmail() throws Exception {
+
+        User user = new User();
+        user.setEmail(EMAIL_NAME_ONE);
+        user.setFirstName(FIRST_NAME_FOUR);
+        user.setLastName(LAST_NAME);
+
+        user.create();
+    }
+
     @Test
     public void testExists() throws Exception {
 
@@ -221,6 +234,16 @@ public class UserTest {
     public void testUpdateUnknownUser() throws Exception {
 
         User user = new User(-1L);
+
+        user.update();
+    }
+
+    @Test(expected = DataIntegrityViolationException.class)
+    public void testUpdateWithExistingEmail() throws Exception {
+
+        User user = new User(1L);
+
+        user.setEmail(EMAIL_NAME_TWO);
 
         user.update();
     }
