@@ -5,7 +5,7 @@ A very simple webapp that can be used to quickly try out code within a JEE web c
 
 The webapp can be run with the following command:
 
-    mvn jetty:run
+    mvn tomcat:run
 
 This will start the server which can be accessed at [http://localhost:8080/scratch-webapp/scratch/](http://localhost:8080/scratch-webapp/scratch/ "scratch-webapp")
 
