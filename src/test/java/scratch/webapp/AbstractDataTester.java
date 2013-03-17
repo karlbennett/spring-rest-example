@@ -131,14 +131,12 @@ public abstract class AbstractDataTester {
 
     private IDatabaseConnection connection;
 
-    private IDataSet dataSet;
-
 
     @Before
     public void dataSetUp() throws Exception {
 
         connection = new DatabaseConnection(dataSource.getConnection());
-        dataSet = new FlatXmlDataSetBuilder().build(getFile("classpath:testData.xml"));
+        IDataSet dataSet = new FlatXmlDataSetBuilder().build(getFile("classpath:testData.xml"));
         DatabaseOperation.CLEAN_INSERT.execute(connection, dataSet);
     }
 
