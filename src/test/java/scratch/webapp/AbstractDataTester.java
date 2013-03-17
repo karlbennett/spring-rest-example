@@ -42,10 +42,10 @@ public abstract class AbstractDataTester {
     public static final Long ID_THREE = 3L;
     public static final Long ID_FOUR = 4L;
 
-    public static final String EMAIL_NAME_ONE = "test_user_one@test.com";
-    public static final String EMAIL_NAME_TWO = "test_user_two@test.com";
-    public static final String EMAIL_NAME_THREE = "test_user_three@test.com";
-    public static final String EMAIL_NAME_FOUR = "test_user_four@test.com";
+    public static final String EMAIL_ONE = "test_user_one@test.com";
+    public static final String EMAIL_TWO = "test_user_two@test.com";
+    public static final String EMAIL_THREE = "test_user_three@test.com";
+    public static final String EMAIL_FOUR = "test_user_four@test.com";
 
     public static final String FIRST_NAME_ONE = "One";
     public static final String FIRST_NAME_TWO = "Two";
@@ -54,9 +54,9 @@ public abstract class AbstractDataTester {
 
     public static final String LAST_NAME = "Test";
 
-    public static final User USER_ONE = new User(ID_ONE, EMAIL_NAME_ONE, FIRST_NAME_ONE, LAST_NAME);
-    public static final User USER_TWO = new User(ID_TWO, EMAIL_NAME_TWO, FIRST_NAME_TWO, LAST_NAME);
-    public static final User USER_THREE = new User(ID_THREE, EMAIL_NAME_THREE, FIRST_NAME_THREE, LAST_NAME);
+    public static final User USER_ONE = new User(ID_ONE, EMAIL_ONE, FIRST_NAME_ONE, LAST_NAME);
+    public static final User USER_TWO = new User(ID_TWO, EMAIL_TWO, FIRST_NAME_TWO, LAST_NAME);
+    public static final User USER_THREE = new User(ID_THREE, EMAIL_THREE, FIRST_NAME_THREE, LAST_NAME);
 
     public static final List<User> USERS = Arrays.asList(USER_ONE, USER_TWO, USER_THREE);
 
@@ -68,11 +68,11 @@ public abstract class AbstractDataTester {
     };
 
     public static final ITable USER_FOUR_TABLE = new DefaultTestTable("user_four_table", COLUMNS) {{
-        addRow(ID_FOUR, EMAIL_NAME_FOUR, FIRST_NAME_FOUR, LAST_NAME);
+        addRow(ID_FOUR, EMAIL_FOUR, FIRST_NAME_FOUR, LAST_NAME);
     }};
 
     public static final ITable UPDATE_USER_TABLE = new DefaultTestTable("user_four_table", COLUMNS) {{
-        addRow(ID_TWO, EMAIL_NAME_FOUR, FIRST_NAME_TWO, LAST_NAME);
+        addRow(ID_TWO, EMAIL_FOUR, FIRST_NAME_TWO, LAST_NAME);
     }};
 
 

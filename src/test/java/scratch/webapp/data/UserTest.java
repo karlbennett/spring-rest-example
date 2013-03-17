@@ -36,7 +36,7 @@ public class UserTest extends AbstractDataTester {
     public void testCreate() throws Exception {
 
         User user = new User();
-        user.setEmail(EMAIL_NAME_FOUR);
+        user.setEmail(EMAIL_FOUR);
         user.setFirstName(FIRST_NAME_FOUR);
         user.setLastName(LAST_NAME);
 
@@ -55,7 +55,7 @@ public class UserTest extends AbstractDataTester {
     public void testCreateUserWithExistingEmail() throws Exception {
 
         User user = new User();
-        user.setEmail(EMAIL_NAME_ONE);
+        user.setEmail(EMAIL_ONE);
         user.setFirstName(FIRST_NAME_FOUR);
         user.setLastName(LAST_NAME);
 
@@ -85,7 +85,7 @@ public class UserTest extends AbstractDataTester {
 
         User user = new User(2L);
 
-        user.setEmail(EMAIL_NAME_FOUR);
+        user.setEmail(EMAIL_FOUR);
 
         user.update();
 
@@ -105,7 +105,7 @@ public class UserTest extends AbstractDataTester {
 
         User user = new User(1L);
 
-        user.setEmail(EMAIL_NAME_TWO);
+        user.setEmail(EMAIL_TWO);
 
         user.update();
     }
