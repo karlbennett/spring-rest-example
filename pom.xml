@@ -226,6 +226,13 @@
             <version>${spring.version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- JSON inspection library used by the Spring MVC Testing framework. -->
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>0.8.1</version>
+            <scope>test</scope>
+        </dependency>
 
         <!-- Tools for importing and deleting data test data from a database. -->
         <dependency>
