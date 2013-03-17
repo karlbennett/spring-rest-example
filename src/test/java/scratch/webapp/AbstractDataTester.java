@@ -33,7 +33,7 @@ import static org.springframework.util.ResourceUtils.getFile;
 @ContextConfiguration(classes = ScratchConfiguration.class)
 // This annotation enables the Spring MVC framework.
 @WebAppConfiguration
-public class AbstractDataTester {
+public abstract class AbstractDataTester {
 
     public static final String USER_TABLE = "user";
 
