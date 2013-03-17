@@ -57,6 +57,7 @@ public abstract class AbstractDataTester {
     public static final User USER_ONE = new User(ID_ONE, EMAIL_ONE, FIRST_NAME_ONE, LAST_NAME);
     public static final User USER_TWO = new User(ID_TWO, EMAIL_TWO, FIRST_NAME_TWO, LAST_NAME);
     public static final User USER_THREE = new User(ID_THREE, EMAIL_THREE, FIRST_NAME_THREE, LAST_NAME);
+    public static final User USER_FOUR = new User(ID_FOUR, EMAIL_FOUR, FIRST_NAME_FOUR, LAST_NAME);
 
     public static final List<User> USERS = Arrays.asList(USER_ONE, USER_TWO, USER_THREE);
 
