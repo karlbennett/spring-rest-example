@@ -27,7 +27,7 @@ public class UserTest extends AbstractDataTester {
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void testConstructUserUnknownId() throws Exception {
+    public void testConstructNonExistentUser() throws Exception {
 
         new User(-1L);
     }
@@ -105,7 +105,7 @@ public class UserTest extends AbstractDataTester {
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void testUpdateUnknownUser() throws Exception {
+    public void testUpdateNonExistentUser() throws Exception {
 
         User user = new User(-1L);
 
@@ -133,7 +133,7 @@ public class UserTest extends AbstractDataTester {
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void testDeleteUnkownUser() throws Exception {
+    public void testDeleteNonExistentUser() throws Exception {
 
         new User(-1L).delete();
     }
