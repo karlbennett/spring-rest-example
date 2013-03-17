@@ -252,6 +252,16 @@ public class User extends AbstractPersistable<Long> {
         return result;
     }
 
+    @Override
+    public String toString() {
+
+        return "User {" +
+              /**/"id = '" + getId() + '\'' +
+                ", email = '" + email + '\'' +
+                ", firstName = '" + firstName + '\'' +
+                ", lastName = '" + lastName + '\'' +
+                '}';
+    }
 
     /**
      * A wrapper class for the {@link UserRepository} that will be injected with the actual {@code UserRepository}.
