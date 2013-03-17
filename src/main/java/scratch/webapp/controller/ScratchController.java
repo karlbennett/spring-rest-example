@@ -1,10 +1,7 @@
 package scratch.webapp.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import scratch.webapp.data.User;
 
 import javax.servlet.http.HttpServletRequest;
@@ -154,5 +151,39 @@ public class ScratchController {
                 return new User(id).delete();
             }
         };
+    }
+
+    public static class ErrorResponse {
+
+        private final String error;
+
+        private final String message;
+
+
+        public ErrorResponse(String error, String message) {
+
+            this.error = error;
+            this.message = message;
+        }
+
+
+        public String getError() {
+
+            return error;
+        }
+
+        public String getMessage() {
+
+            return message;
+        }
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseBody
+    public ErrorResponse handleException(Exception e, HttpServletResponse response) {
+
+        response.setStatus(400);
+
+        return new ErrorResponse(e.getClass().getSimpleName(), e.getMessage());
     }
 }
