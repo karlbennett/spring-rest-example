@@ -37,6 +37,11 @@ public abstract class AbstractDataTester {
 
     public static final String USER_TABLE = "user";
 
+    public static final String ID = "id";
+    public static final String EMAIL = "email";
+    public static final String FIRST_NAME = "firstName";
+    public static final String LAST_NAME = "lastName";
+
     public static final Long ID_ONE = 1L;
     public static final Long ID_TWO = 2L;
     public static final Long ID_THREE = 3L;
@@ -163,18 +168,19 @@ public abstract class AbstractDataTester {
     /**
      * Get the row with the supplied {@code id} form the table with the supplied {@code name}.
      *
+     *
      * @param name the name of the table to request the row from.
-     * @param id   the id of the row to request.
+     * @param email
      * @return the table containing only the request rwo.
      * @throws Exception if the table or row could not be found.
      */
-    public ITable getTableRow(String name, long id) throws Exception {
+    public ITable getTableRow(String name, String email) throws Exception {
 
         // This is the name given to the DBUnit table object not the name of the table in the database.
         final String tableObjectName = "table";
 
         QueryDataSet dataSet = new QueryDataSet(connection);
-        dataSet.addTable(tableObjectName, "SELECT * FROM " + name + " WHERE id = " + id);
+        dataSet.addTable(tableObjectName, "SELECT * FROM " + name + " WHERE email = '" + email + "'");
 
         return dataSet.getTable(tableObjectName);
     }

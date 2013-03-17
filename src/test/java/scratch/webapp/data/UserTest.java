@@ -42,7 +42,13 @@ public class UserTest extends AbstractDataTester {
 
         user.create();
 
-        assertTableEquals("the new user should be persisted.", USER_FOUR_TABLE, getTableRow(USER_TABLE, 4L));
+        ITable table = getTableRow(USER_TABLE, EMAIL_FOUR);
+
+        assertEquals("a row with email four should have been created.", EMAIL_FOUR, table.getValue(0, EMAIL));
+        assertEquals("a row with first name four should have been created.",
+                FIRST_NAME_FOUR, table.getValue(0, FIRST_NAME));
+        assertEquals("a row with the last name should have been created.",
+                LAST_NAME_VALUE, table.getValue(0, LAST_NAME));
     }
 
     @Test(expected = EntityExistsException.class)
@@ -89,7 +95,13 @@ public class UserTest extends AbstractDataTester {
 
         user.update();
 
-        assertTableEquals("the user should be updated.", UPDATE_USER_TABLE, getTableRow(USER_TABLE, 2L));
+        ITable table = getTableRow(USER_TABLE, EMAIL_FOUR);
+
+        assertEquals("a row with email four should have been created.", EMAIL_FOUR, table.getValue(0, EMAIL));
+        assertEquals("the first name should still be the first name two value.",
+                FIRST_NAME_TWO, table.getValue(0, FIRST_NAME));
+        assertEquals("the last name should still be the last name value.",
+                LAST_NAME_VALUE, table.getValue(0, LAST_NAME));
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -115,7 +127,7 @@ public class UserTest extends AbstractDataTester {
 
         new User(3L).delete();
 
-        ITable table = getTableRow(USER_TABLE, 3L);
+        ITable table = getTableRow(USER_TABLE, EMAIL_THREE);
 
         assertEquals("the row with user three should not exists.", 0, table.getRowCount());
     }
