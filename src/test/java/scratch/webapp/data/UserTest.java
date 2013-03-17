@@ -38,7 +38,7 @@ public class UserTest extends AbstractDataTester {
         User user = new User();
         user.setEmail(EMAIL_FOUR);
         user.setFirstName(FIRST_NAME_FOUR);
-        user.setLastName(LAST_NAME);
+        user.setLastName(LAST_NAME_VALUE);
 
         user.create();
 
@@ -57,7 +57,7 @@ public class UserTest extends AbstractDataTester {
         User user = new User();
         user.setEmail(EMAIL_ONE);
         user.setFirstName(FIRST_NAME_FOUR);
-        user.setLastName(LAST_NAME);
+        user.setLastName(LAST_NAME_VALUE);
 
         user.create();
     }
