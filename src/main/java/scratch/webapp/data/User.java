@@ -15,20 +15,16 @@ import javax.validation.constraints.NotNull;
  * @author Karl Bennett
  */
 @Entity
+// This is a Spring Aspect annotation which will cause any dependencies annotated with @Autowired to be weaved into
+// the classes definition so that it will contain the dependencies in every instantiation. The dependencies will be
+// wired in before the constructor execution so that the dependency is available in constructors.
+@Configurable(preConstruction = true)
 public class User extends AbstractPersistable<Long> {
 
-    private static class RepositoryHolder {
-
-        public static final UserRepository REPOSITORY = new RepositoryInjector();
-    }
-
+    @Autowired // Tell Spring to weave this dependency into the classes runtime definition.
     @JsonIgnore
     @Transient
-    private static UserRepository repository() {
-
-        return RepositoryHolder.REPOSITORY;
-    }
-
+    private transient UserRepository repository;
 
     @NotNull(message = "email.null")
     @Column(unique = true, nullable = false)
@@ -45,10 +41,34 @@ public class User extends AbstractPersistable<Long> {
 
     /**
      * A default constructor is required by serialisation and ORM API's.
+     *
+     * Note: If Spring compile time weaving isn't used to inject the users repository then all the persistence methods
+     * will fail with an {@link IllegalStateException}.
      */
     public User() {
     }
 
+    /**
+     * Create a new user with a repository that will be used for all the persistence operations.
+     *
+     * @param repository the persistence repository.
+     */
+    public User(UserRepository repository) {
+
+        this.repository = repository;
+    }
+
+    /**
+     * Create a new user with the supplied values.
+     *
+     * Note: If Spring compile time weaving isn't used to inject the users repository then all the persistence methods
+     * will fail with an {@link IllegalStateException}.
+     *
+     * @param id the id of the user.
+     * @param email the users email.
+     * @param firstName the users first name.
+     * @param lastName the users last name.
+     */
     public User(Long id, String email, String firstName, String lastName) {
 
         this.setId(id);
@@ -58,11 +78,29 @@ public class User extends AbstractPersistable<Long> {
     }
 
     /**
+     * Create a new user with the supplied values.
+     *
+     * @param repository the persistence repository.
+     * @param id the id of the user.
+     * @param email the users email.
+     * @param firstName the users first name.
+     * @param lastName the users last name.
+     */
+    public User(UserRepository repository, Long id, String email, String firstName, String lastName) {
+
+        this(id, email, firstName, lastName);
+
+        this.repository = repository;
+    }
+
+    /**
      * Copy constructor.
      *
      * @param user the user to copy.
      */
     public User(User user) {
+
+        this.repository = user.repository;
 
         setId(user.getId());
         setEmail(user.getEmail());
@@ -72,6 +110,9 @@ public class User extends AbstractPersistable<Long> {
 
     /**
      * Instantiate a new {@code User} and populate it from a persisted user with the same ID.
+     *
+     * Note: If Spring compile time weaving isn't used to inject the users repository then all the persistence methods
+     * will fail with an {@link IllegalStateException}.
      *
      * @param id the ID of the persisted user that will be used to populate this users fields.
      * @throws EntityNotFoundException if there is no persisted user with the supplied ID.
@@ -123,7 +164,7 @@ public class User extends AbstractPersistable<Long> {
      */
     @JsonIgnore
     @Transient
-    public static Iterable<User> all() {
+    public Iterable<User> all() {
 
         return repository().findAll();
     }
@@ -164,13 +205,26 @@ public class User extends AbstractPersistable<Long> {
     /**
      * {@inheritDoc}
      * <p/>
-     * Have overridden this method to annotate it to tell Jackson to ignore it on serialisation to JSON.
+     * Have overridden this method to annotate it to tell Jackson and Hibernate to ignore it on serialisation.
      */
     @JsonIgnore
+    @Transient
     @Override
     public boolean isNew() {
 
         return super.isNew();
+    }
+
+    @JsonIgnore
+    @Transient
+    private UserRepository repository() {
+
+        if (null == repository) {
+
+            throw new IllegalStateException("The " + this.getClass().getName() + " repository cannot be null.");
+        }
+
+        return repository;
     }
 
 
@@ -261,84 +315,5 @@ public class User extends AbstractPersistable<Long> {
                 ", firstName = '" + firstName + '\'' +
                 ", lastName = '" + lastName + '\'' +
                 '}';
-    }
-
-    /**
-     * A wrapper class for the {@link UserRepository} that will be injected with the actual {@code UserRepository}.
-     */
-    // This is a Spring Aspect annotation which will cause any dependencies annotated with @Autowired to be weaved into
-    // the classes definition so that it will contain the dependencies in every instantiation. The dependencies will be
-    // wired in before the constructor execution so that the dependency is available in constructors.
-    @Configurable(preConstruction = true)
-    private static class RepositoryInjector implements UserRepository {
-
-        @Autowired // Tell Spring to weave this dependency into the classes runtime definition.
-        private UserRepository repository;
-
-        @Override
-        public <S extends User> S save(S user) {
-
-            return repository.save(user);
-        }
-
-        @Override
-        public <S extends User> Iterable<S> save(Iterable<S> users) {
-
-            return repository.save(users);
-        }
-
-        @Override
-        public User findOne(Long id) {
-
-            return repository.findOne(id);
-        }
-
-        @Override
-        public boolean exists(Long id) {
-
-            return repository.exists(id);
-        }
-
-        @Override
-        public Iterable<User> findAll() {
-
-            return repository.findAll();
-        }
-
-        @Override
-        public Iterable<User> findAll(Iterable<Long> ids) {
-
-            return repository.findAll(ids);
-        }
-
-        @Override
-        public long count() {
-
-            return repository.count();
-        }
-
-        @Override
-        public void delete(Long id) {
-
-            repository.delete(id);
-        }
-
-        @Override
-        public void delete(User user) {
-
-            repository.delete(user);
-        }
-
-        @Override
-        public void delete(Iterable<? extends User> users) {
-
-            repository.delete(users);
-        }
-
-        @Override
-        public void deleteAll() {
-
-            repository.deleteAll();
-        }
     }
 }

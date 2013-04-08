@@ -79,11 +79,11 @@ public class UserTest extends AbstractDataTester {
     @Test
     public void testAll() throws Exception {
 
-        assertEquals("all the persisted users should be returned.", USERS, User.all());
+        assertEquals("all the persisted users should be returned.", USERS, new User().all());
 
         truncateTable(USER_TABLE);
 
-        assertEquals("no persisted users should be returned.", Collections.<User>emptyList(), User.all());
+        assertEquals("no persisted users should be returned.", Collections.<User>emptyList(), new User().all());
     }
 
     @Test

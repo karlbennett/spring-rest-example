@@ -103,7 +103,7 @@ public class ScratchController {
             @Override
             public Iterable<User> call() throws Exception {
 
-                return User.all();
+                return new User().all();
             }
         };
     }
