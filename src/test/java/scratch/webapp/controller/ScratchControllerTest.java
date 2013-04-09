@@ -12,7 +12,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.util.NestedServletException;
 import scratch.webapp.AbstractDataTester;
 import scratch.webapp.data.User;
 
@@ -21,11 +20,11 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
 
 import static org.hamcrest.Matchers.instanceOf;
+import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
-
-import static org.junit.Assert.*;
+import static scratch.webapp.test.Utils.*;
 
 /**
  * @author Karl Bennett
