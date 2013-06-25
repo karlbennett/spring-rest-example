@@ -3,9 +3,9 @@ scratch-webapp
 
 A very simple webapp that can be used to quickly try out code within a JEE web container.
 
-The webapp can be run with the following command:
+The webapp can be run with the following command (Note: "`tomcat7`" this is required for async support):
 
-    mvn tomcat:run
+    mvn tomcat7:run
 
 This will start the server which can be accessed at [http://localhost:8080/scratch-webapp/scratch/](http://localhost:8080/scratch-webapp/scratch/ "scratch-webapp")
 
