@@ -1,7 +1,7 @@
 scratch-webapp
 ==============
 
-A very simple webapp that can be used to quickly try out code within a JEE web container.
+A very simple webapp that can be used to quickly try out code within a Java Servlet 3.0 web container.
 
 The webapp can be run with the following command (Note: "`tomcat7`" this is required for async support):
 
@@ -33,7 +33,7 @@ It is also possible to carry out CRUD operation on simple users:
     $ curl -XDELETE http://localhost:8080/scratch-webapp/scratch/users/1
 
 
-The  webapp contains only four classes:
+The  webapp only contains four classes:
 
 The controller class that handles the `/scratch-webapp/scratch/`, `/scratch-webapp/scratch/users`, and `/scratch-webapp/scratch/users/{id}` request mappings.
 
