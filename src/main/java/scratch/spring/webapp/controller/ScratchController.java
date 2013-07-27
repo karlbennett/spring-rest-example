@@ -1,8 +1,8 @@
-package scratch.webapp.controller;
+package scratch.spring.webapp.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import scratch.webapp.data.User;
+import scratch.spring.webapp.data.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

@@ -1,4 +1,4 @@
-package scratch.webapp.controller;
+package scratch.spring.webapp.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.dbunit.dataset.DefaultTable;
@@ -12,8 +12,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import scratch.webapp.AbstractDataTester;
-import scratch.webapp.data.User;
+import scratch.spring.webapp.AbstractDataTester;
+import scratch.spring.webapp.data.User;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
@@ -24,7 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
-import static scratch.webapp.test.Utils.*;
+import static scratch.spring.webapp.test.Utils.*;
 
 /**
  * @author Karl Bennett

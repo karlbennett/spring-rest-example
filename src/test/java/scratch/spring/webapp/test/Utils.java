@@ -1,4 +1,4 @@
-package scratch.webapp.test;
+package scratch.spring.webapp.test;
 
 import org.dbunit.Assertion;
 import org.dbunit.DatabaseUnitException;
@@ -7,7 +7,7 @@ import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.DefaultTable;
 import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.datatype.DataType;
-import scratch.webapp.data.User;
+import scratch.spring.webapp.data.User;
 
 import java.util.Arrays;
 import java.util.List;

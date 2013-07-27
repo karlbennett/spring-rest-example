@@ -1,9 +1,9 @@
-package scratch.webapp.data;
+package scratch.spring.webapp.data;
 
 import org.dbunit.dataset.ITable;
 import org.junit.Test;
 import org.springframework.dao.DataIntegrityViolationException;
-import scratch.webapp.AbstractDataTester;
+import scratch.spring.webapp.AbstractDataTester;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
@@ -12,7 +12,7 @@ import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static scratch.webapp.test.Utils.*;
+import static scratch.spring.webapp.test.Utils.*;
 
 /**
  * @author Karl Bennett

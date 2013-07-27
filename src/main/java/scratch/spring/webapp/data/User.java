@@ -1,4 +1,4 @@
-package scratch.webapp.data;
+package scratch.spring.webapp.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <name>scratch-webapp</name>
+    <name>scratch-spring-webapp</name>
 
     <description>
         A simple pre-baked Spring webapp to play with.
@@ -10,7 +10,7 @@
 
     <groupId>scratch</groupId>
 
-    <artifactId>scratch-webapp</artifactId>
+    <artifactId>scratch-spring-webapp</artifactId>
 
     <packaging>war</packaging>
 

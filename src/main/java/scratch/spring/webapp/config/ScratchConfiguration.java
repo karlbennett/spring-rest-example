@@ -1,4 +1,4 @@
-package scratch.webapp.config;
+package scratch.spring.webapp.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -14,8 +14,8 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import scratch.webapp.controller.ScratchController;
-import scratch.webapp.data.UserRepository;
+import scratch.spring.webapp.controller.ScratchController;
+import scratch.spring.webapp.data.UserRepository;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -74,7 +74,7 @@ public class ScratchConfiguration {
 
         LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
         factory.setJpaVendorAdapter(vendorAdapter);
-        factory.setPackagesToScan("scratch.webapp.data");
+        factory.setPackagesToScan("scratch.spring.webapp.data");
         factory.setDataSource(dataSource());
         factory.afterPropertiesSet();
 
