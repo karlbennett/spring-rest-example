@@ -9,7 +9,7 @@ import javax.servlet.annotation.WebServlet;
  * @author Karl Bennett
  */
 @WebServlet(
-        value = "/scratch/*",
+        value = "/spring/*",
         initParams = {
                 @WebInitParam(
                         name = "contextClass",
