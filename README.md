@@ -7,35 +7,35 @@ The webapp can be run with the following command (Note: "`tomcat7`" this is requ
 
     mvn tomcat7:run
 
-This will start the server which can be accessed at [http://localhost:8080/scratch-spring-webapp/scratch/](http://localhost:8080/scratch-spring-webapp/scratch/ "scratch-spring-webapp")
+This will start the server which can be accessed at [http://localhost:8080/scratch/spring/](http://localhost:8080/scratch/spring/ "scratch-spring-webapp")
 
 It is also possible to carry out CRUD operation on simple users:
 
 ###### Create
-    $ curl -XPOST -H "Content-Type:application/json" http://localhost:8080/scratch-spring-webapp/scratch/users -d '{
+    $ curl -XPOST -H "Content-Type:application/json" http://localhost:8080/scratch/spring/users -d '{
         "email": "some.one@there.com",
         "firstName": "Some",
         "lastName": "One",
     }'
 
 ###### Retrieve
-    $ curl -XGET -H "Accept:application/json" http://localhost:8080/scratch-spring-webapp/scratch/users
-    $ curl -XGET -H "Accept:application/json" http://localhost:8080/scratch-spring-webapp/scratch/users/1
+    $ curl -XGET -H "Accept:application/json" http://localhost:8080/scratch/spring/users
+    $ curl -XGET -H "Accept:application/json" http://localhost:8080/scratch/spring/users/1
 
 ###### Update
-    $ curl -XPUT -H "Content-Type:application/json" http://localhost:8080/scratch-spring-webapp/scratch/users/1 -d '{
+    $ curl -XPUT -H "Content-Type:application/json" http://localhost:8080/scratch/spring/users/1 -d '{
         "email": "some.one@there.com",
         "firstName": "Some",
         "lastName": "Two",
     }'
 
 ###### Delete
-    $ curl -XDELETE -H "Accept:application/json" http://localhost:8080/scratch-spring-webapp/scratch/users/1
+    $ curl -XDELETE -H "Accept:application/json" http://localhost:8080/scratch/spring/users/1
 
 
 The  webapp only contains four classes:
 
-The controller class that handles the `/scratch-spring-webapp/scratch/`, `/scratch-spring-webapp/scratch/users`, and `/scratch-spring-webapp/scratch/users/{id}` request mappings.
+The controller class that handles the `/scratch/spring/`, `/scratch/spring/users`, and `/scratch/spring/users/{id}` request mappings.
 
 [`scratch.spring.webapp.controller.ScratchController`](https://github.com/karlbennett/scratch-spring-webapp/blob/master/src/main/java/scratch/spring/webapp/controller/ScratchController.java "ScratchController")
 
