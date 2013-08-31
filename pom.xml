@@ -20,19 +20,22 @@
 
     <properties>
         <spring.agent.version>2.5.6</spring.agent.version>
-        <spring.version>3.2.2.RELEASE</spring.version>
+        <spring.version>3.2.3.RELEASE</spring.version>
         <hibernate.version>4.1.9.Final</hibernate.version>
         <slf4j.version>1.6.6</slf4j.version>
     </properties>
 
     <build>
-        <finalName>scratch-webapp</finalName>
+        <!-- Have to set the context path to scratch because Tomcat 7 has a bug that stops JSP from -->
+        <!-- compiling if the context path has a '-' in it. -->
+        <finalName>scratch</finalName>
 
         <plugins>
             <plugin>
                 <!--Make sure we compile all the Java source as 1.6.-->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
                 <configuration>
                     <compilerVersion>1.6</compilerVersion>
                     <fork>true</fork>
@@ -45,6 +48,9 @@
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.1</version>
+                <configuration>
+                    <path>/${project.build.finalName}</path>
+                </configuration>
                 <executions>
                     <!-- This execution will cause the build to produce an executable war that contains an embedded -->
                     <!-- Tomcat 7 server that can be run with "java -jar". -->
@@ -89,6 +95,17 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <!-- Tell the Maven WAR plugin to ignore the fact that we no longer have a web.xml file. -->
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 
@@ -140,6 +157,13 @@
             <artifactId>tomcat-servlet-api</artifactId>
             <version>7.0.30</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- Added the JSTL libraries to simplify the JSP templating language. -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
         </dependency>
 
         <!-- Hibernate is used to map the domain objects into SQL.-->
@@ -216,7 +240,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.8.2</version>
+            <version>4.11</version>
             <scope>test</scope>
         </dependency>
 
