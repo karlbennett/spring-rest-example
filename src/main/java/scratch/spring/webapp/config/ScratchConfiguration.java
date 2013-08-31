@@ -89,6 +89,9 @@ public class ScratchConfiguration {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * Configure the {@link User} domain classes persistence repository.
+     */
     @PostConstruct
     public void postConstruct() {
 
