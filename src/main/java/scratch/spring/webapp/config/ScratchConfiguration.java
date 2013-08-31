@@ -15,6 +15,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import scratch.spring.webapp.controller.ScratchController;
+import scratch.spring.webapp.controller.UserController;
 import scratch.spring.webapp.data.UserRepository;
 
 import javax.persistence.EntityManagerFactory;
@@ -31,7 +32,7 @@ import javax.sql.DataSource;
 @EnableWebMvc // Enable the Spring Web MVC environment, this includes support for XML/JSON conversion and validation.
 // Tell Spring which package to look in for controller classes. This has been done by providing a class from the
 // required package.
-@ComponentScan(basePackageClasses = {ScratchController.class})
+@ComponentScan(basePackageClasses = {UserController.class, ScratchController.class})
 // Tell Spring which package to look in for data access repositories.
 @EnableJpaRepositories(basePackageClasses = {UserRepository.class})
 @EnableTransactionManagement
