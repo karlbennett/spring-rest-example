@@ -12,7 +12,7 @@ This will start the server which can be accessed at [http://localhost:8080/scrat
 It is also possible to carry out CRUD operation on simple users:
 
 ###### Create
-    $ curl -XPOST -H "Content-Type:application/json" http://localhost:8080/scratch/spring/users -d '{
+    $ curl -XPOST -H "Accept:application/json" -H "Content-Type:application/json" http://localhost:8080/scratch/spring/users -d '{
         "email": "some.one@there.com",
         "firstName": "Some",
         "lastName": "One",
