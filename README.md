@@ -33,11 +33,15 @@ It is also possible to carry out CRUD operation on simple users:
     $ curl -XDELETE -H "Accept:application/json" http://localhost:8080/scratch/spring/users/1
 
 
-The  webapp only contains four classes:
+The  webapp only contains six classes:
 
-The controller class that handles the `/scratch/spring/`, `/scratch/spring/users`, and `/scratch/spring/users/{id}` request mappings.
+The controller class that handles the `/scratch/spring/` request mapping.
 
 [`scratch.spring.webapp.controller.ScratchController`](https://github.com/karlbennett/scratch-spring-webapp/blob/master/src/main/java/scratch/spring/webapp/controller/ScratchController.java "ScratchController")
+
+The controller class that handles the `/scratch/spring/users` and `/scratch/spring/users/{id}` request mappings.
+
+[`scratch.spring.webapp.controller.UserController`](https://github.com/karlbennett/scratch-spring-webapp/blob/master/src/main/java/scratch/spring/webapp/controller/UserController.java "UserController")
 
 The the configuration class that configures Spring MVC and Spring Data.
 
@@ -47,16 +51,18 @@ The the domain class that can be persisted into an in memory database using the 
 
 [`scratch.spring.webapp.data.User`](https://github.com/karlbennett/scratch-spring-webapp/blob/master/src/main/java/scratch/spring/webapp/data/User.java "User")
 
-And lastly the repository class that is used to persisted the User class.
+The repository class that is used to persisted the User class.
 
 [`scratch.spring.webapp.data.UserRepository`](https://github.com/karlbennett/scratch-spring-webapp/blob/master/src/main/java/scratch/spring/webapp/data/UserRepository.java "UserRepository")
 
-There are also three configuration files:
+And lastly the servlet class that will be automatically loaded by the servlet container that the webapp is deployed to.
+
+[`scratch.spring.webapp.servlet.ScratchDispatcherServlet`](https://github.com/karlbennett/scratch-spring-webapp/blob/master/src/main/java/scratch/spring/webapp/servlet/ScratchDispatcherServlet.java "ScratchDispatcherServlet")
+
+There are also two configuration files:
 
 The maven [`pom.xml`](https://github.com/karlbennett/scratch-spring-webapp/blob/master/pom.xml "pom.xml") file, this contains the Jetty plugin configuration and the dependencies for the project.
 
 The [`log4j.xml`](https://github.com/karlbennett/scratch-spring-webapp/blob/master/src/main/resources/log4j.xml "log4j.xml") file that defines the log levels for the webapp and it's libraries. It's currently set to INFO.
-
-The [`web.xml`](https://github.com/karlbennett/scratch-spring-webapp/blob/master/src/main/webapp/WEB-INF/web.xml "web.xml") file that configures the Spring dispatcher servlet to use the `ScratchConfiguration` class which in turn registers the `ScratchController`.
 
 That is the entire project, have fun :)
