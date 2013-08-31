@@ -90,7 +90,7 @@ public class UserController {
             @Override
             public Iterable<User> call() throws Exception {
 
-                return new User().all();
+                return User.all();
             }
         };
     }
