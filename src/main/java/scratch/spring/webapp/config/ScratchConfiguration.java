@@ -92,6 +92,6 @@ public class ScratchConfiguration {
     @PostConstruct
     public void postConstruct() {
 
-        User.setRepository(userRepository);
+        User.setStaticRepository(userRepository);
     }
 }

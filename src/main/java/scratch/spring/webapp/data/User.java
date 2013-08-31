@@ -24,16 +24,16 @@ public class User implements Serializable {
 
     @JsonIgnore
     @Transient
-    private transient static UserRepository repository;
+    private transient static UserRepository staticRepository;
 
     /**
      * @return the global {@link UserRepository} instance.
      */
     @JsonIgnore
     @Transient
-    public static UserRepository getRepository() {
+    public static UserRepository getStaticRepository() {
 
-        return repository;
+        return staticRepository;
     }
 
     /**
@@ -44,16 +44,19 @@ public class User implements Serializable {
      */
     @JsonIgnore
     @Transient
-    public static void setRepository(UserRepository repository) {
+    public static void setStaticRepository(UserRepository repository) {
 
-        if (null != User.repository) {
+        if (null != User.staticRepository) {
 
             throw new IllegalStateException("the User repository has already been set.");
         }
 
-        User.repository = repository;
+        User.staticRepository = repository;
     }
 
+    @JsonIgnore
+    @Transient
+    private final UserRepository repository;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -73,23 +76,36 @@ public class User implements Serializable {
 
 
     /**
-     * A default constructor is required by serialisation and ORM API's.
+     * Create a new {@code User} that will use the supplied {@code UserRepository} to create, update, and delete it's
+     * self.
+     *
+     * @param repository the repository to use for {@code User} CUD operations.
      */
-    public User() {
+    public User(UserRepository repository) {
+
+        this.repository = repository;
     }
 
     /**
-     * Create a new user with the supplied values.
-     * <p/>
-     * Note: If Spring compile time weaving isn't used to inject the users repository then all the persistence methods
-     * will fail with an {@link IllegalStateException}.
-     *
-     * @param id        the id of the user.
-     * @param email     the users email.
-     * @param firstName the users first name.
-     * @param lastName  the users last name.
+     * A default constructor is required by serialisation and ORM API's.
      */
-    public User(Long id, String email, String firstName, String lastName) {
+    public User() {
+
+        this(getStaticRepository());
+    }
+
+    /**
+     * Create a new user with the supplied repository and values.
+     *
+     * @param repository the repository to use for {@code User} CUD operations.
+     * @param id         the id of the user.
+     * @param email      the users email.
+     * @param firstName  the users first name.
+     * @param lastName   the users last name.
+     */
+    public User(UserRepository repository, Long id, String email, String firstName, String lastName) {
+
+        this(repository);
 
         this.id = id;
         this.email = email;
@@ -98,22 +114,48 @@ public class User implements Serializable {
     }
 
     /**
-     * Instantiate a new {@code User} and populate it from a persisted user with the same ID.
-     * <p/>
-     * Note: If Spring compile time weaving isn't used to inject the users repository then all the persistence methods
-     * will fail with an {@link IllegalStateException}.
+     * Create a new user with the supplied values. It will use the static {@code UserRepository} accessed from
+     * {@link #getStaticRepository()} for CUD operations.
      *
-     * @param id the ID of the persisted user that will be used to populate this users fields.
+     * @param id        the id of the user.
+     * @param email     the users email.
+     * @param firstName the users first name.
+     * @param lastName  the users last name.
+     */
+    public User(Long id, String email, String firstName, String lastName) {
+
+        this(getStaticRepository(), id, email, firstName, lastName);
+    }
+
+    /**
+     * Instantiate a new {@code User} and populate it from a persisted user with the same ID that has been retrieved
+     * from the supplied {@code UserRepository}.
+     *
+     * @param repository the repository to use for {@code User} CUD operations.
+     * @param id         the ID of the persisted user that will be used to populate this users fields.
      * @throws EntityNotFoundException if there is no persisted user with the supplied ID.
      */
-    public User(Long id) {
+    public User(UserRepository repository, Long id) {
 
-        User user = repository.findOne(id);
+        this(repository);
+
+        User user = this.repository.findOne(id);
 
         setId(user.getId());
         setEmail(user.getEmail());
         setFirstName(user.getFirstName());
         setLastName(user.getLastName());
+    }
+
+    /**
+     * Instantiate a new {@code User} and populate it from a persisted user with the same ID that has been retrieved
+     * from the static {@code UserRepository}.
+     *
+     * @param id the ID of the persisted user that will be used to populate this users fields.
+     */
+    public User(Long id) {
+
+        this(getStaticRepository(), id);
     }
 
 
@@ -139,7 +181,7 @@ public class User implements Serializable {
     @Transient
     public static Iterable<User> all() {
 
-        return repository.findAll();
+        return getStaticRepository().findAll();
     }
 
     /**
@@ -170,6 +212,11 @@ public class User implements Serializable {
         return this;
     }
 
+
+    public UserRepository getRepository() {
+
+        return repository;
+    }
 
     public Long getId() {
 
