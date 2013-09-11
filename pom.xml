@@ -111,12 +111,11 @@
             <version>${spring.version}</version>
         </dependency>
 
-        <!-- JEE API so that the servlet interfaces can be accessed. A concrete implementation must be provided for the -->
-        <!-- tests to run.-->
+        <!-- JEE API so that the servlet interfaces can be accessed. -->
         <dependency>
-            <groupId>org.apache.tomcat</groupId>
-            <artifactId>tomcat-servlet-api</artifactId>
-            <version>7.0.30</version>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
             <scope>provided</scope>
         </dependency>
 

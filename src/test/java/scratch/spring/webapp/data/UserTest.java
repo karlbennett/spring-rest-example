@@ -5,9 +5,7 @@ import org.junit.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 import scratch.spring.webapp.AbstractDataTester;
 
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.PersistenceException;
 import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;

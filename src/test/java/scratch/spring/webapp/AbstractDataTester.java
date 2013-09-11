@@ -15,8 +15,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import scratch.spring.webapp.config.ScratchConfiguration;
+import scratch.spring.webapp.config.TestScratchConfiguration;
 
 import javax.sql.DataSource;
 
@@ -27,9 +26,7 @@ import static org.springframework.util.ResourceUtils.getFile;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 // This annotation tells Spring where to find the configuration file.
-@ContextConfiguration(classes = ScratchConfiguration.class)
-// This annotation enables the Spring MVC framework.
-@WebAppConfiguration
+@ContextConfiguration(classes = TestScratchConfiguration.class)
 public abstract class AbstractDataTester {
 
     @Autowired
