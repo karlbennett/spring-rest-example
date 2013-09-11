@@ -21,10 +21,35 @@ import javax.persistence.PersistenceException;
 
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
-import static scratch.spring.webapp.test.Utils.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static scratch.spring.webapp.test.Utils.COLUMNS;
+import static scratch.spring.webapp.test.Utils.EMAIL;
+import static scratch.spring.webapp.test.Utils.EMAIL_FOUR;
+import static scratch.spring.webapp.test.Utils.EMAIL_ONE;
+import static scratch.spring.webapp.test.Utils.EMAIL_THREE;
+import static scratch.spring.webapp.test.Utils.EMAIL_TWO;
+import static scratch.spring.webapp.test.Utils.FIRST_NAME;
+import static scratch.spring.webapp.test.Utils.FIRST_NAME_FOUR;
+import static scratch.spring.webapp.test.Utils.FIRST_NAME_ONE;
+import static scratch.spring.webapp.test.Utils.FIRST_NAME_THREE;
+import static scratch.spring.webapp.test.Utils.FIRST_NAME_TWO;
+import static scratch.spring.webapp.test.Utils.ID;
+import static scratch.spring.webapp.test.Utils.ID_ONE;
+import static scratch.spring.webapp.test.Utils.ID_THREE;
+import static scratch.spring.webapp.test.Utils.ID_TWO;
+import static scratch.spring.webapp.test.Utils.LAST_NAME;
+import static scratch.spring.webapp.test.Utils.LAST_NAME_VALUE;
+import static scratch.spring.webapp.test.Utils.USER_ONE;
+import static scratch.spring.webapp.test.Utils.USER_TABLE;
+import static scratch.spring.webapp.test.Utils.assertTableEquals;
 
 /**
  * @author Karl Bennett

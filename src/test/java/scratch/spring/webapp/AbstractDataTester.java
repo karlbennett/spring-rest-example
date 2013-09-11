@@ -3,7 +3,10 @@ package scratch.spring.webapp;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.database.QueryDataSet;
-import org.dbunit.dataset.*;
+import org.dbunit.dataset.DefaultDataSet;
+import org.dbunit.dataset.DefaultTable;
+import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.operation.DatabaseOperation;
 import org.junit.After;
@@ -65,8 +68,7 @@ public abstract class AbstractDataTester {
     /**
      * Get the row with the supplied {@code id} form the table with the supplied {@code name}.
      *
-     *
-     * @param name the name of the table to request the row from.
+     * @param name  the name of the table to request the row from.
      * @param email
      * @return the table containing only the request rwo.
      * @throws Exception if the table or row could not be found.
