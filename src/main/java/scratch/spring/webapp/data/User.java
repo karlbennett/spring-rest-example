@@ -141,6 +141,11 @@ public class User implements Serializable {
 
         User user = this.repository.findOne(id);
 
+        if (null == user) {
+
+            throw new EntityNotFoundException("no user found for id: " + id);
+        }
+
         setId(user.getId());
         setEmail(user.getEmail());
         setFirstName(user.getFirstName());
@@ -169,7 +174,7 @@ public class User implements Serializable {
     @Transient
     public User create() {
 
-        return repository.save(new User(getId(), getEmail(), getFirstName(), getLastName()));
+        return repository.save(new User(id, email, firstName, lastName));
     }
 
     /**
@@ -264,14 +269,13 @@ public class User implements Serializable {
 
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
 
         User user = (User) o;
 
-        return (getId() == null ? user.getId() == null : getId().equals(user.getId())) &&
+        return (id == null ? user.id == null : id.equals(user.id)) &&
                 (email == null ? user.email == null : email.equals(user.email)) &&
                 (firstName == null ? user.firstName == null : firstName.equals(user.firstName)) &&
-                (lastName == null ? user.lastName != null : lastName.equals(user.lastName));
+                (lastName == null ? user.lastName == null : lastName.equals(user.lastName));
     }
 
     @Override

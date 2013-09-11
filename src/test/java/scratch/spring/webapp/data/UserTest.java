@@ -65,13 +65,13 @@ public class UserTest extends AbstractDataTester {
                 LAST_NAME_VALUE, table.getValue(0, LAST_NAME));
     }
 
-    @Test(expected = EntityExistsException.class)
+    @Test
     public void testCreateExistingUser() throws Exception {
 
         USER_ONE.create();
     }
 
-    @Test(expected = PersistenceException.class)
+    @Test(expected = DataIntegrityViolationException.class)
     public void testCreateUserWithExistingEmail() throws Exception {
 
         User user = new User();
@@ -85,11 +85,11 @@ public class UserTest extends AbstractDataTester {
     @Test
     public void testAll() throws Exception {
 
-        assertEquals("all the persisted users should be returned.", USERS, new User().all());
+        assertEquals("all the persisted users should be returned.", USERS, User.all());
 
         truncateTable(USER_TABLE);
 
-        assertEquals("no persisted users should be returned.", Collections.<User>emptyList(), new User().all());
+        assertEquals("no persisted users should be returned.", Collections.<User>emptyList(), User.all());
     }
 
     @Test
