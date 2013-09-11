@@ -11,8 +11,21 @@ import javax.persistence.PersistenceException;
 import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static scratch.spring.webapp.test.Utils.*;
+import static scratch.spring.webapp.test.Utils.EMAIL;
+import static scratch.spring.webapp.test.Utils.EMAIL_FOUR;
+import static scratch.spring.webapp.test.Utils.EMAIL_ONE;
+import static scratch.spring.webapp.test.Utils.EMAIL_THREE;
+import static scratch.spring.webapp.test.Utils.EMAIL_TWO;
+import static scratch.spring.webapp.test.Utils.FIRST_NAME;
+import static scratch.spring.webapp.test.Utils.FIRST_NAME_FOUR;
+import static scratch.spring.webapp.test.Utils.FIRST_NAME_TWO;
+import static scratch.spring.webapp.test.Utils.LAST_NAME;
+import static scratch.spring.webapp.test.Utils.LAST_NAME_VALUE;
+import static scratch.spring.webapp.test.Utils.USERS;
+import static scratch.spring.webapp.test.Utils.USER_ONE;
+import static scratch.spring.webapp.test.Utils.USER_TABLE;
+import static scratch.spring.webapp.test.Utils.USER_THREE;
+import static scratch.spring.webapp.test.Utils.USER_TWO;
 
 /**
  * @author Karl Bennett
@@ -67,14 +80,6 @@ public class UserTest extends AbstractDataTester {
         user.setLastName(LAST_NAME_VALUE);
 
         user.create();
-    }
-
-    @Test
-    public void testExists() throws Exception {
-
-        assertTrue("user one should exist.", USER_ONE.exists());
-        assertTrue("user two should exist.", USER_TWO.exists());
-        assertTrue("user three should exist.", USER_THREE.exists());
     }
 
     @Test
@@ -137,17 +142,5 @@ public class UserTest extends AbstractDataTester {
     public void testDeleteNonExistentUser() throws Exception {
 
         new User(-1L).delete();
-    }
-
-    @Test(expected = EntityNotFoundException.class)
-    public void testThrowNotFound() throws Exception {
-
-        new User().throwNotFound();
-    }
-
-    @Test(expected = EntityExistsException.class)
-    public void testThrowExists() throws Exception {
-
-        new User().throwExists();
     }
 }
