@@ -1,11 +1,10 @@
 package scratch.spring.webapp.controller;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import scratch.spring.webapp.data.User;
 
 import javax.servlet.http.HttpServletResponse;
@@ -23,7 +22,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
  *
  * @author Karl Bennett
  */
-@Controller
+@RestController
 @RequestMapping("/users")
 public class UserController {
 
@@ -41,7 +40,6 @@ public class UserController {
      *          existing user.
      */
     @RequestMapping(value = "/", method = POST, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    @ResponseBody
     public Callable<User> create(@Valid @RequestBody final User user) {
 
         return new Callable<User>() {
@@ -63,7 +61,6 @@ public class UserController {
      *          if no user exists with the supplied id.
      */
     @RequestMapping(value = "/{id}", method = GET, produces = APPLICATION_JSON_VALUE)
-    @ResponseBody
     public Callable<User> retrieve(@PathVariable final Long id) {
 
         return new Callable<User>() {
@@ -71,7 +68,7 @@ public class UserController {
             @Override
             public User call() throws Exception {
 
-                return new User(id);
+                return User.retrieve(id);
             }
         };
     }
@@ -82,7 +79,6 @@ public class UserController {
      * @return all the users that have been persisted.
      */
     @RequestMapping(value = "/", method = GET, produces = APPLICATION_JSON_VALUE)
-    @ResponseBody
     public Callable<Iterable<User>> retrieveAll() {
 
         return new Callable<Iterable<User>>() {
@@ -105,7 +101,6 @@ public class UserController {
      *          if no user exists with the supplied id.
      */
     @RequestMapping(value = "/{id}", method = PUT, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    @ResponseBody
     public Callable<User> update(@PathVariable Long id, @Valid @RequestBody final User user) {
 
         user.setId(id);
@@ -129,7 +124,6 @@ public class UserController {
      *          if no user exists with the supplied id.
      */
     @RequestMapping(value = "/{id}", method = DELETE, produces = APPLICATION_JSON_VALUE)
-    @ResponseBody
     public Callable<User> delete(@PathVariable final Long id) {
 
         return new Callable<User>() {
@@ -137,7 +131,7 @@ public class UserController {
             @Override
             public User call() throws Exception {
 
-                return new User(id).delete();
+                return User.retrieve(id).delete();
             }
         };
     }
@@ -168,7 +162,6 @@ public class UserController {
     }
 
     @ExceptionHandler(Exception.class)
-    @ResponseBody
     public ErrorResponse handleException(Exception e, HttpServletResponse response) {
 
         response.setStatus(400);

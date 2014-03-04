@@ -128,43 +128,6 @@ public class User implements Serializable {
     }
 
     /**
-     * Instantiate a new {@code User} and populate it from a persisted user with the same ID that has been retrieved
-     * from the supplied {@code UserRepository}.
-     *
-     * @param repository the repository to use for {@code User} CUD operations.
-     * @param id         the ID of the persisted user that will be used to populate this users fields.
-     * @throws EntityNotFoundException if there is no persisted user with the supplied ID.
-     */
-    public User(UserRepository repository, Long id) {
-
-        this(repository);
-
-        User user = this.repository.findOne(id);
-
-        if (null == user) {
-
-            throw new EntityNotFoundException("no user found for id: " + id);
-        }
-
-        setId(user.getId());
-        setEmail(user.getEmail());
-        setFirstName(user.getFirstName());
-        setLastName(user.getLastName());
-    }
-
-    /**
-     * Instantiate a new {@code User} and populate it from a persisted user with the same ID that has been retrieved
-     * from the static {@code UserRepository}.
-     *
-     * @param id the ID of the persisted user that will be used to populate this users fields.
-     */
-    public User(Long id) {
-
-        this(getStaticRepository(), id);
-    }
-
-
-    /**
      * Persist this user and populate it with a new ID.
      *
      * @return this user with a newly populated ID.
@@ -175,6 +138,18 @@ public class User implements Serializable {
     public User create() {
 
         return repository.save(new User(id, email, firstName, lastName));
+    }
+
+    /**
+     * Retrieve all the users that have been persisted.
+     *
+     * @return all the persisted users.
+     */
+    @JsonIgnore
+    @Transient
+    public static User retrieve(long id) {
+
+        return getStaticRepository().findOne(id);
     }
 
     /**
@@ -217,49 +192,39 @@ public class User implements Serializable {
         return this;
     }
 
-
     public UserRepository getRepository() {
-
         return repository;
     }
 
     public Long getId() {
-
         return id;
     }
 
     public void setId(Long id) {
-
         this.id = id;
     }
 
     public String getEmail() {
-
         return email;
     }
 
     public void setEmail(String email) {
-
         this.email = email;
     }
 
     public String getFirstName() {
-
         return firstName;
     }
 
     public void setFirstName(String firstName) {
-
         this.firstName = firstName;
     }
 
     public String getLastName() {
-
         return lastName;
     }
 
     public void setLastName(String lastName) {
-
         this.lastName = lastName;
     }
 
@@ -268,27 +233,23 @@ public class User implements Serializable {
     public boolean equals(Object o) {
 
         if (this == o) return true;
+
         if (o == null || getClass() != o.getClass()) return false;
 
         User user = (User) o;
 
-        return (id == null ? user.id == null : id.equals(user.id)) &&
-                (email == null ? user.email == null : email.equals(user.email)) &&
-                (firstName == null ? user.firstName == null : firstName.equals(user.firstName)) &&
-                (lastName == null ? user.lastName == null : lastName.equals(user.lastName));
+        return (null == email ? null == user.email : email.equals(user.email)) &&
+                (null == firstName ? null == user.firstName : firstName.equals(user.firstName)) &&
+                (null == id ? null == user.id : id.equals(user.id)) &&
+                (null == lastName ? null == user.lastName : lastName.equals(user.lastName));
     }
 
     @Override
     public int hashCode() {
 
-        int result = super.hashCode();
-
-        result = 31 * result + (getId() != null ? getId().hashCode() : 0);
-
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (email != null ? email.hashCode() : 0);
-
         result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
-
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
 
         return result;
