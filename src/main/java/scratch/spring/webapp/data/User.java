@@ -98,16 +98,14 @@ public class User implements Serializable {
      * Create a new user with the supplied repository and values.
      *
      * @param repository the repository to use for {@code User} CUD operations.
-     * @param id         the id of the user.
      * @param email      the users email.
      * @param firstName  the users first name.
      * @param lastName   the users last name.
      */
-    public User(UserRepository repository, Long id, String email, String firstName, String lastName) {
+    public User(UserRepository repository, String email, String firstName, String lastName) {
 
         this(repository);
 
-        this.id = id;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -117,14 +115,13 @@ public class User implements Serializable {
      * Create a new user with the supplied values. It will use the static {@code UserRepository} accessed from
      * {@link #getStaticRepository()} for CUD operations.
      *
-     * @param id        the id of the user.
      * @param email     the users email.
      * @param firstName the users first name.
      * @param lastName  the users last name.
      */
-    public User(Long id, String email, String firstName, String lastName) {
+    public User(String email, String firstName, String lastName) {
 
-        this(getStaticRepository(), id, email, firstName, lastName);
+        this(getStaticRepository(), email, firstName, lastName);
     }
 
     /**
@@ -137,7 +134,7 @@ public class User implements Serializable {
     @Transient
     public User create() {
 
-        return repository.save(new User(id, email, firstName, lastName));
+        return repository.save(new User(email, firstName, lastName));
     }
 
     /**
