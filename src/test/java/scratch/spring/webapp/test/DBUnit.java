@@ -27,18 +27,6 @@ public class DBUnit {
     public static final String FIRST_NAME = "firstName";
     public static final String LAST_NAME = "lastName";
 
-    public static final String EMAIL_ONE = "test@email.one";
-    public static final String FIRST_NAME_ONE = "Test1";
-    public static final String LAST_NAME_ONE = "User1";
-
-    public static final String EMAIL_TWO = "test@email.two";
-    public static final String FIRST_NAME_TWO = "Test2";
-    public static final String LAST_NAME_TWO = "User2";
-
-    public static final String EMAIL_THREE = "test@email.three";
-    public static final String FIRST_NAME_THREE = "Test3";
-    public static final String LAST_NAME_THREE = "User3";
-
     public final DataSource dataSource;
 
     @Autowired

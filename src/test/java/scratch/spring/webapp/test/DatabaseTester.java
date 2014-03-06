@@ -10,23 +10,26 @@ import java.util.concurrent.Callable;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static scratch.spring.webapp.test.DBUnit.EMAIL;
-import static scratch.spring.webapp.test.DBUnit.EMAIL_ONE;
-import static scratch.spring.webapp.test.DBUnit.EMAIL_THREE;
-import static scratch.spring.webapp.test.DBUnit.EMAIL_TWO;
 import static scratch.spring.webapp.test.DBUnit.FIRST_NAME;
-import static scratch.spring.webapp.test.DBUnit.FIRST_NAME_ONE;
-import static scratch.spring.webapp.test.DBUnit.FIRST_NAME_THREE;
-import static scratch.spring.webapp.test.DBUnit.FIRST_NAME_TWO;
 import static scratch.spring.webapp.test.DBUnit.LAST_NAME;
-import static scratch.spring.webapp.test.DBUnit.LAST_NAME_ONE;
-import static scratch.spring.webapp.test.DBUnit.LAST_NAME_THREE;
-import static scratch.spring.webapp.test.DBUnit.LAST_NAME_TWO;
 
 /**
  * This class contains prebuilt tests that can be used to check database integration.
  */
 @Component
 public class DatabaseTester {
+
+    public static final String EMAIL_ONE = "test@email.one";
+    public static final String FIRST_NAME_ONE = "Test1";
+    public static final String LAST_NAME_ONE = "User1";
+
+    public static final String EMAIL_TWO = "test@email.two";
+    public static final String FIRST_NAME_TWO = "Test2";
+    public static final String LAST_NAME_TWO = "User2";
+
+    public static final String EMAIL_THREE = "test@email.three";
+    public static final String FIRST_NAME_THREE = "Test3";
+    public static final String LAST_NAME_THREE = "User3";
 
     private final DBUnit dbUnit;
 

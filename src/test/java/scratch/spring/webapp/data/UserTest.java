@@ -17,12 +17,12 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
-import static scratch.spring.webapp.test.DBUnit.EMAIL_ONE;
-import static scratch.spring.webapp.test.DBUnit.EMAIL_TWO;
-import static scratch.spring.webapp.test.DBUnit.FIRST_NAME_ONE;
-import static scratch.spring.webapp.test.DBUnit.FIRST_NAME_TWO;
-import static scratch.spring.webapp.test.DBUnit.LAST_NAME_ONE;
-import static scratch.spring.webapp.test.DBUnit.LAST_NAME_TWO;
+import static scratch.spring.webapp.test.DatabaseTester.EMAIL_ONE;
+import static scratch.spring.webapp.test.DatabaseTester.EMAIL_TWO;
+import static scratch.spring.webapp.test.DatabaseTester.FIRST_NAME_ONE;
+import static scratch.spring.webapp.test.DatabaseTester.FIRST_NAME_TWO;
+import static scratch.spring.webapp.test.DatabaseTester.LAST_NAME_ONE;
+import static scratch.spring.webapp.test.DatabaseTester.LAST_NAME_TWO;
 import static scratch.spring.webapp.test.DatabaseTester.WithId;
 import static scratch.spring.webapp.test.DatabaseTester.WithUser;
 import static scratch.spring.webapp.test.DatabaseTester.WithUserAndId;
@@ -67,7 +67,7 @@ public class UserTest {
         databaseTester.createTest(new WithUser() {
             @Override
             public User call(User user) throws Exception {
-                return new User(EMAIL_TWO, FIRST_NAME_TWO, LAST_NAME_TWO).create();
+                return user.create();
             }
         });
     }
@@ -126,11 +126,13 @@ public class UserTest {
     public void testGetRepository() {
 
         assertEquals("the repository should be correct.", repository,
-                new User(EMAIL_TWO, FIRST_NAME_TWO, LAST_NAME_TWO).getRepository());
+                new User().getRepository());
     }
 
     @Test
     public void testEquals() {
+
+        assertEquals("the users should be equal.", new User(), new User());
 
         assertEquals("the users should be equal.", new User(EMAIL_ONE, FIRST_NAME_ONE, LAST_NAME_ONE),
                 new User(EMAIL_ONE, FIRST_NAME_ONE, LAST_NAME_ONE));
