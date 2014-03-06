@@ -46,12 +46,12 @@ public class User implements Serializable {
     @Transient
     public static void setStaticRepository(UserRepository repository) {
 
-        if (null != User.staticRepository) {
+        if (null != staticRepository) {
 
             throw new IllegalStateException("the User repository has already been set.");
         }
 
-        User.staticRepository = repository;
+        staticRepository = repository;
     }
 
     @JsonIgnore
@@ -235,9 +235,9 @@ public class User implements Serializable {
 
         User user = (User) o;
 
-        return (null == email ? null == user.email : email.equals(user.email)) &&
+        return (null == id ? null == user.id : id.equals(user.id)) &&
+                (null == email ? null == user.email : email.equals(user.email)) &&
                 (null == firstName ? null == user.firstName : firstName.equals(user.firstName)) &&
-                (null == id ? null == user.id : id.equals(user.id)) &&
                 (null == lastName ? null == user.lastName : lastName.equals(user.lastName));
     }
 
@@ -256,7 +256,7 @@ public class User implements Serializable {
     public String toString() {
 
         return "User {" +
-              /**/"id = '" + getId() + '\'' +
+              /**/"id = '" + id + '\'' +
                 ", email = '" + email + '\'' +
                 ", firstName = '" + firstName + '\'' +
                 ", lastName = '" + lastName + '\'' +

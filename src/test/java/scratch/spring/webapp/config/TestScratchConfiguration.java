@@ -15,9 +15,9 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import scratch.spring.webapp.controller.ScratchController;
 import scratch.spring.webapp.controller.UserController;
-import scratch.spring.webapp.data.DBUnit;
 import scratch.spring.webapp.data.User;
 import scratch.spring.webapp.data.UserRepository;
+import scratch.spring.webapp.test.DBUnit;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
