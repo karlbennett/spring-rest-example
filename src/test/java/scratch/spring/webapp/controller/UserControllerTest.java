@@ -187,34 +187,19 @@ public class UserControllerTest {
     @Test
     public void testDelete() throws Exception {
 
-        databaseTester.deleteTest(new WithId() {
-            @Override
-            public User call(Long id) throws Exception {
-                return userController.delete(id).call();
-            }
-        });
+        databaseTester.deleteTest(new DeleteWithId());
     }
 
     @Test(expected = NullPointerException.class)
     public void testDeleteWithInvalidId() throws Exception {
 
-        databaseTester.deleteWithInvalidIdTest(new WithId() {
-            @Override
-            public User call(Long id) throws Exception {
-                return userController.delete(id).call();
-            }
-        });
+        databaseTester.deleteWithInvalidIdTest(new DeleteWithId());
     }
 
     @Test(expected = NullPointerException.class)
     public void testDeleteWithNullId() throws Exception {
 
-        databaseTester.deleteWithNullIdTest(new WithId() {
-            @Override
-            public User call(Long id) throws Exception {
-                return userController.delete(id).call();
-            }
-        });
+        databaseTester.deleteWithNullIdTest(new DeleteWithId());
     }
 
     @Test
@@ -247,6 +232,14 @@ public class UserControllerTest {
         @Override
         public User call(Long id) throws Exception {
             return userController.retrieve(id).call();
+        }
+    }
+
+    private class DeleteWithId implements WithId {
+
+        @Override
+        public User call(Long id) throws Exception {
+            return userController.delete(id).call();
         }
     }
 
