@@ -51,7 +51,6 @@ public class UserSteps {
     public void the_response_body_should_contain_the_new_user() {
 
         final Map<String, Object> expected = user.toMap();
-        expected.remove("id");
 
         @SuppressWarnings("unchecked")
         final Map<String, Object> actual = responses.get().peek().readEntity(Map.class);
