@@ -1,30 +1,24 @@
 Feature: User - Create
 
-  Scenario: I create a new user with the RESTful endpoint and the user is persisted correctly.
+  Background:
     Given there is a new user
     And the user has an "email" of "test_one@email.test"
     And the user has a "firstName" of "Test"
     And the user has a "lastName" of "User"
+
+  Scenario: I create a new user with the RESTful endpoint and the user is persisted correctly.
     When I create the user
     Then I should receive a status code of 201
     And the response body should contain the new user
     And the new user should be persisted
 
   Scenario: I create the same user twice with the RESTful endpoint and the second creation fails.
-    Given there is a new user
-    And the user has an "email" of "test_one@email.test"
-    And the user has a "firstName" of "Test"
-    And the user has a "lastName" of "User"
-    When I create the user
-    And I create the user
+    Given I create the user
+    Then I create the user
     Then I should receive a status code of 400
 
   Scenario: I create a user with an existing email with the RESTful endpoint and the creation fails.
-    Given there is a new user
-    And the user has an "email" of "test_one@email.test"
-    And the user has a "firstName" of "Test"
-    And the user has a "lastName" of "User"
-    And I create the user
+    Given I create the user
     When there is another new user
     And the user has an "email" of "test_one@email.test"
     And the user has a "firstName" of "Test2"
@@ -33,11 +27,7 @@ Feature: User - Create
     Then I should receive a status code of 400
 
   Scenario Outline: I create a user with existing name values with the RESTful endpoint and the user is persisted correctly.
-    Given there is a new user
-    And the user has an "email" of "test_one@email.test"
-    And the user has a "firstName" of "Test"
-    And the user has a "lastName" of "User"
-    And I create the user
+    Given I create the user
     When there is another new user
     And the user has an "email" of "test_two@email.test"
     And the user has a "firstName" of "<first-name>"
@@ -92,11 +82,7 @@ Feature: User - Create
     | email | firstName  |           |
 
   Scenario: I create a user with an invalid field with the RESTful endpoint and the creation fails.
-    Given there is a new user
-    And the user has an "email" of "test_one@email.test"
-    And the user has a "firstName" of "Test"
-    And the user has a "lastName" of "User"
-    And the user has a "invalid" of "true"
+    Given the user has a "invalid" of "true"
     When I create the user
     Then I should receive a status code of 400
 
