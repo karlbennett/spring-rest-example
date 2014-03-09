@@ -23,6 +23,7 @@
         <hibernate.version>4.3.4.Final</hibernate.version>
         <jackson.version>2.3.2</jackson.version>
         <slf4j.version>1.7.6</slf4j.version>
+        <cucumber.version>1.1.5</cucumber.version>
     </properties>
 
     <build>
@@ -51,6 +52,25 @@
                 <configuration>
                     <path>/${project.build.finalName}</path>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>tomcat-run</id>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <phase>pre-integration-test</phase>
+                        <configuration>
+                            <fork>true</fork>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>tomcat-shutdown</id>
+                        <goals>
+                            <goal>shutdown</goal>
+                        </goals>
+                        <phase>post-integration-test</phase>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>
@@ -63,6 +83,20 @@
                 </configuration>
             </plugin>
 
+            <plugin>
+                <!-- Add the Maven Failsafe Plugin so that the integration tests run. -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.16</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -197,6 +231,35 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <version>${spring.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Cucumber dependencies. -->
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-junit</artifactId>
+            <version>${cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-spring</artifactId>
+            <version>${cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- The Jersey REST client to simplify interacting with the scratch REST API. -->
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>2.6</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jackson</artifactId>
+            <version>2.6</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

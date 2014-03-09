@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
@@ -63,14 +64,17 @@ public class User implements Serializable {
     private Long id;
 
     @NotNull(message = "email.null")
+    @Size(min = 1)
     @Column(unique = true, nullable = false)
     private String email;
 
     @NotNull(message = "firstName.null")
+    @Size(min = 1)
     @Column(nullable = false)
     private String firstName;
 
     @NotNull(message = "lastName.null")
+    @Size(min = 1)
     @Column(nullable = false)
     private String lastName;
 

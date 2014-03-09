@@ -1,6 +1,8 @@
 package scratch.spring.webapp.config;
 
+import org.glassfish.jersey.jackson.JacksonFeature;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +23,9 @@ import scratch.spring.webapp.test.DBUnit;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
 
 /**
  * Test configuration that does not have the @EnableWebMvc annotation because the tests are not running with a
@@ -63,6 +68,15 @@ public class TestScratchConfiguration {
         txManager.setEntityManagerFactory(entityManagerFactory().getObject());
 
         return txManager;
+    }
+
+    @Bean
+    public static WebTarget client(@Value("rest.baseUrl") String url) {
+
+        final Client client = ClientBuilder.newClient();
+        client.register(JacksonFeature.class);
+
+        return client.target(url);
     }
 
     @Autowired
