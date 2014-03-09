@@ -48,11 +48,12 @@ public class UserCreateSteps {
         @SuppressWarnings("unchecked")
         final Map<String, Object> body = responses.get().peek().readEntity(Map.class);
 
-        assertEquals("the user should have been persisted.", body, get(body.get(ID).toString()).readEntity(Map.class));
+        assertEquals("the user should have been persisted.", body, get(body.get(ID).toString()));
     }
 
-    private Response get(String id) {
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> get(String id) {
 
-        return client.path(id).request(MediaType.APPLICATION_JSON_TYPE).get();
+        return client.path(id).request(MediaType.APPLICATION_JSON_TYPE).get().readEntity(Map.class);
     }
 }
