@@ -15,6 +15,10 @@ public class PropertyObject {
 
     private final Map<String, Object> map;
 
+    public PropertyObject() {
+        this(new HashMap<String, Object>());
+    }
+
     public PropertyObject(PropertyObject propertyObject) {
         this(propertyObject.toMap());
     }

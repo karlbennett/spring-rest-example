@@ -9,8 +9,9 @@ import org.springframework.test.context.ContextConfiguration;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Deque;
 import java.util.Map;
+
+import static scratch.spring.webapp.steps.UserFields.ID;
 
 /**
  * Global hooks to run before and after even scenario.
@@ -25,25 +26,26 @@ public class Hooks {
     private WebTarget client;
 
     @Autowired
-    private Holder<Deque<Response>> responses;
+    private DequeHolder<Response> responses;
 
     @Before
     public void setup() {
 
         user.clear();
+        responses.clear();
     }
 
     @After
     public void tearDown() {
 
-        for (Response response : responses.get()) {
+        for (Response response : responses) {
 
             if (HttpStatus.CREATED.value() == response.getStatus()) {
 
                 @SuppressWarnings("unchecked")
                 final Map<String, Object> body = response.readEntity(Map.class);
 
-                client.path(body.get("id").toString()).request(MediaType.APPLICATION_JSON_TYPE).delete();
+                client.path(body.get(ID).toString()).request(MediaType.APPLICATION_JSON_TYPE).delete();
             }
         }
     }

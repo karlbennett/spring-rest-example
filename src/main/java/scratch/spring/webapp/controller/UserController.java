@@ -71,7 +71,13 @@ public class UserController {
             @Override
             public User call() throws Exception {
 
-                return User.retrieve(id);
+                final User user = User.retrieve(id);
+
+                if (null == user) {
+                    throw new NotFoundException("there is no user for id (" + id + ")");
+                }
+
+                return user;
             }
         };
     }
@@ -164,11 +170,25 @@ public class UserController {
         }
     }
 
+    @ExceptionHandler(NotFoundException.class)
+    public ErrorResponse handleException(NotFoundException e, HttpServletResponse response) {
+
+        response.setStatus(404);
+
+        return new ErrorResponse(e.getClass().getSimpleName(), e.getMessage());
+    }
+
     @ExceptionHandler(Exception.class)
     public ErrorResponse handleException(Exception e, HttpServletResponse response) {
 
         response.setStatus(400);
 
         return new ErrorResponse(e.getClass().getSimpleName(), e.getMessage());
+    }
+
+    static class NotFoundException extends RuntimeException {
+        public NotFoundException(String message) {
+            super(message);
+        }
     }
 }

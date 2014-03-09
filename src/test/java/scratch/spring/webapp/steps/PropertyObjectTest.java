@@ -75,9 +75,9 @@ public class PropertyObjectTest {
     }
 
     @Test
-    public void testCreateWithPropertyObject() {
+    public void testCreate() {
 
-        new PropertyObject(propertyObject);
+        new PropertyObject();
     }
 
     @Test(expected = NullPointerException.class)

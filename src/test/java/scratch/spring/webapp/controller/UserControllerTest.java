@@ -20,6 +20,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static scratch.spring.webapp.controller.UserController.ErrorResponse;
+import static scratch.spring.webapp.controller.UserController.NotFoundException;
 import static scratch.spring.webapp.test.DatabaseTester.WithId;
 import static scratch.spring.webapp.test.DatabaseTester.WithUser;
 import static scratch.spring.webapp.test.DatabaseTester.WithUserAndId;
@@ -106,7 +107,7 @@ public class UserControllerTest {
         databaseTester.retrieveTest(new RetrieveWithId());
     }
 
-    @Test
+    @Test(expected = NotFoundException.class)
     public void testRetrieveWithInvalidId() throws Exception {
 
         databaseTester.retrieveWithInvalidIdTest(new RetrieveWithId());
@@ -203,20 +204,45 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testHandleException() {
+    public void testHandleExceptionWithNotFoundException() {
+
+        handleExceptionTest(404, NotFoundException.class, new HandleException() {
+            @Override
+            public ErrorResponse handle(String message, HttpServletResponse response) {
+                return userController.handleException(new NotFoundException(message), response);
+            }
+        });
+    }
+
+    @Test
+    public void testHandleExceptionWithException() {
+
+        handleExceptionTest(400, Exception.class, new HandleException() {
+            @Override
+            public ErrorResponse handle(String message, HttpServletResponse response) {
+                return userController.handleException(new Exception(message), response);
+            }
+        });
+    }
+
+    public static void handleExceptionTest(int status, Class<? extends Exception> type, HandleException handler) {
 
         final String MESSAGE = "test error";
 
         final HttpServletResponse response = mock(HttpServletResponse.class);
 
-        final ErrorResponse errorResponse = userController.handleException(new Exception(MESSAGE), response);
+        final ErrorResponse errorResponse = handler.handle(MESSAGE, response);
 
-        assertEquals("error should be correct.", Exception.class.getSimpleName(), errorResponse.getError());
+        assertEquals("error should be correct.", type.getSimpleName(), errorResponse.getError());
         assertEquals("message should be correct.", MESSAGE, errorResponse.getMessage());
 
-        verify(response, times(1)).setStatus(400);
+        verify(response, times(1)).setStatus(status);
 
         verifyNoMoreInteractions(response);
+    }
+
+    public static interface HandleException {
+        public ErrorResponse handle(String message, HttpServletResponse response);
     }
 
     private class CreateWithUser implements WithUser {

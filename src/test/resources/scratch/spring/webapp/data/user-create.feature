@@ -14,7 +14,7 @@ Feature: User - Create
 
   Scenario: I create the same user twice with the RESTful endpoint and the second creation fails.
     Given I create the user
-    Then I create the user
+    When I create the user again
     Then I should receive a status code of 400
 
   Scenario: I create a user with an existing email with the RESTful endpoint and the creation fails.

@@ -8,16 +8,14 @@ import org.springframework.test.context.ContextConfiguration;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Deque;
 import java.util.Map;
 
 import static javax.ws.rs.client.Entity.json;
 import static org.junit.Assert.assertEquals;
+import static scratch.spring.webapp.steps.UserFields.ID;
 
 @ContextConfiguration(classes = CucumberScratchConfiguration.class)
 public class UserCreateSteps {
-
-    public static final String ID = "id";
 
     @Autowired
     private PropertyObject user;
@@ -26,27 +24,22 @@ public class UserCreateSteps {
     private WebTarget client;
 
     @Autowired
-    private Holder<Deque<Response>> responses;
+    private DequeHolder<Response> responses;
 
-    @When("^I create the user$")
+    @When("^I create the user(?: again)?$")
     public void I_create_the_user() {
-
-        post(user);
-    }
-
-    private void post(PropertyObject user) {
 
         final Response response = client.request(MediaType.APPLICATION_JSON_TYPE).post(json(user.toMap()));
         response.bufferEntity();
 
-        responses.get().push(response);
+        responses.push(response);
     }
 
     @And("^the new user should be persisted$")
     public void the_new_user_should_be_persisted() {
 
         @SuppressWarnings("unchecked")
-        final Map<String, Object> body = responses.get().peek().readEntity(Map.class);
+        final Map<String, Object> body = responses.peek().readEntity(Map.class);
 
         assertEquals("the user should have been persisted.", body, get(body.get(ID).toString()));
     }

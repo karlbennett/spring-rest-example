@@ -12,8 +12,6 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.HashMap;
 
 /**
  * Test configuration that does not have the @EnableWebMvc annotation because the tests are not running with a
@@ -45,12 +43,12 @@ public class CucumberScratchConfiguration {
     @Bean
     public static PropertyObject user() {
 
-        return new PropertyObject(new HashMap<String, Object>());
+        return new PropertyObject();
     }
 
     @Bean
-    public static Holder<Deque<Response>> responses() {
+    public static DequeHolder<Response> responses() {
 
-        return new Holder<Deque<Response>>(new ArrayDeque<Response>());
+        return new DequeHolder<Response>(new ArrayDeque<Response>());
     }
 }
