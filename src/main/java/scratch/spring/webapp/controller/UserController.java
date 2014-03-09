@@ -41,7 +41,7 @@ public class UserController {
      *          if the deserialised user contains an ID that is contained by an
      *          existing user.
      */
-    @RequestMapping(value = "/", method = POST, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(method = POST, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(CREATED)
     public Callable<User> create(@Valid @RequestBody final User user) {
 
@@ -81,7 +81,7 @@ public class UserController {
      *
      * @return all the users that have been persisted.
      */
-    @RequestMapping(value = "/", method = GET, produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(method = GET, produces = APPLICATION_JSON_VALUE)
     public Callable<Iterable<User>> retrieveAll() {
 
         return new Callable<Iterable<User>>() {
