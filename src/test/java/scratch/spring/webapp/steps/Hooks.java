@@ -3,7 +3,6 @@ package scratch.spring.webapp.steps;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ContextConfiguration;
 
 import javax.ws.rs.client.WebTarget;
@@ -26,7 +25,7 @@ public class Hooks {
     private WebTarget client;
 
     @Autowired
-    private DequeHolder<Response> responses;
+    private Responses responses;
 
     @Before
     public void setup() {
@@ -38,15 +37,12 @@ public class Hooks {
     @After
     public void tearDown() {
 
-        for (Response response : responses) {
+        for (Response response : responses.created()) {
 
-            if (HttpStatus.CREATED.value() == response.getStatus()) {
+            @SuppressWarnings("unchecked")
+            final Map<String, Object> body = response.readEntity(Map.class);
 
-                @SuppressWarnings("unchecked")
-                final Map<String, Object> body = response.readEntity(Map.class);
-
-                client.path(body.get(ID).toString()).request(MediaType.APPLICATION_JSON_TYPE).delete();
-            }
+            client.path(body.get(ID).toString()).request(MediaType.APPLICATION_JSON_TYPE).delete();
         }
     }
 }

@@ -7,7 +7,6 @@ import org.springframework.test.context.ContextConfiguration;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Deque;
 import java.util.Map;
 
 import static scratch.spring.webapp.steps.UserFields.ID;
@@ -19,12 +18,12 @@ public class UserRetrieveSteps {
     private WebTarget client;
 
     @Autowired
-    private Holder<Deque<Response>> responses;
+    private Responses responses;
 
     @When("^I request an existing user$")
     public void I_request_an_existing_user() {
 
-        final Response createResponse = responses.get().peek();
+        final Response createResponse = responses.created().latest();
 
         @SuppressWarnings("unchecked")
         final Map<String, Object> body = createResponse.readEntity(Map.class);

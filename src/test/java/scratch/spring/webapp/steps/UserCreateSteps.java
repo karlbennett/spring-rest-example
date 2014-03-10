@@ -24,7 +24,7 @@ public class UserCreateSteps {
     private WebTarget client;
 
     @Autowired
-    private DequeHolder<Response> responses;
+    private Responses responses;
 
     @When("^I create the user(?: again)?$")
     public void I_create_the_user() {
@@ -32,14 +32,14 @@ public class UserCreateSteps {
         final Response response = client.request(MediaType.APPLICATION_JSON_TYPE).post(json(user.toMap()));
         response.bufferEntity();
 
-        responses.push(response);
+        responses.add(response);
     }
 
     @And("^the new user should be persisted$")
     public void the_new_user_should_be_persisted() {
 
         @SuppressWarnings("unchecked")
-        final Map<String, Object> body = responses.peek().readEntity(Map.class);
+        final Map<String, Object> body = responses.latest().readEntity(Map.class);
 
         assertEquals("the user should have been persisted.", body, get(body.get(ID).toString()));
     }

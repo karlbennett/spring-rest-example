@@ -1,4 +1,4 @@
-Feature: User - Create
+Feature: User - Retrieve
 
   Background:
     Given there is a new user

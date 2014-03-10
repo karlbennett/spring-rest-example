@@ -10,8 +10,6 @@ import org.springframework.core.io.ClassPathResource;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Response;
-import java.util.ArrayDeque;
 
 /**
  * Test configuration that does not have the @EnableWebMvc annotation because the tests are not running with a
@@ -47,8 +45,8 @@ public class CucumberScratchConfiguration {
     }
 
     @Bean
-    public static DequeHolder<Response> responses() {
+    public static Responses responses() {
 
-        return new DequeHolder<Response>(new ArrayDeque<Response>());
+        return new Responses();
     }
 }
