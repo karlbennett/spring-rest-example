@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static scratch.spring.webapp.steps.UserFields.ID;
 
 @ContextConfiguration(classes = CucumberScratchConfiguration.class)
 public class UserSteps {
@@ -48,13 +49,14 @@ public class UserSteps {
         assertEquals("the response HTTP status code should be correct.", status, responses.latest().getStatus());
     }
 
-    @Then("^the response body should contain the (?:new|requested) user$")
+    @Then("^the response body should contain the (?:new|requested|updated) user$")
     @SuppressWarnings("unchecked")
-    public void the_response_body_should_contain_the_new_user() {
+    public void the_response_body_should_contain_the_user() {
 
-        final Map<String, Object> expected = responses.created().latest().readEntity(Map.class);
+        final Map<String, Object> expected = user.toMap();
 
         final Map<String, Object> actual = responses.latest().readEntity(Map.class);
+        actual.remove(ID);
 
         assertEquals("the response body should contain the user.", expected, actual);
     }

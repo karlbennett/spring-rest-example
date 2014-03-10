@@ -35,8 +35,8 @@ public class UserCreateSteps {
         responses.add(response);
     }
 
-    @And("^the new user should be persisted$")
-    public void the_new_user_should_be_persisted() {
+    @And("^the(?: new)? user should be (?:persisted|updated)$")
+    public void the_new_user_should_be() {
 
         @SuppressWarnings("unchecked")
         final Map<String, Object> body = responses.latest().readEntity(Map.class);
