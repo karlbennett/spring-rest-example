@@ -71,15 +71,20 @@ public class UserController {
             @Override
             public User call() throws Exception {
 
-                final User user = User.retrieve(id);
-
-                if (null == user) {
-                    throw new NotFoundException("there is no user for id (" + id + ")");
-                }
-
-                return user;
+                return retrieveWithException(id);
             }
         };
+    }
+
+    private static User retrieveWithException(Long id) {
+
+        final User user = User.retrieve(id);
+
+        if (null == user) {
+            throw new NotFoundException("there is no user for id (" + id + ")");
+        }
+
+        return user;
     }
 
     /**
@@ -140,7 +145,7 @@ public class UserController {
             @Override
             public User call() throws Exception {
 
-                return User.retrieve(id).delete();
+                return retrieveWithException(id).delete();
             }
         };
     }
