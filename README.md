@@ -15,7 +15,7 @@ It is also possible to carry out CRUD operation on simple users:
     $ curl -XPOST -H "Accept:application/json" -H "Content-Type:application/json" http://localhost:8080/scratch/spring/users -d '{
         "email": "some.one@there.com",
         "firstName": "Some",
-        "lastName": "One",
+        "lastName": "One"
     }'
 
 ###### Retrieve
@@ -26,7 +26,7 @@ It is also possible to carry out CRUD operation on simple users:
     $ curl -XPUT -H "Content-Type:application/json" http://localhost:8080/scratch/spring/users/1 -d '{
         "email": "some.one@there.com",
         "firstName": "Some",
-        "lastName": "Two",
+        "lastName": "Two"
     }'
 
 ###### Delete
