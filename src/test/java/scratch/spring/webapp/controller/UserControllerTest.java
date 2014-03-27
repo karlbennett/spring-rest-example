@@ -191,7 +191,7 @@ public class UserControllerTest {
         databaseTester.deleteTest(new DeleteWithId());
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = NotFoundException.class)
     public void testDeleteWithInvalidId() throws Exception {
 
         databaseTester.deleteWithInvalidIdTest(new DeleteWithId());
