@@ -48,9 +48,14 @@
             <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
-                <version>2.2</version>
+                <!-- We are using version 2.1 of the tomcat plugin because 2.2 has a bug that causes the executable JAR -->
+                <!-- to fail to start up. -->
+                <version>2.1</version>
                 <configuration>
                     <path>/${project.build.finalName}</path>
+                    <!-- This directory configuration is required to tell the tomcat plugin where the WAR files are. -->
+                    <!-- Otherwise it expects a ${basedir}/src/main/webapp directory to exist. -->
+                    <warSourceDirectory>${basedir}/src/main</warSourceDirectory>
                 </configuration>
                 <executions>
                     <execution>
@@ -69,6 +74,13 @@
                             <goal>shutdown</goal>
                         </goals>
                         <phase>post-integration-test</phase>
+                    </execution>
+                    <execution>
+                        <id>tomcat-exec-war</id>
+                        <goals>
+                            <goal>exec-war</goal>
+                        </goals>
+                        <phase>package</phase>
                     </execution>
                 </executions>
             </plugin>
@@ -256,6 +268,7 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- This dependency enables automatic JSON serialisation and deserialisation in the Jersey REST client. -->
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-jackson</artifactId>
