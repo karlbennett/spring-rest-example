@@ -1,14 +1,13 @@
 package scratch.steps;
 
-import cucumber.api.java.After;
 import cucumber.api.java.Before;
-import org.glassfish.jersey.client.ClientResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import java.util.Map;
+import java.util.Set;
 
 import static scratch.steps.UserFields.ID;
 
@@ -32,17 +31,14 @@ public class Hooks {
 
         user.clear();
         responses.clear();
-    }
 
-    @After
-    public void tearDown() {
+        @SuppressWarnings("unchecked")
+        final Set<Map<String, Object>> users =
+                client.request(MediaType.APPLICATION_JSON_TYPE).get().readEntity(Set.class);
 
-        for (ClientResponse response : responses.created()) {
+        for (Map<String, Object> user : users) {
 
-            @SuppressWarnings("unchecked")
-            final Map<String, Object> body = response.readEntity(Map.class);
-
-            client.path(body.get(ID).toString()).request(MediaType.APPLICATION_JSON_TYPE).delete();
+            client.path(user.get(ID).toString()).request(MediaType.APPLICATION_JSON_TYPE).delete();
         }
     }
 }
