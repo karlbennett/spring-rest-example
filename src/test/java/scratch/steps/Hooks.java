@@ -1,16 +1,16 @@
-package scratch.spring.webapp.steps;
+package scratch.steps;
 
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
+import org.glassfish.jersey.client.ClientResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.util.Map;
 
-import static scratch.spring.webapp.steps.UserFields.ID;
+import static scratch.steps.UserFields.ID;
 
 /**
  * Global hooks to run before and after even scenario.
@@ -37,7 +37,7 @@ public class Hooks {
     @After
     public void tearDown() {
 
-        for (Response response : responses.created()) {
+        for (ClientResponse response : responses.created()) {
 
             @SuppressWarnings("unchecked")
             final Map<String, Object> body = response.readEntity(Map.class);

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import scratch.spring.webapp.data.User;
 
+import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.concurrent.Callable;
@@ -71,20 +72,9 @@ public class UserController {
             @Override
             public User call() throws Exception {
 
-                return retrieveWithException(id);
+                return User.retrieve(id);
             }
         };
-    }
-
-    private static User retrieveWithException(Long id) {
-
-        final User user = User.retrieve(id);
-
-        if (null == user) {
-            throw new NotFoundException("there is no user for id (" + id + ")");
-        }
-
-        return user;
     }
 
     /**
@@ -145,7 +135,7 @@ public class UserController {
             @Override
             public User call() throws Exception {
 
-                return retrieveWithException(id).delete();
+                return User.retrieve(id).delete();
             }
         };
     }
@@ -175,25 +165,19 @@ public class UserController {
         }
     }
 
-    @ExceptionHandler(NotFoundException.class)
-    public ErrorResponse handleException(NotFoundException e, HttpServletResponse response) {
+    @ExceptionHandler
+    public ErrorResponse handleException(EntityNotFoundException e, HttpServletResponse response) {
 
         response.setStatus(404);
 
         return new ErrorResponse(e.getClass().getSimpleName(), e.getMessage());
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler
     public ErrorResponse handleException(Exception e, HttpServletResponse response) {
 
         response.setStatus(400);
 
         return new ErrorResponse(e.getClass().getSimpleName(), e.getMessage());
-    }
-
-    static class NotFoundException extends RuntimeException {
-        public NotFoundException(String message) {
-            super(message);
-        }
     }
 }

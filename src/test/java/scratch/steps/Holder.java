@@ -1,4 +1,4 @@
-package scratch.spring.webapp.steps;
+package scratch.steps;
 
 public class Holder<T> {
 

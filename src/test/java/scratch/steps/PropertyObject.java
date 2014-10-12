@@ -1,4 +1,4 @@
-package scratch.spring.webapp.steps;
+package scratch.steps;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -12,6 +12,8 @@ import static java.util.Map.Entry;
  * An object that holds dot notation properties e.g. one.two.three="third layer value"
  */
 public class PropertyObject {
+
+    private static final String DOT = "\\.";
 
     private final Map<String, Object> map;
 
@@ -68,7 +70,7 @@ public class PropertyObject {
     @SuppressWarnings("unchecked")
     public <T> T get(String propertyPath) {
 
-        final T value = traverse(map, propertyPath.split("\\."), null, new GetLeaf<T>(), new CheckBranch());
+        final T value = traverse(map, propertyPath.split(DOT), null, new GetLeaf<T>(), new CheckBranch());
 
         if (value instanceof Map) {
             return (T) deepCopyMap((Map<String, Object>) value);
@@ -115,13 +117,13 @@ public class PropertyObject {
      */
     public void set(String propertyPath, Object value) {
 
-        traverse(map, propertyPath.split("\\."), value, new SetLeaf(), new CreateBranch());
+        traverse(map, propertyPath.split(DOT), value, new SetLeaf(), new CreateBranch());
     }
 
     @SuppressWarnings("unchecked")
     public <T> T remove(String propertyPath) {
 
-        return (T) traverse(map, propertyPath.split("\\."), null, new RemoveLeaf(), new CheckBranch());
+        return (T) traverse(map, propertyPath.split(DOT), null, new RemoveLeaf(), new CheckBranch());
     }
 
     public void clear() {

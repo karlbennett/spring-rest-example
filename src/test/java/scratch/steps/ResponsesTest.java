@@ -1,9 +1,9 @@
-package scratch.spring.webapp.steps;
+package scratch.steps;
 
+import org.glassfish.jersey.client.ClientResponse;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.ws.rs.core.Response;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
@@ -25,18 +25,18 @@ import static org.springframework.http.HttpStatus.OK;
 
 public class ResponsesTest {
 
-    private Response responseOne;
-    private Response responseTwo;
-    private Response responseThree;
+    private ClientResponse responseOne;
+    private ClientResponse responseTwo;
+    private ClientResponse responseThree;
 
-    private List<Response> responsesList;
+    private List<ClientResponse> responsesList;
 
     @Before
     public void setUp() {
 
-        responseOne = mock(Response.class);
-        responseTwo = mock(Response.class);
-        responseThree = mock(Response.class);
+        responseOne = mock(ClientResponse.class);
+        responseTwo = mock(ClientResponse.class);
+        responseThree = mock(ClientResponse.class);
 
         responsesList = asList(responseThree, responseTwo, responseOne);
     }
@@ -44,7 +44,7 @@ public class ResponsesTest {
     @Test
     public void testCreateWithDeque() {
 
-        final Deque<Response> responseDeque = new ArrayDeque<Response>();
+        final Deque<ClientResponse> responseDeque = new ArrayDeque<ClientResponse>();
         responseDeque.push(responseOne);
         responseDeque.push(responseTwo);
         responseDeque.push(responseThree);
@@ -66,7 +66,7 @@ public class ResponsesTest {
     public void iteratorTest(Responses responses) {
 
         int count = 0;
-        for (Response response : responses) {
+        for (ClientResponse response : responses) {
 
             assertEquals("the response should be correct.", responsesList.get(count++), response);
         }
@@ -162,7 +162,7 @@ public class ResponsesTest {
 
         responses.clear();
 
-        for (Response response : responses) {
+        for (ClientResponse response : responses) {
             fail("there should be no responses: " + response);
         }
     }

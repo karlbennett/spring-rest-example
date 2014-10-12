@@ -1,4 +1,4 @@
-package scratch.spring.webapp.steps;
+package scratch.steps;
 
 /**
  * Constants for the names of the User fields.

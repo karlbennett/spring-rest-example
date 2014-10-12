@@ -1,4 +1,4 @@
-package scratch.spring.webapp.steps;
+package scratch.steps;
 
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.When;
@@ -7,12 +7,11 @@ import org.springframework.test.context.ContextConfiguration;
 
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.util.Map;
 
 import static javax.ws.rs.client.Entity.json;
 import static org.junit.Assert.assertEquals;
-import static scratch.spring.webapp.steps.UserFields.ID;
+import static scratch.steps.UserFields.ID;
 
 @ContextConfiguration(classes = CucumberScratchConfiguration.class)
 public class UserCreateSteps {
@@ -29,10 +28,7 @@ public class UserCreateSteps {
     @When("^I create the user(?: again)?$")
     public void I_create_the_user() {
 
-        final Response response = client.request(MediaType.APPLICATION_JSON_TYPE).post(json(user.toMap()));
-        response.bufferEntity();
-
-        responses.add(response);
+        client.request(MediaType.APPLICATION_JSON_TYPE).post(json(user.toMap()));
     }
 
     @And("^the(?: new)? user should be (?:persisted|updated)$")

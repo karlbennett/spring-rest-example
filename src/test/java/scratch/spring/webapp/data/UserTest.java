@@ -6,314 +6,336 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 import scratch.spring.webapp.config.TestScratchConfiguration;
-import scratch.spring.webapp.test.DatabaseTester;
 
-import java.util.concurrent.Callable;
+import javax.persistence.EntityNotFoundException;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.not;
+import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static scratch.spring.webapp.test.DatabaseTester.EMAIL_ONE;
-import static scratch.spring.webapp.test.DatabaseTester.EMAIL_TWO;
-import static scratch.spring.webapp.test.DatabaseTester.FIRST_NAME_ONE;
-import static scratch.spring.webapp.test.DatabaseTester.FIRST_NAME_TWO;
-import static scratch.spring.webapp.test.DatabaseTester.LAST_NAME_ONE;
-import static scratch.spring.webapp.test.DatabaseTester.LAST_NAME_TWO;
-import static scratch.spring.webapp.test.DatabaseTester.WithId;
-import static scratch.spring.webapp.test.DatabaseTester.WithUser;
-import static scratch.spring.webapp.test.DatabaseTester.WithUserAndId;
+import static org.junit.Assert.assertNotEquals;
+import static scratch.spring.webapp.data.Users.userOne;
+import static scratch.spring.webapp.data.Users.userThree;
+import static scratch.spring.webapp.data.Users.userTwo;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestScratchConfiguration.class)
+@WebAppConfiguration("classpath:")
 public class UserTest {
-
-    @Autowired
-    private DatabaseTester databaseTester;
 
     @Autowired
     private UserRepository repository;
 
+    @Autowired
+    private UserSteps steps;
+
+    private User persistedUser;
+
     @Before
     public void setUp() {
 
-        databaseTester.setUp();
+        persistedUser = steps.given_a_user_has_been_persisted();
     }
 
     @After
     public void tearDown() {
 
-        databaseTester.tearDown();
+        steps.all_users_are_cleaned_up();
     }
 
     @Test
-    public void testGetStaticRepository() {
+    public void I_can_access_the_injectable_user_repository_from_user_static_context() {
 
         assertEquals("the repository should be correct.", repository, User.getStaticRepository());
     }
 
     @Test(expected = IllegalStateException.class)
-    public void testSetStaticRepository() {
+    public void I_cannot_set_the_repository_in_the_users_static_context_once_it_has_been_configured() {
 
         User.setStaticRepository(repository);
     }
 
     @Test
-    public void testCreate() throws Exception {
+    public void I_can_create_a_user() throws Exception {
 
-        databaseTester.createTest(new WithUser() {
-            @Override
-            public User call(User user) throws Exception {
-                return user.create();
-            }
-        });
+        final User user = userOne();
+
+        user.create();
+
+        steps.then_the_user_should_be_created(user);
     }
 
     @Test(expected = DataIntegrityViolationException.class)
-    public void testCreateDuplicate() throws Exception {
+    public void I_cannot_create_the_same_user_twice() throws Exception {
 
-        databaseTester.createDuplicateTest(new CreateWithUser());
+        persistedUser.setId(null);
+        persistedUser.create();
     }
 
     @Test(expected = DataIntegrityViolationException.class)
-    public void testCreateWithDuplicateEmail() throws Exception {
+    public void I_cannot_create_two_users_with_the_same_email() throws Exception {
 
-        databaseTester.createWithDuplicateEmailTest(new CreateWithUser());
+        final User user = userOne();
+        user.setEmail(persistedUser.getEmail());
+
+        user.create();
     }
 
     @Test
-    public void testCreateWithDuplicateFirstName() throws Exception {
+    public void I_can_create_two_users_with_the_same_first_name() throws Exception {
 
-        databaseTester.createWithDuplicateFirstNameTest(new CreateWithUser());
+        final User user = userOne();
+        user.setFirstName(persistedUser.getFirstName());
+
+        user.create();
+
+        steps.then_the_user_should_be_created(user);
     }
 
     @Test
-    public void testCreateWithDuplicateLastName() throws Exception {
+    public void I_can_create_two_users_with_the_same_last_name() throws Exception {
 
-        databaseTester.createWithDuplicateLastNameTest(new CreateWithUser());
+        final User user = userOne();
+        user.setLastName(persistedUser.getLastName());
+
+        user.create();
+
+        steps.then_the_user_should_be_created(user);
     }
 
     @Test(expected = DataIntegrityViolationException.class)
-    public void testCreateWithNullEmail() throws Exception {
+    public void I_cannot_create_a_user_with_a_null_email() throws Exception {
 
-        databaseTester.createWithNullEmailTest(new CreateWithUser());
+        final User user = userOne();
+        user.setEmail(null);
+
+        user.create();
     }
 
     @Test(expected = DataIntegrityViolationException.class)
-    public void testCreateWithNullFirstName() throws Exception {
+    public void I_cannot_create_a_user_with_a_null_first_name() throws Exception {
 
-        databaseTester.createWithNullFirstNameTest(new CreateWithUser());
+        final User user = userOne();
+        user.setFirstName(null);
+
+        user.create();
     }
 
     @Test(expected = DataIntegrityViolationException.class)
-    public void testCreateWithNullLastName() throws Exception {
+    public void I_cannot_create_a_user_with_a_null_last_name() throws Exception {
 
-        databaseTester.createWithNullLastNameTest(new CreateWithUser());
-    }
+        final User user = userOne();
+        user.setLastName(null);
 
-    @Test(expected = NullPointerException.class)
-    public void testCreateWithNullUser() throws Exception {
-
-        databaseTester.createWithNullUserTest(new CreateWithUser());
+        user.create();
     }
 
     @Test
-    public void testRetrieve() throws Exception {
+    public void I_can_retrieve_a_user() throws Exception {
 
-        databaseTester.retrieveTest(new WithId() {
-            @Override
-            public User call(Long id) throws Exception {
-                return User.retrieve(id);
-            }
-        });
+        steps.then_the_persisted_user_should_be_able_to_be_retrieved(User.retrieve(persistedUser.getId()));
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void I_cannot_retrieve_a_user_with_an_invalid_id() throws Exception {
+
+        User.retrieve(-1L);
+    }
+
+    @Test(expected = InvalidDataAccessApiUsageException.class)
+    public void I_cannot_retrieve_a_user_with_a_null_id() throws Exception {
+
+        User.retrieve(null);
     }
 
     @Test
-    public void testRetrieveWithInvalidId() throws Exception {
+    public void I_can_retrieve_all_the_persisted_users() throws Exception {
 
-        databaseTester.retrieveWithInvalidIdTest(new RetrieveWithId());
-    }
+        userOne().create();
+        userTwo().create();
+        userThree().create();
 
-    @Test(expected = NullPointerException.class)
-    public void testRetrieveWithNullId() throws Exception {
-
-        databaseTester.retrieveWithNullIdTest(new RetrieveWithId());
-    }
-
-    @Test
-    public void testAll() throws Exception {
-
-        databaseTester.retrieveAllTest(new Callable<Iterable<User>>() {
-            @Override
-            public Iterable<User> call() throws Exception {
-                return User.all();
-            }
-        });
+        steps.then_all_persisted_users_should_be_retrieved(User.all());
     }
 
     @Test
-    public void testUpdate() throws Exception {
+    public void I_can_update_a_user() throws Exception {
 
-        databaseTester.updateTest(new WithUserAndId() {
-            @Override
-            public User call(Long id, User user) throws Exception {
+        persistedUser.setEmail("updated@email.com");
+        persistedUser.setFirstName("Updated");
+        persistedUser.setLastName("Different");
 
-                user.setId(id);
+        persistedUser.update();
 
-                return user.update();
-            }
-        });
+        steps.then_the_user_should_be_updated(persistedUser);
     }
 
     @Test(expected = DataIntegrityViolationException.class)
-    public void testUpdateDuplicate() throws Exception {
+    public void I_cannot_update_a_user_to_be_equal_to_an_existing_user() throws Exception {
 
-        databaseTester.updateDuplicateTest(new UpdateWithUserAndId());
+        final User user = userOne();
+        user.create();
+
+        user.setEmail(persistedUser.getEmail());
+        user.setFirstName(persistedUser.getFirstName());
+        user.setLastName(persistedUser.getLastName());
+
+        user.update();
     }
 
     @Test(expected = DataIntegrityViolationException.class)
-    public void testUpdateWithDuplicateEmail() throws Exception {
+    public void I_cannot_update_a_user_to_have_the_same_email_as_an_existing_user() throws Exception {
 
-        databaseTester.updateWithDuplicateEmailTest(new UpdateWithUserAndId());
+        final User user = userOne();
+        user.create();
+
+        user.setEmail(persistedUser.getEmail());
+
+        user.update();
     }
 
     @Test
-    public void testUpdateWithDuplicateFirstName() throws Exception {
+    public void I_can_update_a_user_to_have_the_same_first_name_as_an_existing_user() throws Exception {
 
-        databaseTester.updateWithDuplicateFirstNameTest(new UpdateWithUserAndId());
+        final User user = userOne();
+        user.create();
+
+        user.setFirstName(persistedUser.getFirstName());
+
+        user.update();
+
+        steps.then_the_user_should_be_updated(user);
     }
 
     @Test
-    public void testUpdateWithDuplicateLastName() throws Exception {
+    public void I_can_update_a_user_to_have_the_same_last_name_as_an_existing_user() throws Exception {
 
-        databaseTester.updateWithDuplicateLastNameTest(new UpdateWithUserAndId());
+        final User user = userOne();
+        user.create();
+
+        user.setLastName(persistedUser.getLastName());
+
+        user.update();
+
+        steps.then_the_user_should_be_updated(user);
     }
 
-    @Test
-    public void testUpdateWithNullId() throws Exception {
+    @Test(expected = EntityNotFoundException.class)
+    public void I_cannot_update_a_user_with_a_null_id() throws Exception {
 
-        databaseTester.updateWithNullIdTest(new UpdateWithUserAndId());
+        persistedUser.setId(null);
+
+        persistedUser.update();
     }
 
     @Test(expected = DataIntegrityViolationException.class)
-    public void testUpdateWithNullEmail() throws Exception {
+    public void I_cannot_update_a_user_with_a_null_email() throws Exception {
 
-        databaseTester.updateWithNullEmailTest(new UpdateWithUserAndId());
+        persistedUser.setEmail(null);
+
+        persistedUser.update();
     }
 
     @Test(expected = DataIntegrityViolationException.class)
-    public void testUpdateWithNullFirstName() throws Exception {
+    public void I_cannot_update_a_user_with_a_null_first_name() throws Exception {
 
-        databaseTester.updateWithNullFirstNameTest(new UpdateWithUserAndId());
+        persistedUser.setFirstName(null);
+
+        persistedUser.update();
     }
 
     @Test(expected = DataIntegrityViolationException.class)
-    public void testUpdateWithNullLastName() throws Exception {
+    public void I_cannot_update_a_user_with_a_null_last_name() throws Exception {
 
-        databaseTester.updateWithNullLastNameTest(new UpdateWithUserAndId());
-    }
+        persistedUser.setLastName(null);
 
-    @Test(expected = NullPointerException.class)
-    public void testUpdateWithNullUser() throws Exception {
-
-        databaseTester.updateWithNullUserTest(new UpdateWithUserAndId());
+        persistedUser.update();
     }
 
     @Test
-    public void testDelete() throws Exception {
+    public void I_can_delete_a_user() throws Exception {
 
-        databaseTester.deleteTest(new DeleteWithId());
+        persistedUser.delete();
+
+        steps.then_the_user_should_no_longer_be_persisted(persistedUser);
     }
 
-    @Test(expected = NullPointerException.class)
-    public void testDeleteWithInvalidId() throws Exception {
+    @Test(expected = EntityNotFoundException.class)
+    public void I_cannot_delete_a_user_with_an_invalid_id() throws Exception {
 
-        databaseTester.deleteWithInvalidIdTest(new DeleteWithId());
+        persistedUser.setId(-1L);
+
+        persistedUser.delete();
     }
 
-    @Test(expected = NullPointerException.class)
-    public void testDeleteWithNullId() throws Exception {
+    @Test(expected = InvalidDataAccessApiUsageException.class)
+    public void I_cannot_delete_a_user_with_a_null_id() throws Exception {
 
-        databaseTester.deleteWithNullIdTest(new DeleteWithId());
-    }
+        persistedUser.setId(null);
 
-    @Test
-    public void testGetRepository() {
-
-        assertEquals("the repository should be correct.", repository,
-                new User().getRepository());
-    }
-
-    @Test
-    public void testEquals() {
-
-        assertEquals("the users should be equal.", new User(), new User());
-
-        assertEquals("the users should be equal.", new User(EMAIL_ONE, FIRST_NAME_ONE, LAST_NAME_ONE),
-                new User(EMAIL_ONE, FIRST_NAME_ONE, LAST_NAME_ONE));
-
-        assertThat("the users should not be equal.", new User(EMAIL_ONE, FIRST_NAME_ONE, LAST_NAME_ONE),
-                not(equalTo(new User(EMAIL_TWO, FIRST_NAME_TWO, LAST_NAME_TWO))));
+        persistedUser.delete();
     }
 
     @Test
-    public void testHashCode() {
+    public void I_can_check_the_equality_of_a_user() {
 
-        assertEquals("the user hash codes should be equal.",
-                new User(EMAIL_ONE, FIRST_NAME_ONE, LAST_NAME_ONE).hashCode(),
-                new User(EMAIL_ONE, FIRST_NAME_ONE, LAST_NAME_ONE).hashCode());
+        final User left = userOne();
+        final User right = userOne();
 
-        assertThat("the user hash codes should not be equal.",
-                new User(EMAIL_ONE, FIRST_NAME_ONE, LAST_NAME_ONE).hashCode(),
-                not(equalTo(new User(EMAIL_TWO, FIRST_NAME_TWO, LAST_NAME_TWO).hashCode())));
+        assertEquals("a user is equal to it's self.", left, left);
+        assertEquals("a user is equal to another user with the same data.", left, right);
+
+        final User differentIdUser = userOne();
+        differentIdUser.setId(-1L);
+
+        assertNotEquals("a user is not equal to a user with a different id.", left, differentIdUser);
+
+        final User differentEmailUser = userOne();
+        differentEmailUser.setEmail("different");
+
+        assertNotEquals("a user is not equal to a user with a different email.", left, differentEmailUser);
+
+        final User differentFirstNameUser = userOne();
+        differentFirstNameUser.setFirstName("different");
+
+        assertNotEquals("a user is not equal to a user with a different first name.", left, differentFirstNameUser);
+
+        final User differentLastNameUser = userOne();
+        differentLastNameUser.setLastName("different");
+
+        assertNotEquals("a user is not equal to a user with a different last name.", left, differentLastNameUser);
+
+        assertNotEquals("a user is not equal to an object.", left, new Object());
+
+        assertNotEquals("a user is not equal to null.", left, null);
     }
 
     @Test
-    public void testToString() {
+    public void I_can_check_the_has_code_of_a_user() {
 
-        assertNotNull("toString should produce a string.",
-                new User(EMAIL_ONE, FIRST_NAME_ONE, LAST_NAME_ONE).toString());
+        final User left = userOne();
+
+        assertEquals("a users hash code is equal to the hash code of another user with the same data.", left.hashCode(),
+                userOne().hashCode());
+
+        assertNotEquals("a users hash code is not equal to the hash code of another user with a different data.",
+                left.hashCode(), userThree().hashCode());
     }
 
-    private class CreateWithUser implements WithUser {
+    @Test
+    public void I_can_to_string_a_user() {
 
-        @Override
-        public User call(User user) throws Exception {
-            return user.create();
-        }
-    }
-
-    private class RetrieveWithId implements WithId {
-
-        @Override
-        public User call(Long id) throws Exception {
-            return User.retrieve(id);
-        }
-    }
-
-    private class DeleteWithId implements WithId {
-
-        @Override
-        public User call(Long id) throws Exception {
-
-            final User user = User.retrieve(id);
-
-            return user.delete();
-        }
-    }
-
-    private class UpdateWithUserAndId implements WithUserAndId {
-
-        @Override
-        public User call(Long id, User user) throws Exception {
-
-            user.setId(id);
-
-            return user.update();
-        }
+        assertEquals("the user should produce the correct toString value.",
+                format(
+                        "User {id = %d, email = '%s', firstName = '%s', lastName = '%s'}",
+                        persistedUser.getId(),
+                        persistedUser.getEmail(),
+                        persistedUser.getFirstName(),
+                        persistedUser.getLastName()
+                ),
+                persistedUser.toString());
     }
 }

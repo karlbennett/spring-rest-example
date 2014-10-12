@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <name>scratch-spring-webapp</name>
@@ -19,7 +19,7 @@
     <url>https://github.com/karlbennett/scratch-webapp</url>
 
     <properties>
-        <spring.version>4.0.2.RELEASE</spring.version>
+        <spring.version>4.1.0.RELEASE</spring.version>
         <hibernate.version>4.3.4.Final</hibernate.version>
         <jackson.version>2.3.2</jackson.version>
         <slf4j.version>1.7.6</slf4j.version>
@@ -27,8 +27,6 @@
     </properties>
 
     <build>
-        <!-- Have to set the context path to scratch because Tomcat 7 has a bug that stops JSP from -->
-        <!-- compiling if the context path has a '-' in it. -->
         <finalName>scratch</finalName>
 
         <plugins>
@@ -59,6 +57,7 @@
                 </configuration>
                 <executions>
                     <execution>
+                        <!-- Start Tomcat and the webapp before the integration (acceptance) tests begin. -->
                         <id>tomcat-run</id>
                         <goals>
                             <goal>run</goal>
@@ -69,6 +68,7 @@
                         </configuration>
                     </execution>
                     <execution>
+                        <!-- Shut down Tomcat after the integration (acceptance) tests have finished. -->
                         <id>tomcat-shutdown</id>
                         <goals>
                             <goal>shutdown</goal>
@@ -76,6 +76,8 @@
                         <phase>post-integration-test</phase>
                     </execution>
                     <execution>
+                        <!-- Create a single executable JAR file that contains the entire application and can be started -->
+                        <!-- with the "java -jar" command. -->
                         <id>tomcat-exec-war</id>
                         <goals>
                             <goal>exec-war</goal>
@@ -104,7 +106,6 @@
                     <execution>
                         <goals>
                             <goal>integration-test</goal>
-                            <goal>verify</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -243,6 +244,14 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <version>${spring.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- This dependency is required to use the Spring MVC test jsonPath() methods. -->
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>[0.9.1]</version>
             <scope>test</scope>
         </dependency>
 

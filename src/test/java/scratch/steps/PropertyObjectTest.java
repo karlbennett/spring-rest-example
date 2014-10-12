@@ -1,4 +1,4 @@
-package scratch.spring.webapp.steps;
+package scratch.steps;
 
 import org.junit.Before;
 import org.junit.Test;

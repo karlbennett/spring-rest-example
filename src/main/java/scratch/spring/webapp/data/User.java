@@ -1,6 +1,7 @@
 package scratch.spring.webapp.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.dao.DataRetrievalFailureException;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +14,8 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+
+import static java.lang.String.format;
 
 /**
  * A simple user class that contains an email, first, and last names. The email has been annotated to indicate it should
@@ -138,7 +141,7 @@ public class User implements Serializable {
     @Transient
     public User create() {
 
-        return repository.save(new User(email, firstName, lastName));
+        return repository.save(this);
     }
 
     /**
@@ -148,9 +151,15 @@ public class User implements Serializable {
      */
     @JsonIgnore
     @Transient
-    public static User retrieve(long id) {
+    public static User retrieve(Long id) {
 
-        return getStaticRepository().findOne(id);
+        final User user = getStaticRepository().findOne(id);
+
+        if (null == user) {
+            throw new EntityNotFoundException(format("A user with the ID (%d) could not be found.", id));
+        }
+
+        return user;
     }
 
     /**
@@ -175,6 +184,10 @@ public class User implements Serializable {
     @Transient
     public User update() {
 
+        if (null == id) {
+            throw new EntityNotFoundException(this + " has not yet been persisted.");
+        }
+
         return repository.save(this);
     }
 
@@ -188,13 +201,16 @@ public class User implements Serializable {
     @Transient
     public User delete() {
 
-        repository.delete(this);
+        try {
+
+            repository.delete(id);
+
+        } catch (DataRetrievalFailureException e) {
+
+            throw new EntityNotFoundException(this + " has not yet been persisted.");
+        }
 
         return this;
-    }
-
-    public UserRepository getRepository() {
-        return repository;
     }
 
     public Long getId() {
@@ -229,30 +245,40 @@ public class User implements Serializable {
         this.lastName = lastName;
     }
 
-
     @Override
     public boolean equals(Object o) {
 
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof User)) {
+            return false;
+        }
 
-        if (o == null || getClass() != o.getClass()) return false;
+        final User that = (User) o;
 
-        User user = (User) o;
+        if (id != null ? !id.equals(that.id) : that.id != null) {
+            return false;
+        }
+        if (email != null ? !email.equals(that.email) : that.email != null) {
+            return false;
+        }
+        if (firstName != null ? !firstName.equals(that.firstName) : that.firstName != null) {
+            return false;
+        }
+        if (lastName != null ? !lastName.equals(that.lastName) : that.lastName != null) {
+            return false;
+        }
 
-        return (null == id ? null == user.id : id.equals(user.id)) &&
-                (null == email ? null == user.email : email.equals(user.email)) &&
-                (null == firstName ? null == user.firstName : firstName.equals(user.firstName)) &&
-                (null == lastName ? null == user.lastName : lastName.equals(user.lastName));
+        return true;
     }
 
     @Override
     public int hashCode() {
-
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
-
         return result;
     }
 
@@ -260,7 +286,7 @@ public class User implements Serializable {
     public String toString() {
 
         return "User {" +
-              /**/"id = '" + id + '\'' +
+              /**/"id = " + id +
                 ", email = '" + email + '\'' +
                 ", firstName = '" + firstName + '\'' +
                 ", lastName = '" + lastName + '\'' +

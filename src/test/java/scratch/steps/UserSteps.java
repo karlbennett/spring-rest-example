@@ -1,17 +1,17 @@
-package scratch.spring.webapp.steps;
+package scratch.steps;
 
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
+import org.glassfish.jersey.client.ClientResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 
-import javax.ws.rs.core.Response;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
-import static scratch.spring.webapp.steps.UserFields.ID;
+import static scratch.steps.UserFields.ID;
 
 @ContextConfiguration(classes = CucumberScratchConfiguration.class)
 public class UserSteps {
@@ -32,6 +32,8 @@ public class UserSteps {
     public void the_user_has_an_of(String propertyPath, String value) {
 
         if ("".equals(propertyPath)) {
+            // We ignore empty property names so that it is possible to write Scenario Examples that don't set some
+            // properties.
             return;
         }
 
@@ -68,7 +70,7 @@ public class UserSteps {
         final Set<Map<String, Object>> retrievedUsers = responses.latest().readEntity(Set.class);
 
         final Set<Map<String, Object>> createdUsers = new HashSet<Map<String, Object>>();
-        for (Response response : responses.created()) {
+        for (ClientResponse response : responses.created()) {
 
             createdUsers.add(response.readEntity(Map.class));
         }

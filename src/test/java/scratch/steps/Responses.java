@@ -1,29 +1,29 @@
-package scratch.spring.webapp.steps;
+package scratch.steps;
 
+import org.glassfish.jersey.client.ClientResponse;
 import org.springframework.http.HttpStatus;
 
-import javax.ws.rs.core.Response;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Iterator;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
-public class Responses extends Holder<Deque<Response>> implements Iterable<Response> {
+public class Responses extends Holder<Deque<ClientResponse>> implements Iterable<ClientResponse> {
 
     public Responses() {
-        this(new ArrayDeque<Response>());
+        this(new ArrayDeque<ClientResponse>());
     }
 
-    public Responses(Deque<Response> responses) {
+    public Responses(Deque<ClientResponse> responses) {
         super(responses);
     }
 
-    public void add(Response response) {
+    public void add(ClientResponse response) {
         get().push(response);
     }
 
-    public Response latest() {
+    public ClientResponse latest() {
         return get().peek();
     }
 
@@ -36,7 +36,7 @@ public class Responses extends Holder<Deque<Response>> implements Iterable<Respo
 
         final Responses responses = new Responses();
 
-        for (Response response : get()) {
+        for (ClientResponse response : get()) {
 
             if (httpStatus.value() == response.getStatus()) {
                 responses.get().addLast(response);
@@ -51,7 +51,7 @@ public class Responses extends Holder<Deque<Response>> implements Iterable<Respo
     }
 
     @Override
-    public Iterator<Response> iterator() {
+    public Iterator<ClientResponse> iterator() {
         return get().iterator();
     }
 }
