@@ -1,6 +1,5 @@
 package scratch.spring.webapp.data;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,7 +23,7 @@ import static scratch.spring.webapp.data.Users.userTwo;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestScratchConfiguration.class)
 @WebAppConfiguration("classpath:")
-public class UserTest {
+public class UserTest implements UserTestTemplate {
 
     @Autowired
     private UserRepository repository;
@@ -37,13 +36,9 @@ public class UserTest {
     @Before
     public void setUp() {
 
-        persistedUser = steps.given_a_user_has_been_persisted();
-    }
-
-    @After
-    public void tearDown() {
-
         steps.all_users_are_cleaned_up();
+
+        persistedUser = steps.given_a_user_has_been_persisted();
     }
 
     @Test
@@ -59,7 +54,7 @@ public class UserTest {
     }
 
     @Test
-    public void I_can_create_a_user() throws Exception {
+    public void I_can_create_a_user() {
 
         final User user = userOne();
 
@@ -69,14 +64,14 @@ public class UserTest {
     }
 
     @Test(expected = DataIntegrityViolationException.class)
-    public void I_cannot_create_the_same_user_twice() throws Exception {
+    public void I_cannot_create_the_same_user_twice() {
 
         persistedUser.setId(null);
         persistedUser.create();
     }
 
     @Test(expected = DataIntegrityViolationException.class)
-    public void I_cannot_create_two_users_with_the_same_email() throws Exception {
+    public void I_cannot_create_two_users_with_the_same_email() {
 
         final User user = userOne();
         user.setEmail(persistedUser.getEmail());
@@ -85,7 +80,7 @@ public class UserTest {
     }
 
     @Test
-    public void I_can_create_two_users_with_the_same_first_name() throws Exception {
+    public void I_can_create_two_users_with_the_same_first_name() {
 
         final User user = userOne();
         user.setFirstName(persistedUser.getFirstName());
@@ -96,7 +91,7 @@ public class UserTest {
     }
 
     @Test
-    public void I_can_create_two_users_with_the_same_last_name() throws Exception {
+    public void I_can_create_two_users_with_the_same_last_name() {
 
         final User user = userOne();
         user.setLastName(persistedUser.getLastName());
@@ -107,7 +102,7 @@ public class UserTest {
     }
 
     @Test(expected = DataIntegrityViolationException.class)
-    public void I_cannot_create_a_user_with_a_null_email() throws Exception {
+    public void I_cannot_create_a_user_with_a_null_email() {
 
         final User user = userOne();
         user.setEmail(null);
@@ -116,7 +111,7 @@ public class UserTest {
     }
 
     @Test(expected = DataIntegrityViolationException.class)
-    public void I_cannot_create_a_user_with_a_null_first_name() throws Exception {
+    public void I_cannot_create_a_user_with_a_null_first_name() {
 
         final User user = userOne();
         user.setFirstName(null);
@@ -125,7 +120,7 @@ public class UserTest {
     }
 
     @Test(expected = DataIntegrityViolationException.class)
-    public void I_cannot_create_a_user_with_a_null_last_name() throws Exception {
+    public void I_cannot_create_a_user_with_a_null_last_name() {
 
         final User user = userOne();
         user.setLastName(null);
@@ -134,25 +129,25 @@ public class UserTest {
     }
 
     @Test
-    public void I_can_retrieve_a_user() throws Exception {
+    public void I_can_retrieve_a_user() {
 
         steps.then_the_persisted_user_should_be_able_to_be_retrieved(User.retrieve(persistedUser.getId()));
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void I_cannot_retrieve_a_user_with_an_invalid_id() throws Exception {
+    public void I_cannot_retrieve_a_user_with_an_invalid_id() {
 
         User.retrieve(-1L);
     }
 
     @Test(expected = InvalidDataAccessApiUsageException.class)
-    public void I_cannot_retrieve_a_user_with_a_null_id() throws Exception {
+    public void I_cannot_retrieve_a_user_with_a_null_id() {
 
         User.retrieve(null);
     }
 
     @Test
-    public void I_can_retrieve_all_the_persisted_users() throws Exception {
+    public void I_can_retrieve_all_the_persisted_users() {
 
         userOne().create();
         userTwo().create();
@@ -162,7 +157,7 @@ public class UserTest {
     }
 
     @Test
-    public void I_can_update_a_user() throws Exception {
+    public void I_can_update_a_user() {
 
         persistedUser.setEmail("updated@email.com");
         persistedUser.setFirstName("Updated");
@@ -174,7 +169,7 @@ public class UserTest {
     }
 
     @Test(expected = DataIntegrityViolationException.class)
-    public void I_cannot_update_a_user_to_be_equal_to_an_existing_user() throws Exception {
+    public void I_cannot_update_a_user_to_be_equal_to_an_existing_user() {
 
         final User user = userOne();
         user.create();
@@ -187,7 +182,7 @@ public class UserTest {
     }
 
     @Test(expected = DataIntegrityViolationException.class)
-    public void I_cannot_update_a_user_to_have_the_same_email_as_an_existing_user() throws Exception {
+    public void I_cannot_update_a_user_to_have_the_same_email_as_an_existing_user() {
 
         final User user = userOne();
         user.create();
@@ -198,7 +193,7 @@ public class UserTest {
     }
 
     @Test
-    public void I_can_update_a_user_to_have_the_same_first_name_as_an_existing_user() throws Exception {
+    public void I_can_update_a_user_to_have_the_same_first_name_as_an_existing_user() {
 
         final User user = userOne();
         user.create();
@@ -211,7 +206,7 @@ public class UserTest {
     }
 
     @Test
-    public void I_can_update_a_user_to_have_the_same_last_name_as_an_existing_user() throws Exception {
+    public void I_can_update_a_user_to_have_the_same_last_name_as_an_existing_user() {
 
         final User user = userOne();
         user.create();
@@ -224,7 +219,7 @@ public class UserTest {
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void I_cannot_update_a_user_with_a_null_id() throws Exception {
+    public void I_cannot_update_a_user_with_a_null_id() {
 
         persistedUser.setId(null);
 
@@ -232,7 +227,7 @@ public class UserTest {
     }
 
     @Test(expected = DataIntegrityViolationException.class)
-    public void I_cannot_update_a_user_with_a_null_email() throws Exception {
+    public void I_cannot_update_a_user_with_a_null_email() {
 
         persistedUser.setEmail(null);
 
@@ -240,7 +235,7 @@ public class UserTest {
     }
 
     @Test(expected = DataIntegrityViolationException.class)
-    public void I_cannot_update_a_user_with_a_null_first_name() throws Exception {
+    public void I_cannot_update_a_user_with_a_null_first_name() {
 
         persistedUser.setFirstName(null);
 
@@ -248,7 +243,7 @@ public class UserTest {
     }
 
     @Test(expected = DataIntegrityViolationException.class)
-    public void I_cannot_update_a_user_with_a_null_last_name() throws Exception {
+    public void I_cannot_update_a_user_with_a_null_last_name() {
 
         persistedUser.setLastName(null);
 
@@ -256,7 +251,7 @@ public class UserTest {
     }
 
     @Test
-    public void I_can_delete_a_user() throws Exception {
+    public void I_can_delete_a_user() {
 
         persistedUser.delete();
 
@@ -264,7 +259,7 @@ public class UserTest {
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void I_cannot_delete_a_user_with_an_invalid_id() throws Exception {
+    public void I_cannot_delete_a_user_with_an_invalid_id() {
 
         persistedUser.setId(-1L);
 
@@ -272,7 +267,7 @@ public class UserTest {
     }
 
     @Test(expected = InvalidDataAccessApiUsageException.class)
-    public void I_cannot_delete_a_user_with_a_null_id() throws Exception {
+    public void I_cannot_delete_a_user_with_a_null_id() {
 
         persistedUser.setId(null);
 
