@@ -32,7 +32,7 @@ public class UserController {
     /**
      * Persist a new user using the user object that has been deserialised from the {@code JSON} in the body of the
      * {@code POST} request.
-     * <p/>
+     *
      * This operation will fail if a user exists with the emil supplied in the new user. Also if an ID is supplied it
      * will be ignored.
      *

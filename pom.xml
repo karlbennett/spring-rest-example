@@ -19,11 +19,16 @@
     <url>https://github.com/karlbennett/scratch-webapp</url>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
         <spring.version>4.1.0.RELEASE</spring.version>
         <hibernate.version>4.3.4.Final</hibernate.version>
         <jackson.version>2.3.2</jackson.version>
         <slf4j.version>1.7.6</slf4j.version>
         <cucumber.version>1.1.5</cucumber.version>
+        <reports.version>2.7</reports.version>
+        <jacoco.version>0.7.2.201409121644</jacoco.version>
+        <javadoc.version>2.10.1</javadoc.version>
     </properties>
 
     <build>
@@ -110,8 +115,72 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <!-- Set the version of the reports plugin to use. -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>${reports.version}</version>
+            </plugin>
+            <plugin>
+                <!-- Enable the generation of JavaDocs. -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${javadoc.version}</version>
+            </plugin>
+            <plugin>
+                <!-- Enable Jacoco test coverage reports. -->
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <executions>
+                    <execution>
+                        <!-- Enable instrumentation of the code before the tests run. -->
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
+
+    <reporting>
+        <!-- Configure the Maven source control report. -->
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>${reports.version}</version>
+                <configuration>
+                    <webAccessUrl>https://github.com/karlbennett/${project.artifactId}</webAccessUrl>
+                </configuration>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <!-- Configure the linking of the JavaDoc and Jacoco reports in the generated Maven site. -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${javadoc.version}</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>javadoc</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
 
     <dependencies>
         <!-- Spring MVC for easy request mapping. -->

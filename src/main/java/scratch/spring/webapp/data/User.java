@@ -148,9 +148,11 @@ public class User implements Serializable {
     }
 
     /**
-     * Retrieve all the users that have been persisted.
+     * Retrieve the user with the supplied ID.
      *
-     * @return all the persisted users.
+     * @param id the ID of the user to retrieved.
+     * @return the persisted user.
+     * @throws EntityNotFoundException it the user does not exist.
      */
     @JsonIgnore
     @Transient
