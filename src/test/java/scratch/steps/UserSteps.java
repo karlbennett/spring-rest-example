@@ -78,7 +78,7 @@ public class UserSteps {
 
         final Set<Map<String, Object>> retrievedUsers = responses.latest().readEntity(Set.class);
 
-        final Set<Map<String, Object>> createdUsers = new HashSet<Map<String, Object>>();
+        final Set<Map<String, Object>> createdUsers = new HashSet<>();
         for (ClientResponse response : responses.created()) {
 
             createdUsers.add(response.readEntity(Map.class));

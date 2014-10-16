@@ -7,15 +7,12 @@ import org.dbunit.dataset.Column;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.DefaultDataSet;
 import org.dbunit.dataset.DefaultTable;
-import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.datatype.DataType;
 import org.dbunit.operation.DatabaseOperation;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Callable;
 
 import static java.lang.String.format;
@@ -56,22 +53,6 @@ public class DBUnitUserRepository {
     public boolean exists(Long id) {
 
         return 1 == retrieveUser(id).getRowCount();
-    }
-
-    public Iterable<User> findAll() {
-
-        final ITable userTable = retrieveUsers();
-
-        final int count = userTable.getRowCount();
-
-        final List<User> users = new ArrayList<User>(count);
-
-        for (int i = 0; i < count; i++) {
-
-            users.add(map(i, userTable));
-        }
-
-        return users;
     }
 
     private static User map(final ITable table) {
@@ -143,19 +124,6 @@ public class DBUnitUserRepository {
             public ITable call(IDatabaseConnection connection) throws SQLException, DataSetException {
 
                 return connection.createQueryTable(USER, sql);
-            }
-        });
-    }
-
-    private ITable retrieveUsers() {
-
-        return wrapCheckedException(new WithConnection<ITable>() {
-            @Override
-            public ITable call(IDatabaseConnection connection) throws SQLException, DataSetException {
-
-                IDataSet dataSet = connection.createDataSet();
-
-                return dataSet.getTable(USER);
             }
         });
     }

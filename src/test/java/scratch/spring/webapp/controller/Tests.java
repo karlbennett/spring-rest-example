@@ -119,7 +119,7 @@ public class Tests {
 
         private Map<String, Object> userMap() {
 
-            final Map<String, Object> map = new HashMap<String, Object>();
+            final Map<String, Object> map = new HashMap<>();
             map.put("email", user.getEmail());
             map.put("firstName", user.getFirstName());
             map.put("lastName", user.getLastName());
