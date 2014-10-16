@@ -28,6 +28,11 @@ public class Users {
         return new User(EMAIL, FIRST_NAME, LAST_NAME);
     }
 
+    public static User user(UserRepository repository) {
+
+        return new User(repository, EMAIL, FIRST_NAME, LAST_NAME);
+    }
+
     public static User userOne() {
 
         return new User(EMAIL_ONE, FIRST_NAME_ONE, LAST_NAME_ONE);

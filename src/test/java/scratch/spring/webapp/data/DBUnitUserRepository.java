@@ -20,6 +20,10 @@ import java.util.concurrent.Callable;
 
 import static java.lang.String.format;
 
+/**
+ * This user repository has been implemented with DBUnit so that an alternate method other than the production code is
+ * used to populating the database with test data.
+ */
 public class DBUnitUserRepository {
 
     public static final String USER = "User";

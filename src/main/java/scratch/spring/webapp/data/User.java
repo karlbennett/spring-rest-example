@@ -141,6 +141,9 @@ public class User implements Serializable {
     @Transient
     public User create() {
 
+        // Remove any ID to make sure we actually attempt a create and not an update.
+        id = null;
+
         return repository.save(this);
     }
 
@@ -184,7 +187,7 @@ public class User implements Serializable {
     @Transient
     public User update() {
 
-        if (null == id) {
+        if (null == id || !repository.exists(id)) {
             throw new EntityNotFoundException(this + " has not yet been persisted.");
         }
 

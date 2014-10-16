@@ -1,48 +1,76 @@
 package scratch.spring.webapp.data;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.InvalidDataAccessApiUsageException;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import scratch.spring.webapp.config.TestScratchConfiguration;
+import org.springframework.dao.DataRetrievalFailureException;
 
 import javax.persistence.EntityNotFoundException;
+import java.lang.reflect.Field;
+import java.util.List;
 
 import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static scratch.spring.webapp.data.Users.user;
 import static scratch.spring.webapp.data.Users.userOne;
 import static scratch.spring.webapp.data.Users.userThree;
-import static scratch.spring.webapp.data.Users.userTwo;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestScratchConfiguration.class)
-@WebAppConfiguration("classpath:")
-public class UserTest implements UserTestTemplate {
+public class UserTest {
 
-    @Autowired
+    private static final Field STATIC_REPOSITORY_FIELD = getStaticRepositoryField();
+
+    private static Field getStaticRepositoryField() {
+
+        try {
+
+            final Field staticRepositoryField = User.class.getDeclaredField("staticRepository");
+            staticRepositoryField.setAccessible(true);
+
+            return staticRepositoryField;
+
+        } catch (NoSuchFieldException e) {
+
+            throw new RuntimeException(e);
+        }
+    }
+
     private UserRepository repository;
 
-    @Autowired
-    private UserSteps steps;
-
-    private User persistedUser;
+    private User user;
+    private User userOne;
 
     @Before
-    public void setUp() {
+    public void setUp() throws IllegalAccessException {
 
-        steps.all_users_are_cleaned_up();
+        repository = mock(UserRepository.class);
 
-        persistedUser = steps.given_a_user_has_been_persisted();
+        STATIC_REPOSITORY_FIELD.set(null, repository);
+
+        user = user(repository);
+
+        userOne = mock(User.class);
+    }
+
+    @After
+    public void tearDown() throws IllegalAccessException {
+
+        // Must null static repository or the User class will not be able to be configured.
+        STATIC_REPOSITORY_FIELD.set(null, null);
     }
 
     @Test
-    public void I_can_access_the_injectable_user_repository_from_user_static_context() {
+    public void I_can_instanciate_a_user() {
+
+        new User();
+    }
+
+    @Test
+    public void I_can_access_the_static_repository() {
 
         assertEquals("the repository should be correct.", repository, User.getStaticRepository());
     }
@@ -56,249 +84,117 @@ public class UserTest implements UserTestTemplate {
     @Test
     public void I_can_create_a_user() {
 
-        final User user = userOne();
+        when(repository.save(user)).thenReturn(userOne);
 
-        user.create();
-
-        steps.then_the_user_should_be_created(user);
-    }
-
-    @Test(expected = DataIntegrityViolationException.class)
-    public void I_cannot_create_the_same_user_twice() {
-
-        persistedUser.setId(null);
-        persistedUser.create();
-    }
-
-    @Test(expected = DataIntegrityViolationException.class)
-    public void I_cannot_create_two_users_with_the_same_email() {
-
-        final User user = userOne();
-        user.setEmail(persistedUser.getEmail());
-
-        user.create();
+        assertEquals("the created user is returned.", userOne, user.create());
     }
 
     @Test
-    public void I_can_create_two_users_with_the_same_first_name() {
+    public void the_users_id_is_set_to_null_when_created() {
 
-        final User user = userOne();
-        user.setFirstName(persistedUser.getFirstName());
-
+        user.setId(1L);
         user.create();
 
-        steps.then_the_user_should_be_created(user);
-    }
-
-    @Test
-    public void I_can_create_two_users_with_the_same_last_name() {
-
-        final User user = userOne();
-        user.setLastName(persistedUser.getLastName());
-
-        user.create();
-
-        steps.then_the_user_should_be_created(user);
-    }
-
-    @Test(expected = DataIntegrityViolationException.class)
-    public void I_cannot_create_a_user_with_a_null_email() {
-
-        final User user = userOne();
-        user.setEmail(null);
-
-        user.create();
-    }
-
-    @Test(expected = DataIntegrityViolationException.class)
-    public void I_cannot_create_a_user_with_a_null_first_name() {
-
-        final User user = userOne();
-        user.setFirstName(null);
-
-        user.create();
-    }
-
-    @Test(expected = DataIntegrityViolationException.class)
-    public void I_cannot_create_a_user_with_a_null_last_name() {
-
-        final User user = userOne();
-        user.setLastName(null);
-
-        user.create();
+        assertNull("the users id should be null.", user.getId());
     }
 
     @Test
     public void I_can_retrieve_a_user() {
 
-        steps.then_the_persisted_user_should_be_able_to_be_retrieved(User.retrieve(persistedUser.getId()));
+        user.setId(1L);
+
+        when(repository.findOne(user.getId())).thenReturn(userOne);
+
+        assertEquals("the retrieved user is returned.", userOne, User.retrieve(user.getId()));
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void I_cannot_retrieve_a_user_with_an_invalid_id() {
+    public void an_error_occurs_when_no_user_is_retrieved() {
 
-        User.retrieve(-1L);
-    }
-
-    @Test(expected = InvalidDataAccessApiUsageException.class)
-    public void I_cannot_retrieve_a_user_with_a_null_id() {
-
-        User.retrieve(null);
+        User.retrieve(1L);
     }
 
     @Test
-    public void I_can_retrieve_all_the_persisted_users() {
+    public void I_can_retrieve_all_user() {
 
-        userOne().create();
-        userTwo().create();
-        userThree().create();
+        @SuppressWarnings("unchecked")
+        final List<User> users = mock(List.class);
 
-        steps.then_all_persisted_users_should_be_retrieved(User.all());
+        when(repository.findAll()).thenReturn(users);
+
+        assertEquals("the retrieved users are returned.", users, User.all());
     }
 
     @Test
     public void I_can_update_a_user() {
 
-        persistedUser.setEmail("updated@email.com");
-        persistedUser.setFirstName("Updated");
-        persistedUser.setLastName("Different");
+        user.setId(1L);
 
-        persistedUser.update();
+        when(repository.save(user)).thenReturn(userOne);
+        when(repository.exists(user.getId())).thenReturn(true);
 
-        steps.then_the_user_should_be_updated(persistedUser);
-    }
-
-    @Test(expected = DataIntegrityViolationException.class)
-    public void I_cannot_update_a_user_to_be_equal_to_an_existing_user() {
-
-        final User user = userOne();
-        user.create();
-
-        user.setEmail(persistedUser.getEmail());
-        user.setFirstName(persistedUser.getFirstName());
-        user.setLastName(persistedUser.getLastName());
-
-        user.update();
-    }
-
-    @Test(expected = DataIntegrityViolationException.class)
-    public void I_cannot_update_a_user_to_have_the_same_email_as_an_existing_user() {
-
-        final User user = userOne();
-        user.create();
-
-        user.setEmail(persistedUser.getEmail());
-
-        user.update();
-    }
-
-    @Test
-    public void I_can_update_a_user_to_have_the_same_first_name_as_an_existing_user() {
-
-        final User user = userOne();
-        user.create();
-
-        user.setFirstName(persistedUser.getFirstName());
-
-        user.update();
-
-        steps.then_the_user_should_be_updated(user);
-    }
-
-    @Test
-    public void I_can_update_a_user_to_have_the_same_last_name_as_an_existing_user() {
-
-        final User user = userOne();
-        user.create();
-
-        user.setLastName(persistedUser.getLastName());
-
-        user.update();
-
-        steps.then_the_user_should_be_updated(user);
+        assertEquals("the updated user is returned.", userOne, user.update());
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void I_cannot_update_a_user_with_a_null_id() {
+    public void I_cannot_update_a_user_that_does_not_have_an_id() {
 
-        persistedUser.setId(null);
+        user.setId(null);
 
-        persistedUser.update();
+        user.update();
     }
 
-    @Test(expected = DataIntegrityViolationException.class)
-    public void I_cannot_update_a_user_with_a_null_email() {
+    @Test(expected = EntityNotFoundException.class)
+    public void I_cannot_update_a_user_that_does_not_exist() {
 
-        persistedUser.setEmail(null);
+        user.setId(1L);
 
-        persistedUser.update();
-    }
+        when(repository.exists(user.getId())).thenReturn(false);
 
-    @Test(expected = DataIntegrityViolationException.class)
-    public void I_cannot_update_a_user_with_a_null_first_name() {
-
-        persistedUser.setFirstName(null);
-
-        persistedUser.update();
-    }
-
-    @Test(expected = DataIntegrityViolationException.class)
-    public void I_cannot_update_a_user_with_a_null_last_name() {
-
-        persistedUser.setLastName(null);
-
-        persistedUser.update();
+        user.update();
     }
 
     @Test
     public void I_can_delete_a_user() {
 
-        persistedUser.delete();
-
-        steps.then_the_user_should_no_longer_be_persisted(persistedUser);
+        assertEquals("the deleted user is returned.", user, user.delete());
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void I_cannot_delete_a_user_with_an_invalid_id() {
+    public void I_cannot_delete_a_user_that_does_not_exist() {
 
-        persistedUser.setId(-1L);
+        user.setId(1L);
 
-        persistedUser.delete();
-    }
+        doThrow(DataRetrievalFailureException.class).when(repository).delete(user.getId());
 
-    @Test(expected = InvalidDataAccessApiUsageException.class)
-    public void I_cannot_delete_a_user_with_a_null_id() {
-
-        persistedUser.setId(null);
-
-        persistedUser.delete();
+        user.delete();
     }
 
     @Test
     public void I_can_check_the_equality_of_a_user() {
 
-        final User left = userOne();
-        final User right = userOne();
+        final User left = user();
+        final User right = user();
 
         assertEquals("a user is equal to it's self.", left, left);
         assertEquals("a user is equal to another user with the same data.", left, right);
 
-        final User differentIdUser = userOne();
+        final User differentIdUser = user();
         differentIdUser.setId(-1L);
 
         assertNotEquals("a user is not equal to a user with a different id.", left, differentIdUser);
 
-        final User differentEmailUser = userOne();
+        final User differentEmailUser = user();
         differentEmailUser.setEmail("different");
 
         assertNotEquals("a user is not equal to a user with a different email.", left, differentEmailUser);
 
-        final User differentFirstNameUser = userOne();
+        final User differentFirstNameUser = user();
         differentFirstNameUser.setFirstName("different");
 
         assertNotEquals("a user is not equal to a user with a different first name.", left, differentFirstNameUser);
 
-        final User differentLastNameUser = userOne();
+        final User differentLastNameUser = user();
         differentLastNameUser.setLastName("different");
 
         assertNotEquals("a user is not equal to a user with a different last name.", left, differentLastNameUser);
@@ -326,11 +222,11 @@ public class UserTest implements UserTestTemplate {
         assertEquals("the user should produce the correct toString value.",
                 format(
                         "User {id = %d, email = '%s', firstName = '%s', lastName = '%s'}",
-                        persistedUser.getId(),
-                        persistedUser.getEmail(),
-                        persistedUser.getFirstName(),
-                        persistedUser.getLastName()
+                        user.getId(),
+                        user.getEmail(),
+                        user.getFirstName(),
+                        user.getLastName()
                 ),
-                persistedUser.toString());
+                user.toString());
     }
 }

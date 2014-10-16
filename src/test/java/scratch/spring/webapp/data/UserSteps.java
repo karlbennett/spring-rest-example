@@ -31,21 +31,16 @@ public class UserSteps {
 
     public User given_a_user_has_been_persisted() {
 
-        final User user = dbUnitRepository.save(user());
-
-        assertTrue("the user should exist.", dbUnitRepository.exists(user.getId()));
-
-        return user;
+        return given_a_user_has_been_persisted(user());
     }
 
-    public void then_the_persisted_user_should_be_able_to_be_retrieved(User user) {
+    public User given_a_user_has_been_persisted(User user) {
 
-        assertEquals("the retrieved user should be correct.", dbUnitRepository.findOne(user.getId()), user);
-    }
+        final User persistedUser = dbUnitRepository.save(user);
 
-    public void then_all_persisted_users_should_be_retrieved(Iterable<User> all) {
+        assertTrue("the user should exist.", dbUnitRepository.exists(persistedUser.getId()));
 
-        assertEquals("all the persisted users should be retrieved.", dbUnitRepository.findAll(), all);
+        return persistedUser;
     }
 
     public void then_the_user_should_no_longer_be_persisted(User user) {

@@ -12,6 +12,12 @@ Feature: User - Create
     And the response body should contain the new user
     And the new user should be persisted
 
+  Scenario: I create a new user with an existing id and the creation fails.
+    Given I create the user
+    When the user has an "id" of the last created user
+    And I create the user again
+    Then I should receive a status code of 400
+
   Scenario: I create the same user twice and the second creation fails.
     Given I create the user
     When I create the user again

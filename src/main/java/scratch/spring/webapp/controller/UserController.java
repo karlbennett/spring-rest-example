@@ -34,13 +34,12 @@ public class UserController {
      * {@code POST} request.
      * <p/>
      * This operation will fail if a user exists with the emil supplied in the new user. Also if an ID is supplied it
-     * will be ignored unless it is an ID for an existing user at which point the persistence will fail.
+     * will be ignored.
      *
      * @param user the user to persist.
      * @return the newly persisted user.
-     * @throws javax.persistence.EntityExistsException
-     *          if the deserialised user contains an ID that is contained by an
-     *          existing user.
+     * @throws org.springframework.dao.DataIntegrityViolationException
+     *          if the deserialised user contains an unique data that has already been persisted.
      */
     @RequestMapping(method = POST, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(CREATED)
