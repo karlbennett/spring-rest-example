@@ -18,8 +18,8 @@ import java.io.Serializable;
 import static java.lang.String.format;
 
 /**
- * A simple user class that contains an email, first, and last names. The email has been annotated to indicate it should
- * be unique. All attributes have been annotated to be not null.
+ * A simple user class that contains an email, first name, last name, and phone number. The email has been annotated to
+ * indicate it should be unique. Some others have been annotated to be not null.
  *
  * @author Karl Bennett
  */
