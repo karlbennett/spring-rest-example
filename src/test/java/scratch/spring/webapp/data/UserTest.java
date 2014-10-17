@@ -172,7 +172,7 @@ public class UserTest {
     @Test
     public void I_can_check_the_equality_of_a_user() {
 
-        final Equals eq = new Equals() {
+        final Equals<User> eq = new Equals<User>() {
             @Override
             public boolean equal(User left, Object right) {
                 return left.equals(right);
@@ -187,7 +187,7 @@ public class UserTest {
     @Test
     public void I_can_check_the_hash_code_of_a_user() {
 
-        final Equals eq = new Equals() {
+        final Equals<User> eq = new Equals<User>() {
             @Override
             public boolean equal(User left, Object right) {
 
@@ -205,7 +205,7 @@ public class UserTest {
     }
 
     public static void I_can_check_the_equality_of_a_user(Long differentId, String differentValue,
-                                                          Create create, Equals eq) {
+                                                          Create create, Equals<User> eq) {
 
         final User left = create.user();
         final User right = create.user();
@@ -279,10 +279,5 @@ public class UserTest {
 
             return new User();
         }
-    }
-
-    private static interface Equals {
-
-        public boolean equal(User left, Object right);
     }
 }
