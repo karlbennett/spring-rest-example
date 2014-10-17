@@ -109,6 +109,10 @@ public class Tests {
                 return false;
             }
 
+            if (!item.get("phoneNumber").equals(user.getPhoneNumber())) {
+                return false;
+            }
+
             return true;
         }
 

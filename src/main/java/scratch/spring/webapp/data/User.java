@@ -81,16 +81,41 @@ public class User implements Serializable {
     @Column(nullable = false)
     private String lastName;
 
+    @Column
+    private String phoneNumber;
+
 
     /**
-     * Create a new {@code User} that will use the supplied {@code UserRepository} to create, update, and delete it's
-     * self.
+     * Create a new user with the supplied values. It will use the static {@code UserRepository} accessed from
+     * {@link #getStaticRepository()} for CUD operations.
      *
-     * @param repository the repository to use for {@code User} CUD operations.
+     * @param email       the users email.
+     * @param firstName   the users first name.
+     * @param lastName    the users last name.
+     * @param phoneNumber the users phone number
      */
-    public User(UserRepository repository) {
+    public User(String email, String firstName, String lastName, String phoneNumber) {
 
-        this.repository = repository;
+        this(getStaticRepository(), email, firstName, lastName, phoneNumber);
+    }
+
+    /**
+     * Create a new user with the supplied repository and values.
+     *
+     * @param repository  the repository to use for {@code User} CUD operations.
+     * @param email       the users email.
+     * @param firstName   the users first name.
+     * @param lastName    the users last name.
+     * @param phoneNumber the users phone number
+     */
+    public User(UserRepository repository, String email, String firstName, String lastName, String phoneNumber) {
+
+        this(repository);
+
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
     }
 
     /**
@@ -102,33 +127,14 @@ public class User implements Serializable {
     }
 
     /**
-     * Create a new user with the supplied repository and values.
+     * Create a new {@code User} that will use the supplied {@code UserRepository} to create, update, and delete it's
+     * self.
      *
      * @param repository the repository to use for {@code User} CUD operations.
-     * @param email      the users email.
-     * @param firstName  the users first name.
-     * @param lastName   the users last name.
      */
-    public User(UserRepository repository, String email, String firstName, String lastName) {
+    public User(UserRepository repository) {
 
-        this(repository);
-
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
-
-    /**
-     * Create a new user with the supplied values. It will use the static {@code UserRepository} accessed from
-     * {@link #getStaticRepository()} for CUD operations.
-     *
-     * @param email     the users email.
-     * @param firstName the users first name.
-     * @param lastName  the users last name.
-     */
-    public User(String email, String firstName, String lastName) {
-
-        this(getStaticRepository(), email, firstName, lastName);
+        this.repository = repository;
     }
 
     /**
@@ -250,6 +256,14 @@ public class User implements Serializable {
         this.lastName = lastName;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
     @Override
     public boolean equals(Object o) {
 
@@ -274,6 +288,9 @@ public class User implements Serializable {
         if (lastName != null ? !lastName.equals(that.lastName) : that.lastName != null) {
             return false;
         }
+        if (phoneNumber != null ? !phoneNumber.equals(that.phoneNumber) : that.phoneNumber != null) {
+            return false;
+        }
 
         return true;
     }
@@ -285,6 +302,7 @@ public class User implements Serializable {
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
+        result = 31 * result + (phoneNumber != null ? phoneNumber.hashCode() : 0);
 
         return result;
     }
@@ -297,6 +315,7 @@ public class User implements Serializable {
                 ", email = '" + email + '\'' +
                 ", firstName = '" + firstName + '\'' +
                 ", lastName = '" + lastName + '\'' +
+                ", phoneNumber = '" + phoneNumber + '\'' +
                 '}';
     }
 }

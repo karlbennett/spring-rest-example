@@ -11,14 +11,13 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static scratch.spring.webapp.data.Users.user;
-import static scratch.spring.webapp.data.Users.userOne;
-import static scratch.spring.webapp.data.Users.userThree;
 
 public class UserTest {
 
@@ -173,47 +172,72 @@ public class UserTest {
     @Test
     public void I_can_check_the_equality_of_a_user() {
 
-        final User left = user();
-        final User right = user();
+        final Equals eq = new Equals() {
+            @Override
+            public boolean equal(User left, Object right) {
+                return left.equals(right);
+            }
+        };
 
-        assertEquals("a user is equal to it's self.", left, left);
-        assertEquals("a user is equal to another user with the same data.", left, right);
-
-        final User differentIdUser = user();
-        differentIdUser.setId(-1L);
-
-        assertNotEquals("a user is not equal to a user with a different id.", left, differentIdUser);
-
-        final User differentEmailUser = user();
-        differentEmailUser.setEmail("different");
-
-        assertNotEquals("a user is not equal to a user with a different email.", left, differentEmailUser);
-
-        final User differentFirstNameUser = user();
-        differentFirstNameUser.setFirstName("different");
-
-        assertNotEquals("a user is not equal to a user with a different first name.", left, differentFirstNameUser);
-
-        final User differentLastNameUser = user();
-        differentLastNameUser.setLastName("different");
-
-        assertNotEquals("a user is not equal to a user with a different last name.", left, differentLastNameUser);
-
-        assertNotEquals("a user is not equal to an object.", left, new Object());
-
-        assertNotEquals("a user is not equal to null.", left, null);
+        I_can_check_the_equality_of_a_user(2L, "different", new CreateWithId(), eq);
+        I_can_check_the_equality_of_a_user(null, null, new CreateWithId(), eq);
+        I_can_check_the_equality_of_a_user(2L, "different", new CreateWithNull(), eq);
     }
 
     @Test
-    public void I_can_check_the_has_code_of_a_user() {
+    public void I_can_check_the_hash_code_of_a_user() {
 
-        final User left = userOne();
+        final Equals eq = new Equals() {
+            @Override
+            public boolean equal(User left, Object right) {
 
-        assertEquals("a users hash code is equal to the hash code of another user with the same data.", left.hashCode(),
-                userOne().hashCode());
+                if (null == right) {
+                    return false;
+                }
 
-        assertNotEquals("a users hash code is not equal to the hash code of another user with a different data.",
-                left.hashCode(), userThree().hashCode());
+                return left.hashCode() == right.hashCode();
+            }
+        };
+
+        I_can_check_the_equality_of_a_user(2L, "different", new CreateWithId(), eq);
+        I_can_check_the_equality_of_a_user(null, null, new CreateWithId(), eq);
+        I_can_check_the_equality_of_a_user(2L, "different", new CreateWithNull(), eq);
+    }
+
+    public static void I_can_check_the_equality_of_a_user(Long differentId, String differentValue,
+                                                          Create create, Equals eq) {
+
+        final User left = create.user();
+        final User right = create.user();
+
+        assertTrue("a user is equal to it's self.", eq.equal(left, left));
+        assertTrue("a user is equal to another user with the same data.", eq.equal(left, right));
+
+        final User differentIdUser = create.user();
+        differentIdUser.setId(differentId);
+        assertFalse("a user is not equal to a user with a different id.", eq.equal(left, differentIdUser));
+
+        final User differentEmailUser = create.user();
+        differentEmailUser.setEmail(differentValue);
+        assertFalse("a user is not equal to a user with a different email.", eq.equal(left, differentEmailUser));
+
+        final User differentFirstNameUser = create.user();
+        differentFirstNameUser.setFirstName(differentValue);
+        assertFalse("a user is not equal to a user with a different first name.",
+                eq.equal(left, differentFirstNameUser));
+
+        final User differentLastNameUser = create.user();
+        differentLastNameUser.setLastName(differentValue);
+        assertFalse("a user is not equal to a user with a different last name.", eq.equal(left, differentLastNameUser));
+
+        final User differentPhoneNumberUser = create.user();
+        differentPhoneNumberUser.setPhoneNumber(differentValue);
+        assertFalse("a user is not equal to a user with a different phone number.",
+                eq.equal(left, differentPhoneNumberUser));
+
+        assertFalse("a user is not equal to an object.", eq.equal(left, new Object()));
+
+        assertFalse("a user is not equal to null.", eq.equal(left, null));
     }
 
     @Test
@@ -221,12 +245,44 @@ public class UserTest {
 
         assertEquals("the user should produce the correct toString value.",
                 format(
-                        "User {id = %d, email = '%s', firstName = '%s', lastName = '%s'}",
+                        "User {id = %d, email = '%s', firstName = '%s', lastName = '%s', phoneNumber = '%s'}",
                         user.getId(),
                         user.getEmail(),
                         user.getFirstName(),
-                        user.getLastName()
+                        user.getLastName(),
+                        user.getPhoneNumber()
                 ),
                 user.toString());
+    }
+
+    private static interface Create {
+
+        public User user();
+    }
+
+    private static class CreateWithId implements Create {
+
+        @Override
+        public User user() {
+
+            final User user = Users.user();
+            user.setId(1L);
+
+            return user;
+        }
+    }
+
+    private static class CreateWithNull implements Create {
+
+        @Override
+        public User user() {
+
+            return new User();
+        }
+    }
+
+    private static interface Equals {
+
+        public boolean equal(User left, Object right);
     }
 }

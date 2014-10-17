@@ -29,6 +29,7 @@ public class DBUnitUserRepository {
     public static final String EMAIL = "email";
     public static final String FIRST_NAME = "firstName";
     public static final String LAST_NAME = "lastName";
+    public static final String PHONE_NUMBER = "phoneNumber";
 
     public final DataSource dataSource;
 
@@ -40,7 +41,7 @@ public class DBUnitUserRepository {
     @SuppressWarnings("unchecked")
     public <S extends User> S save(S user) {
 
-        createUser(user.getEmail(), user.getFirstName(), user.getLastName());
+        createUser(user.getEmail(), user.getFirstName(), user.getLastName(), user.getPhoneNumber());
 
         return (S) map(retrieveUser(user.getEmail()));
     }
@@ -70,8 +71,9 @@ public class DBUnitUserRepository {
                 final String email = table.getValue(index, EMAIL).toString();
                 final String firstName = table.getValue(index, FIRST_NAME).toString();
                 final String lastName = table.getValue(index, LAST_NAME).toString();
+                final String phoneNumber = table.getValue(index, PHONE_NUMBER).toString();
 
-                final User user = new User(email, firstName, lastName);
+                final User user = new User(email, firstName, lastName, phoneNumber);
                 user.setId(id);
 
                 return user;
@@ -84,13 +86,13 @@ public class DBUnitUserRepository {
         clearUsers();
     }
 
-    private void createUser(String email, String firstName, String lastName) {
+    private void createUser(String email, String firstName, String lastName, String phoneNumber) {
 
-        userOperation(DatabaseOperation.INSERT, null, email, firstName, lastName);
+        userOperation(DatabaseOperation.INSERT, null, email, firstName, lastName, phoneNumber);
     }
 
     private void userOperation(final DatabaseOperation operation, final Long id, final String email,
-                               final String firstName, final String lastName) {
+                               final String firstName, final String lastName, final String phoneNumber) {
 
         final DefaultTable userTable = userTable();
 
@@ -98,7 +100,7 @@ public class DBUnitUserRepository {
             @Override
             public Void call(IDatabaseConnection connection) throws Exception {
 
-                userTable.addRow(new Object[]{id, email, firstName, lastName});
+                userTable.addRow(new Object[]{id, email, firstName, lastName, phoneNumber});
 
                 operation.execute(connection, new DefaultDataSet(userTable));
 
@@ -149,8 +151,9 @@ public class DBUnitUserRepository {
         final Column email = new Column(EMAIL, DataType.VARCHAR);
         final Column firstName = new Column(FIRST_NAME, DataType.VARCHAR);
         final Column lastName = new Column(LAST_NAME, DataType.VARCHAR);
+        final Column phoneNumber = new Column(PHONE_NUMBER, DataType.VARCHAR);
 
-        final Column[] columns = {id, email, firstName, lastName};
+        final Column[] columns = {id, email, firstName, lastName, phoneNumber};
 
         return new DefaultTable(USER, columns);
     }

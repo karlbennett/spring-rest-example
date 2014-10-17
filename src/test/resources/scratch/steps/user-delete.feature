@@ -5,11 +5,13 @@ Feature: User - Delete
     And the user has an "email" of "test_one@email.test"
     And the user has a "firstName" of "Test"
     And the user has a "lastName" of "User"
+    And the user has a "phoneNumber" of "5551234"
     And I create the user
     And there is another new user
     And the user has an "email" of "test_two@email.test"
     And the user has a "firstName" of "Test2"
     And the user has a "lastName" of "User2"
+    And the user has a "phoneNumber" of "5551235"
     And I create the user
 
   Scenario: I delete an existing user and it is returned in the response.
