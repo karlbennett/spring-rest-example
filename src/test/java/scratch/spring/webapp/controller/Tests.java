@@ -97,23 +97,34 @@ public class Tests {
         @Override
         public boolean matchesSafely(JSONObject item) {
 
-            if (!item.get("email").equals(user.getEmail())) {
+            if (!getValue(item, "email").equals(user.getEmail())) {
                 return false;
             }
 
-            if (!item.get("firstName").equals(user.getFirstName())) {
+            if (!getValue(item, "firstName").equals(user.getFirstName())) {
                 return false;
             }
 
-            if (!item.get("lastName").equals(user.getLastName())) {
+            if (!getValue(item, "lastName").equals(user.getLastName())) {
                 return false;
             }
 
-            if (!item.get("phoneNumber").equals(user.getPhoneNumber())) {
+            if (!getValue(item, "phoneNumber").equals(user.getPhoneNumber())) {
                 return false;
             }
 
             return true;
+        }
+
+        private static String getValue(JSONObject item, String key) {
+
+            final Object value = item.get(key);
+
+            if (null == value) {
+                return "";
+            }
+
+            return value.toString();
         }
 
         @Override

@@ -3,12 +3,10 @@ package scratch.spring.webapp.data;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
-import org.dbunit.dataset.Column;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.DefaultDataSet;
 import org.dbunit.dataset.DefaultTable;
 import org.dbunit.dataset.ITable;
-import org.dbunit.dataset.datatype.DataType;
 import org.dbunit.operation.DatabaseOperation;
 
 import javax.sql.DataSource;
@@ -16,20 +14,22 @@ import java.sql.SQLException;
 import java.util.concurrent.Callable;
 
 import static java.lang.String.format;
+import static scratch.spring.webapp.data.DBUnits.ADDRESS;
+import static scratch.spring.webapp.data.DBUnits.ADDRESS_ID;
+import static scratch.spring.webapp.data.DBUnits.ID;
+import static scratch.spring.webapp.data.DBUnits.USER;
+import static scratch.spring.webapp.data.DBUnits.addressTable;
+import static scratch.spring.webapp.data.DBUnits.columnValue;
+import static scratch.spring.webapp.data.DBUnits.mapAddress;
+import static scratch.spring.webapp.data.DBUnits.mapUser;
+import static scratch.spring.webapp.data.DBUnits.userTable;
+import static scratch.spring.webapp.data.DBUnits.wrapCheckedException;
 
 /**
  * This user repository has been implemented with DBUnit so that an alternate method other than the production code is
  * used to populating the database with test data.
  */
 public class DBUnitUserRepository {
-
-    public static final String USER = "User";
-
-    public static final String ID = "id";
-    public static final String EMAIL = "email";
-    public static final String FIRST_NAME = "firstName";
-    public static final String LAST_NAME = "lastName";
-    public static final String PHONE_NUMBER = "phoneNumber";
 
     public final DataSource dataSource;
 
@@ -41,14 +41,44 @@ public class DBUnitUserRepository {
     @SuppressWarnings("unchecked")
     public <S extends User> S save(S user) {
 
-        createUser(user.getEmail(), user.getFirstName(), user.getLastName(), user.getPhoneNumber());
+        final Address address = user.getAddress();
 
-        return (S) map(retrieveUser(user.getEmail()));
+        if (null == address) {
+
+            createUser(user.getEmail(), user.getFirstName(), user.getLastName(), user.getPhoneNumber(), null);
+
+            return (S) mapUser(retrieveUser(user.getEmail()));
+        }
+
+        createAddress(address.getNumber(), address.getStreet(), address.getSuburb(), address.getCity(),
+                address.getPostcode());
+
+        final ITable addressTable = retrieveAddress(address.getNumber(), address.getStreet(), address.getSuburb(),
+                address.getCity(), address.getPostcode());
+
+        createUser(user.getEmail(), user.getFirstName(), user.getLastName(), user.getPhoneNumber(),
+                Long.valueOf(columnValue(addressTable, ID)));
+
+        final User createdUser = mapUser(retrieveUser(user.getEmail()));
+        createdUser.setAddress(mapAddress(addressTable));
+
+        return (S) createdUser;
     }
 
     public User findOne(Long id) {
 
-        return map(retrieveUser(id));
+        final ITable userTable = retrieveUser(id);
+
+        final ITable addressTable = retrieveAddress(Long.valueOf(columnValue(userTable, ADDRESS_ID)));
+
+        if (0 >= addressTable.getRowCount()) {
+            return mapUser(userTable);
+        }
+
+        final User user = mapUser(userTable);
+        user.setAddress(mapAddress(addressTable));
+
+        return user;
     }
 
     public boolean exists(Long id) {
@@ -56,115 +86,91 @@ public class DBUnitUserRepository {
         return 1 == retrieveUser(id).getRowCount();
     }
 
-    private static User map(final ITable table) {
-
-        return map(0, table);
-    }
-
-    private static User map(final int index, final ITable table) {
-
-        return wrapCheckedException(new Callable<User>() {
-            @Override
-            public User call() throws DataSetException {
-
-                final Long id = Long.valueOf(table.getValue(index, ID).toString());
-                final String email = table.getValue(index, EMAIL).toString();
-                final String firstName = table.getValue(index, FIRST_NAME).toString();
-                final String lastName = table.getValue(index, LAST_NAME).toString();
-                final String phoneNumber = table.getValue(index, PHONE_NUMBER).toString();
-
-                final User user = new User(email, firstName, lastName, phoneNumber);
-                user.setId(id);
-
-                return user;
-            }
-        });
-    }
-
     public void deleteAll() {
 
         clearUsers();
+        clearAddresses();
     }
 
-    private void createUser(String email, String firstName, String lastName, String phoneNumber) {
+    private void createUser(String email, String firstName, String lastName, String phoneNumber, Long addressId) {
 
-        userOperation(DatabaseOperation.INSERT, null, email, firstName, lastName, phoneNumber);
+        operation(userTable(), DatabaseOperation.INSERT, null, email, firstName, lastName, phoneNumber, addressId);
     }
 
-    private void userOperation(final DatabaseOperation operation, final Long id, final String email,
-                               final String firstName, final String lastName, final String phoneNumber) {
+    private void createAddress(Integer number, String street, String suburb, String city, String postcode) {
 
-        final DefaultTable userTable = userTable();
+        operation(addressTable(), DatabaseOperation.INSERT, null, number, street, suburb, city, postcode);
+    }
+
+    private void operation(final DefaultTable table, final DatabaseOperation operation, final Object... values) {
 
         wrapCheckedException(new WithConnection<Void>() {
             @Override
             public Void call(IDatabaseConnection connection) throws Exception {
 
-                userTable.addRow(new Object[]{id, email, firstName, lastName, phoneNumber});
+                table.addRow(values);
 
-                operation.execute(connection, new DefaultDataSet(userTable));
+                operation.execute(connection, new DefaultDataSet(table));
 
                 return null;
             }
         });
     }
 
-    private ITable retrieveUser(final Long id) {
+    private ITable retrieveUser(Long id) {
 
-        return retrieve(format("SELECT * FROM User WHERE id = %d", id));
+        return retrieve(USER, format("SELECT * FROM User WHERE id = %d", id));
     }
 
-    private ITable retrieveUser(final String email) {
+    private ITable retrieveUser(String email) {
 
-        return retrieve(format("SELECT * FROM User WHERE email = '%s'", email));
+        return retrieve(USER, format("SELECT * FROM User WHERE email = '%s'", email));
     }
 
-    private ITable retrieve(final String sql) {
+    private ITable retrieveAddress(Long id) {
+
+        return retrieve(ADDRESS, format("SELECT * FROM Address WHERE id = %d", id));
+    }
+
+    private ITable retrieveAddress(Integer number, String street, String suburb, String city, String postcode) {
+
+        return retrieve(ADDRESS, format(
+  /**/"SELECT * FROM Address WHERE number = %d AND street = '%s' AND suburb = '%s' AND city = '%s' AND postcode = '%s'",
+                number, street, suburb, city, postcode));
+    }
+
+    private ITable retrieve(final String tableName, final String sql) {
 
         return wrapCheckedException(new WithConnection<ITable>() {
             @Override
             public ITable call(IDatabaseConnection connection) throws SQLException, DataSetException {
 
-                return connection.createQueryTable(USER, sql);
+                return connection.createQueryTable(tableName, sql);
             }
         });
     }
 
     private void clearUsers() {
 
-        final DefaultTable userTable = userTable();
+        clear(userTable());
+    }
+
+    private void clearAddresses() {
+
+        clear(addressTable());
+    }
+
+    private void clear(final DefaultTable table) {
 
         wrapCheckedException(new WithConnection<Void>() {
             @Override
             public Void call(IDatabaseConnection connection) throws DatabaseUnitException, SQLException {
 
-                DatabaseOperation.DELETE_ALL.execute(connection, new DefaultDataSet(userTable));
+                DatabaseOperation.DELETE_ALL.execute(connection, new DefaultDataSet(table));
 
                 return null;
             }
         });
-    }
-
-    private DefaultTable userTable() {
-
-        final Column id = new Column(ID, DataType.BIGINT);
-        final Column email = new Column(EMAIL, DataType.VARCHAR);
-        final Column firstName = new Column(FIRST_NAME, DataType.VARCHAR);
-        final Column lastName = new Column(LAST_NAME, DataType.VARCHAR);
-        final Column phoneNumber = new Column(PHONE_NUMBER, DataType.VARCHAR);
-
-        final Column[] columns = {id, email, firstName, lastName, phoneNumber};
-
-        return new DefaultTable(USER, columns);
-    }
-
-    private static <T> T wrapCheckedException(Callable<T> callable) {
-
-        try {
-            return callable.call();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private abstract class WithConnection<T> implements Callable<T> {

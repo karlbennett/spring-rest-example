@@ -1,5 +1,10 @@
 package scratch.spring.webapp.data;
 
+import static scratch.spring.webapp.data.Addresses.address;
+import static scratch.spring.webapp.data.Addresses.addressOne;
+import static scratch.spring.webapp.data.Addresses.addressThree;
+import static scratch.spring.webapp.data.Addresses.addressTwo;
+
 /**
  * Data for user persistence tests.
  *
@@ -29,26 +34,26 @@ public class Users {
 
     public static User user() {
 
-        return new User(EMAIL, FIRST_NAME, LAST_NAME, PHONE_NUMBER);
+        return new User(EMAIL, FIRST_NAME, LAST_NAME, PHONE_NUMBER, address());
     }
 
     public static User user(UserRepository repository) {
 
-        return new User(repository, EMAIL, FIRST_NAME, LAST_NAME, PHONE_NUMBER);
+        return new User(repository, EMAIL, FIRST_NAME, LAST_NAME, PHONE_NUMBER, address());
     }
 
     public static User userOne() {
 
-        return new User(EMAIL_ONE, FIRST_NAME_ONE, LAST_NAME_ONE, PHONE_NUMBER_ONE);
+        return new User(EMAIL_ONE, FIRST_NAME_ONE, LAST_NAME_ONE, PHONE_NUMBER_ONE, addressOne());
     }
 
     public static User userTwo() {
 
-        return new User(EMAIL_TWO, FIRST_NAME_TWO, LAST_NAME_TWO, PHONE_NUMBER_TWO);
+        return new User(EMAIL_TWO, FIRST_NAME_TWO, LAST_NAME_TWO, PHONE_NUMBER_TWO, addressTwo());
     }
 
     public static User userThree() {
 
-        return new User(EMAIL_THREE, FIRST_NAME_THREE, LAST_NAME_THREE, PHONE_NUMBER_THREE);
+        return new User(EMAIL_THREE, FIRST_NAME_THREE, LAST_NAME_THREE, PHONE_NUMBER_THREE, addressThree());
     }
 }

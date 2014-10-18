@@ -17,6 +17,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static scratch.spring.webapp.data.Addresses.addressOne;
 import static scratch.spring.webapp.data.Users.user;
 
 public class UserTest {
@@ -179,9 +180,9 @@ public class UserTest {
             }
         };
 
-        I_can_check_the_equality_of_a_user(2L, "different", new CreateWithId(), eq);
-        I_can_check_the_equality_of_a_user(null, null, new CreateWithId(), eq);
-        I_can_check_the_equality_of_a_user(2L, "different", new CreateWithNull(), eq);
+        I_can_check_the_equality_of_a_user(2L, "different", addressOne(), new CreateWithId(), eq);
+        I_can_check_the_equality_of_a_user(null, null, null, new CreateWithId(), eq);
+        I_can_check_the_equality_of_a_user(2L, "different", addressOne(), new CreateWithNull(), eq);
     }
 
     @Test
@@ -199,13 +200,13 @@ public class UserTest {
             }
         };
 
-        I_can_check_the_equality_of_a_user(2L, "different", new CreateWithId(), eq);
-        I_can_check_the_equality_of_a_user(null, null, new CreateWithId(), eq);
-        I_can_check_the_equality_of_a_user(2L, "different", new CreateWithNull(), eq);
+        I_can_check_the_equality_of_a_user(2L, "different", addressOne(), new CreateWithId(), eq);
+        I_can_check_the_equality_of_a_user(null, null, null, new CreateWithId(), eq);
+        I_can_check_the_equality_of_a_user(2L, "different", addressOne(), new CreateWithNull(), eq);
     }
 
     public static void I_can_check_the_equality_of_a_user(Long differentId, String differentValue,
-                                                          Create create, Equals<User> eq) {
+                                                          Address differentAddress, Create create, Equals<User> eq) {
 
         final User left = create.user();
         final User right = create.user();
@@ -235,6 +236,10 @@ public class UserTest {
         assertFalse("a user is not equal to a user with a different phone number.",
                 eq.equal(left, differentPhoneNumberUser));
 
+        final User differentAddressUser = create.user();
+        differentAddressUser.setAddress(differentAddress);
+        assertFalse("a user is not equal to a user with a different address.", eq.equal(left, differentAddressUser));
+
         assertFalse("a user is not equal to an object.", eq.equal(left, new Object()));
 
         assertFalse("a user is not equal to null.", eq.equal(left, null));
@@ -245,12 +250,13 @@ public class UserTest {
 
         assertEquals("the user should produce the correct toString value.",
                 format(
-                        "User {id = %d, email = '%s', firstName = '%s', lastName = '%s', phoneNumber = '%s'}",
+                /**/"User {id = %d, email = '%s', firstName = '%s', lastName = '%s', phoneNumber = '%s', address = %s}",
                         user.getId(),
                         user.getEmail(),
                         user.getFirstName(),
                         user.getLastName(),
-                        user.getPhoneNumber()
+                        user.getPhoneNumber(),
+                        user.getAddress()
                 ),
                 user.toString());
     }

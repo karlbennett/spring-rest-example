@@ -3,6 +3,7 @@ package scratch.spring.webapp.data;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.dao.DataRetrievalFailureException;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityExistsException;
@@ -10,6 +11,8 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -84,31 +87,27 @@ public class User implements Serializable {
     @Column
     private String phoneNumber;
 
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "addressId")
+    private Address address;
+
 
     /**
      * Create a new user with the supplied values. It will use the static {@code UserRepository} accessed from
      * {@link #getStaticRepository()} for CUD operations.
-     *
-     * @param email       the users email.
-     * @param firstName   the users first name.
-     * @param lastName    the users last name.
-     * @param phoneNumber the users phone number
      */
-    public User(String email, String firstName, String lastName, String phoneNumber) {
+    public User(String email, String firstName, String lastName, String phoneNumber, Address address) {
 
-        this(getStaticRepository(), email, firstName, lastName, phoneNumber);
+        this(getStaticRepository(), email, firstName, lastName, phoneNumber, address);
     }
 
     /**
      * Create a new user with the supplied repository and values.
      *
-     * @param repository  the repository to use for {@code User} CUD operations.
-     * @param email       the users email.
-     * @param firstName   the users first name.
-     * @param lastName    the users last name.
-     * @param phoneNumber the users phone number
+     * @param repository the repository to use for {@code User} CUD operations.
      */
-    public User(UserRepository repository, String email, String firstName, String lastName, String phoneNumber) {
+    public User(UserRepository repository, String email, String firstName, String lastName, String phoneNumber,
+                Address address) {
 
         this(repository);
 
@@ -116,6 +115,7 @@ public class User implements Serializable {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
+        this.address = address;
     }
 
     /**
@@ -264,6 +264,14 @@ public class User implements Serializable {
         this.phoneNumber = phoneNumber;
     }
 
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
     @Override
     public boolean equals(Object o) {
 
@@ -291,6 +299,9 @@ public class User implements Serializable {
         if (phoneNumber != null ? !phoneNumber.equals(that.phoneNumber) : that.phoneNumber != null) {
             return false;
         }
+        if (address != null ? !address.equals(that.address) : that.address != null) {
+            return false;
+        }
 
         return true;
     }
@@ -303,6 +314,7 @@ public class User implements Serializable {
         result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
         result = 31 * result + (phoneNumber != null ? phoneNumber.hashCode() : 0);
+        result = 31 * result + (address != null ? address.hashCode() : 0);
 
         return result;
     }
@@ -316,6 +328,7 @@ public class User implements Serializable {
                 ", firstName = '" + firstName + '\'' +
                 ", lastName = '" + lastName + '\'' +
                 ", phoneNumber = '" + phoneNumber + '\'' +
+                ", address = " + address +
                 '}';
     }
 }
