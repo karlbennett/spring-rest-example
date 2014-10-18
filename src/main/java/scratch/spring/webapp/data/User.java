@@ -147,8 +147,9 @@ public class User implements Serializable {
     @Transient
     public User create() {
 
-        // Remove any ID to make sure we actually attempt a create and not an update.
+        // Remove any ID's to make sure we actually attempt a create and not an update.
         id = null;
+        address.setId(null);
 
         return repository.save(this);
     }
