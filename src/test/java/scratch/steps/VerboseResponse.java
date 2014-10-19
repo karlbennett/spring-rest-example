@@ -44,6 +44,8 @@ public class VerboseResponse extends ClientResponse {
 
         toString.append(format("HTTP/1.1 %d %s", response.getStatus(), response.getStatusInfo().getReasonPhrase()));
 
+        toString.append(NEW_LINE);
+
         for (Entry<String, List<String>> header : response.getHeaders().entrySet()) {
             toString.append(format("%s: %s", header.getKey(), header.getValue())).append(NEW_LINE);
         }

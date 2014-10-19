@@ -20,7 +20,7 @@ public class Responses extends Holder<Deque<ClientResponse>> implements Iterable
     }
 
     public void add(ClientResponse response) {
-        get().push(new VerboseResponse(response));
+        get().push(response);
     }
 
     public ClientResponse latest() {

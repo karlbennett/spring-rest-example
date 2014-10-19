@@ -51,7 +51,8 @@ public class UserSteps {
     @Then("^I should receive a status code of (\\d+)$")
     public void I_should_receive_a_status_code_of(int status) {
 
-        assertThat("the response HTTP status code should be correct.", responses.latest(), statusEquals(status));
+        assertThat("the response HTTP status code should be correct.", new VerboseResponse(responses.latest()),
+                statusEquals(status));
     }
 
     @Then("^the response body should contain the (?:new|requested|updated) user$")
