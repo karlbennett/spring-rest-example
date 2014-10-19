@@ -70,7 +70,8 @@ public class PropertyObject {
     @SuppressWarnings("unchecked")
     public <T> T get(String propertyPath) {
 
-        final T value = traverse(map, propertyPath.split(DOT), null, new GetLeaf<T>(), new CheckBranch());
+        final T value = traverse(map, propertyPath.split(DOT), null, new GetLeaf<T>(propertyPath),
+                new CheckBranch(propertyPath));
 
         if (value instanceof Map) {
             return (T) deepCopyMap((Map<String, Object>) value);
@@ -82,6 +83,10 @@ public class PropertyObject {
     @SuppressWarnings("unchecked")
     private static <T> T traverse(Map<String, Object> map, String[] propertyPath, Object value, Leaf<T> leaf,
                                   Branch branch) {
+
+        if (null == map) {
+            return null;
+        }
 
         final String head = head(propertyPath);
         final String[] tail = tail(propertyPath);
@@ -126,7 +131,8 @@ public class PropertyObject {
     @SuppressWarnings("unchecked")
     public <T> T remove(String propertyPath) {
 
-        return (T) traverse(map, propertyPath.split(DOT), null, new RemoveLeaf(), new CheckBranch());
+        return (T) traverse(map, propertyPath.split(DOT), null, new RemoveLeaf(propertyPath),
+                new CheckBranch(propertyPath));
     }
 
     public void clear() {
@@ -147,10 +153,36 @@ public class PropertyObject {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        PropertyObject that = (PropertyObject) o;
+        final PropertyObject that = (PropertyObject) o;
 
-        return map.equals(that.map);
+        return deepEquals(map.entrySet().iterator(), that.map);
+    }
 
+    @SuppressWarnings("unchecked")
+    private static boolean deepEquals(Iterator<Entry<String, Object>> left, Map<String, Object> right) {
+
+        if (!left.hasNext()) {
+            return true;
+        }
+
+        final Entry<String, Object> leftEntry = left.next();
+
+        if ((leftEntry.getValue() instanceof Map)) {
+
+            final Object rightValue = right.get(leftEntry.getKey());
+
+            if (!(rightValue instanceof Map)) {
+                return false;
+            }
+
+            final Set<Entry<String, Object>> leftEntries = ((Map<String, Object>) leftEntry.getValue()).entrySet();
+
+            if (!deepEquals(leftEntries.iterator(), (Map<String, Object>) rightValue)) {
+                return false;
+            }
+        }
+
+        return deepEquals(left, right);
     }
 
     @Override
@@ -158,31 +190,20 @@ public class PropertyObject {
         return map.hashCode();
     }
 
+    @Override
+    public String toString() {
+        return map.toString();
+    }
+
+    private static void checkKey(String propertyPath, Map<String, Object> map, String key) {
+
+        if (!map.containsKey(key)) {
+            throw new IllegalArgumentException("no value exists for property (" + propertyPath + ")");
+        }
+    }
+
     private static interface Leaf<T> {
         public T run(Map<String, Object> map, String key, Object value);
-    }
-
-    private static interface Branch {
-        public void run(Map<String, Object> map, String key);
-    }
-
-    private static class GetLeaf<T> implements Leaf<T> {
-
-        @SuppressWarnings("unchecked")
-        @Override
-        public T run(Map<String, Object> map, String key, Object value) {
-
-            checkKey(map, key);
-
-            return (T) map.get(key);
-        }
-
-        public static void checkKey(Map<String, Object> map, String key) {
-
-            if (!map.containsKey(key)) {
-                throw new IllegalArgumentException("no value exists for property (" + key + ")");
-            }
-        }
     }
 
     private static class SetLeaf implements Leaf<Void> {
@@ -196,25 +217,55 @@ public class PropertyObject {
         }
     }
 
-    private static class RemoveLeaf<T> implements Leaf<T> {
+    private static abstract class CheckedLeaf<T> implements Leaf<T> {
 
-        @SuppressWarnings("unchecked")
+        private final String propertyPath;
+
+        protected CheckedLeaf(String propertyPath) {
+            this.propertyPath = propertyPath;
+        }
+
         @Override
         public T run(Map<String, Object> map, String key, Object value) {
 
-            GetLeaf.checkKey(map, key);
+            checkKey(propertyPath, map, key);
+
+            return runWithKeyCheck(map, key, value);
+        }
+
+        protected abstract T runWithKeyCheck(Map<String, Object> map, String key, Object value);
+    }
+
+    private static class GetLeaf<T> extends CheckedLeaf<T> {
+
+        protected GetLeaf(String propertyPath) {
+            super(propertyPath);
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public T runWithKeyCheck(Map<String, Object> map, String key, Object value) {
+
+            return (T) map.get(key);
+        }
+    }
+
+    private static class RemoveLeaf<T> extends CheckedLeaf<T> {
+
+        protected RemoveLeaf(String propertyPath) {
+            super(propertyPath);
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public T runWithKeyCheck(Map<String, Object> map, String key, Object value) {
 
             return (T) map.remove(key);
         }
     }
 
-    private static class CheckBranch implements Branch {
-
-        @Override
-        public void run(Map<String, Object> map, String key) {
-
-            GetLeaf.checkKey(map, key);
-        }
+    private static interface Branch {
+        public void run(Map<String, Object> map, String key);
     }
 
     private static class CreateBranch implements Branch {
@@ -222,7 +273,26 @@ public class PropertyObject {
         @Override
         public void run(Map<String, Object> map, String key) {
 
+            if (map.containsKey(key) && map.get(key) instanceof Map) {
+                return;
+            }
+
             map.put(key, new HashMap<String, Object>());
+        }
+    }
+
+    private static class CheckBranch implements Branch {
+
+        private final String propertyPath;
+
+        protected CheckBranch(String propertyPath) {
+            this.propertyPath = propertyPath;
+        }
+
+        @Override
+        public void run(Map<String, Object> map, String key) {
+
+            checkKey(propertyPath, map, key);
         }
     }
 }

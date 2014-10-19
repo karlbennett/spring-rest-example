@@ -14,6 +14,7 @@ import java.util.Set;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static scratch.steps.StatusMatcher.statusEquals;
+import static scratch.steps.UserFields.ADDRESS_ID;
 import static scratch.steps.UserFields.ID;
 
 @ContextConfiguration(classes = CucumberScratchConfiguration.class)
@@ -59,10 +60,11 @@ public class UserSteps {
     @SuppressWarnings("unchecked")
     public void the_response_body_should_contain_the_user() {
 
-        final Map<String, Object> expected = user.toMap();
+        final PropertyObject expected = new PropertyObject(user);
 
-        final Map<String, Object> actual = responses.latest().readEntity(Map.class);
+        final PropertyObject actual = new PropertyObject(responses.latest().readEntity(Map.class));
         actual.remove(ID);
+        actual.remove(ADDRESS_ID);
 
         assertEquals("the response body should contain the user.", expected, actual);
     }

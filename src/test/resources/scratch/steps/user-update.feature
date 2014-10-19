@@ -6,17 +6,25 @@ Feature: User - Update
     And the user has a "firstName" of "Test"
     And the user has a "lastName" of "User"
     And the user has a "phoneNumber" of "5551234"
-    And the user has a "address" of "null"
+    And the user has a "address.number" of "11"
+    And the user has a "address.street" of "Test Road"
+    And the user has a "address.suburb" of "Testerton"
+    And the user has a "address.city" of "Testopolis"
+    And the user has a "address.postcode" of "TST123"
     And I create the user
     And there is another new user
     And the user has an "email" of "test_two@email.test"
     And the user has a "firstName" of "Test2"
     And the user has a "lastName" of "User2"
     And the user has a "phoneNumber" of "5551235"
-    And the user has a "address" of "null"
+    And the user has a "address.number" of "22"
+    And the user has a "address.street" of "Test1 Road"
+    And the user has a "address.suburb" of "Testerton1"
+    And the user has a "address.city" of "Testopolis1"
+    And the user has a "address.postcode" of "TST124"
     And I create the user
 
-  Scenario Outline: I update an existing user and the user is updated correctly.
+  Scenario Outline: I update a user and the user is updated correctly.
     Given the user has an "email" of "<email>"
     And the user has a "firstName" of "<first-name>"
     And the user has a "lastName" of "<last-name>"
@@ -34,7 +42,26 @@ Feature: User - Update
     | test_two@email.test   | Test2      | User2     | 5551236      |
     | test_three@email.test | Test3      | User3     | 5551236      |
 
-  Scenario Outline: I update an existing user with the same name and phone number values as an existing and the user is updated correctly.
+  Scenario Outline: I update a users address and the user is updated correctly.
+    Given the user has a "address.number" of "<number>"
+    And the user has a "address.street" of "<street>"
+    And the user has a "address.suburb" of "<suburb>"
+    And the user has a "address.city" of "<city>"
+    And the user has a "address.postcode" of "<postcode>"
+    When I update the user
+    Then I should receive a status code of 200
+    And the response body should contain the updated user
+    And the user should be updated
+  Examples:
+    | number | street     | suburb     | city        | postcode |
+    | 33     | Test1 Road | Testerton1 | Testopolis1 | TST124   |
+    | 22     | Test2 Road | Testerton1 | Testopolis1 | TST124   |
+    | 22     | Test1 Road | Testerton2 | Testopolis1 | TST124   |
+    | 22     | Test1 Road | Testerton1 | Testopolis2 | TST124   |
+    | 22     | Test1 Road | Testerton1 | Testopolis1 | TST125   |
+    | 33     | Test2 Road | Testerton2 | Testopolis2 | TST125   |
+
+  Scenario Outline: I update a user with existing name and phone number values and the user is updated correctly.
     Given the user has an "email" of "<email>"
     And the user has a "firstName" of "<first-name>"
     And the user has a "lastName" of "<last-name>"
@@ -49,7 +76,26 @@ Feature: User - Update
     | test_two@email.test | Test2      | User      | 5551235      |
     | test_two@email.test | Test2      | User2     | 5551234      |
 
-  Scenario Outline: I update an existing user with the no phone number value and the user is updated correctly.
+  Scenario Outline: I update a users address with the existing values and the user is updated correctly.
+    Given the user has a "address.number" of "<number>"
+    And the user has a "address.street" of "<street>"
+    And the user has a "address.suburb" of "<suburb>"
+    And the user has a "address.city" of "<city>"
+    And the user has a "address.postcode" of "<postcode>"
+    When I update the user
+    Then I should receive a status code of 200
+    And the response body should contain the updated user
+    And the user should be updated
+  Examples:
+    | number | street     | suburb     | city        | postcode |
+    | 11     | Test1 Road | Testerton1 | Testopolis1 | TST124   |
+    | 22     | Test Road  | Testerton1 | Testopolis1 | TST124   |
+    | 22     | Test1 Road | Testerton  | Testopolis1 | TST124   |
+    | 22     | Test1 Road | Testerton1 | Testopolis  | TST124   |
+    | 22     | Test1 Road | Testerton1 | Testopolis1 | TST123   |
+    | 11     | Test Road  | Testerton  | Testopolis  | TST123   |
+
+  Scenario Outline: I update a user with the no phone number value and the user is updated correctly.
     Given the user has an "email" of "test_two@email.test"
     And the user has a "firstName" of "Test2"
     And the user has a "lastName" of "User2"
@@ -63,7 +109,31 @@ Feature: User - Update
     |              |
     | null         |
 
-  Scenario: I update an existing user with the no phone number field and the user is updated correctly.
+  Scenario Outline: I update a users address with empty values and the user is updated correctly.
+    Given the user has a "address.number" of "<number>"
+    And the user has a "address.street" of "<street>"
+    And the user has a "address.suburb" of "<suburb>"
+    And the user has a "address.city" of "<city>"
+    And the user has a "address.postcode" of "<postcode>"
+    When I update the user
+    Then I should receive a status code of 200
+    And the response body should contain the updated user
+    And the user should be updated
+  Examples:
+    | number | street     | suburb     | city        | postcode |
+    | null   | Test2 Road | Testerton2 | Testopolis2 | TST125   |
+    |        | Test2 Road | Testerton2 | Testopolis2 | TST125   |
+    | 33     | null       | Testerton2 | Testopolis2 | TST125   |
+    | 33     |            | Testerton2 | Testopolis2 | TST125   |
+    | 33     | Test2 Road | null       | Testopolis2 | TST125   |
+    | 33     | Test2 Road |            | Testopolis2 | TST125   |
+    | 33     | Test2 Road | Testerton2 | null        | TST125   |
+    | 33     | Test2 Road | Testerton2 |             | TST125   |
+    | 33     | Test2 Road | Testerton2 | Testopolis2 | null     |
+    | 33     | Test2 Road | Testerton2 | Testopolis2 |          |
+    | 33     | Test2 Road | Testerton2 | Testopolis2 | TST125   |
+
+  Scenario: I update a user with the no phone number field and the user is updated correctly.
     Given the user has no "phoneNumber" field
     When I update the user
     Then I should receive a status code of 200
@@ -71,7 +141,22 @@ Feature: User - Update
     And the response body should contain the updated user
     And the user should be updated
 
-  Scenario: I update an existing user with the email of an existing user and update fails.
+  Scenario Outline: I update a users address with missing values and the user is updated correctly.
+    Given the user has no "address.<field-name>" field
+    When I update the user
+    Then I should receive a status code of 200
+    And the user has a "address.<field-name>" of "null"
+    And the response body should contain the updated user
+    And the user should be updated
+  Examples:
+    | field-name |
+    | number     |
+    | street     |
+    | suburb     |
+    | city       |
+    | postcode   |
+
+  Scenario: I update a user with an existing email and the update fails.
     Given the user has an "email" of "test_one@email.test"
     And the user has a "firstName" of "Test2"
     And the user has a "lastName" of "User2"
@@ -79,12 +164,10 @@ Feature: User - Update
     When I update the user
     Then I should receive a status code of 400
 
-  Scenario Outline: I update an existing user with missing values and the update fails.
-    Given there is a new user
-    And the user has an "email" of "<email>"
+  Scenario Outline: I update a user with missing values and the update fails.
+    Given the user has an "email" of "<email>"
     And the user has a "firstName" of "<first-name>"
     And the user has a "lastName" of "<last-name>"
-    And the user has a "phoneNumber" of "5551235"
     When I update the user
     Then I should receive a status code of 400
   Examples:
@@ -96,7 +179,7 @@ Feature: User - Update
     | test_one@email.test | Test       |           |
     | test_one@email.test | Test       | null      |
 
-  Scenario Outline: I update an existing user with missing fields and the update fails.
+  Scenario Outline: I update a user with missing fields and the update fails.
     Given the user has no "<field-name>" field
     When I update the user
     Then I should receive a status code of 400
@@ -106,7 +189,7 @@ Feature: User - Update
     | firstName  |
     | lastName   |
 
-  Scenario: I update an existing user with an empty user and the update fails.
+  Scenario: I update a user with an empty user and the update fails.
     Given there is a new user
     When I update the user
     Then I should receive a status code of 400

@@ -6,14 +6,22 @@ Feature: User - Delete
     And the user has a "firstName" of "Test"
     And the user has a "lastName" of "User"
     And the user has a "phoneNumber" of "5551234"
-    And the user has a "address" of "null"
+    And the user has a "address.number" of "11"
+    And the user has a "address.street" of "Test Road"
+    And the user has a "address.suburb" of "Testerton"
+    And the user has a "address.city" of "Testopolis"
+    And the user has a "address.postcode" of "TST123"
     And I create the user
     And there is another new user
     And the user has an "email" of "test_two@email.test"
     And the user has a "firstName" of "Test2"
     And the user has a "lastName" of "User2"
     And the user has a "phoneNumber" of "5551235"
-    And the user has a "address" of "null"
+    And the user has a "address.number" of "22"
+    And the user has a "address.street" of "Test1 Road"
+    And the user has a "address.suburb" of "Testerton1"
+    And the user has a "address.city" of "Testopolis1"
+    And the user has a "address.postcode" of "TST124"
     And I create the user
 
   Scenario: I delete an existing user and it is returned in the response.

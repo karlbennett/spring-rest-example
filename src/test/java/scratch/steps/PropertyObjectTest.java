@@ -21,22 +21,27 @@ public class PropertyObjectTest {
     private static final String ONE = "one";
     private static final String TWO = "two";
     private static final String THREE = "three";
-    private static final String ONE_TWO = ONE + "." + TWO;
-    private static final String ONE_TWO_THREE = ONE_TWO + "." + THREE;
-    private static final String TWO_THREE = TWO + "." + THREE;
-
     private static final String FOUR = "four";
     private static final String FIVE = "five";
     private static final String SIX = "six";
     private static final String SEVEN = "seven";
+    private static final String EIGHT = "eight";
+    private static final String NINE = "nine";
+    private static final String TEN = "ten";
+
+    private static final String ONE_TWO = ONE + "." + TWO;
+    private static final String ONE_THREE = ONE + "." + THREE;
+    private static final String ONE_FOUR = ONE + "." + FOUR;
+    private static final String ONE_TWO_THREE = ONE_TWO + "." + THREE;
+    private static final String ONE_TWO_FOUR = ONE_TWO + "." + FOUR;
+    private static final String ONE_TWO_FIVE = ONE_TWO + "." + FIVE;
+    private static final String TWO_THREE = TWO + "." + THREE;
+
     private static final String FOUR_FIVE = FOUR + "." + FIVE;
     private static final String FOUR_FIVE_SIX = FOUR_FIVE + "." + SIX;
     private static final String FOUR_FIVE_SIX_SEVEN = FOUR_FIVE_SIX + "." + SEVEN;
     private static final String FIVE_SIX = FIVE + "." + SIX;
 
-    private static final String EIGHT = "eight";
-    private static final String NINE = "nine";
-    private static final String TEN = "ten";
     private static final String EIGHT_NINE = EIGHT + "." + NINE;
     private static final String EIGHT_NINE_TEN = EIGHT_NINE + "." + TEN;
 
@@ -204,6 +209,28 @@ public class PropertyObjectTest {
 
     public static void setTest(PropertyObject propertyObject) {
 
+        propertyObject.set(ONE_TWO, NEW_VALUE);
+        propertyObject.set(ONE_THREE, NEW_VALUE);
+        propertyObject.set(ONE_FOUR, NEW_VALUE);
+
+        assertEquals("value one.two should be correct.", NEW_VALUE,
+                propertyObject.get(ONE_TWO));
+        assertEquals("value one.three should be correct.", NEW_VALUE,
+                propertyObject.get(ONE_THREE));
+        assertEquals("value one.four should be correct.", NEW_VALUE,
+                propertyObject.get(ONE_FOUR));
+
+        propertyObject.set(ONE_TWO_THREE, NEW_VALUE);
+        propertyObject.set(ONE_TWO_FOUR, NEW_VALUE);
+        propertyObject.set(ONE_TWO_FIVE, NEW_VALUE);
+
+        assertEquals("value one.two.three should be correct.", NEW_VALUE,
+                propertyObject.get(ONE_TWO_THREE));
+        assertEquals("value one.two.four should be correct.", NEW_VALUE,
+                propertyObject.get(ONE_TWO_FOUR));
+        assertEquals("value one.two.five should be correct.", NEW_VALUE,
+                propertyObject.get(ONE_TWO_FIVE));
+
         propertyObject.set(ONE_TWO_THREE, NEW_VALUE);
         assertEquals("value one.two.three should be correct.", NEW_VALUE,
                 propertyObject.get(ONE_TWO_THREE));
@@ -221,9 +248,9 @@ public class PropertyObjectTest {
                 propertyObject.get(FOUR));
 
         propertyObject.set(FOUR_FIVE_SIX_SEVEN, NEW_VALUE);
-        assertEquals("value five.seven should be correct.", singletonMap(SEVEN, NEW_VALUE),
+        assertEquals("value four.five.six should be correct.", singletonMap(SEVEN, NEW_VALUE),
                 propertyObject.get(FOUR_FIVE_SIX));
-        assertEquals("value five.seven.eight should be correct.", NEW_VALUE,
+        assertEquals("value four.five.six.seven should be correct.", NEW_VALUE,
                 propertyObject.get(FOUR_FIVE_SIX_SEVEN));
 
         propertyObject.set(EIGHT_NINE_TEN, NEW_VALUE);
@@ -386,16 +413,16 @@ public class PropertyObjectTest {
 
     private static Map<String, Object> referenceMap() {
 
-        final Map<String, Object> two = new HashMap<String, Object>();
+        final Map<String, Object> two = new HashMap<>();
         two.put(THREE, 3);
 
-        final Map<String, Object> five = new HashMap<String, Object>();
+        final Map<String, Object> five = new HashMap<>();
         five.put(SIX, 6);
 
-        final Map<String, Object> four = new HashMap<String, Object>();
+        final Map<String, Object> four = new HashMap<>();
         four.put(FIVE, five);
 
-        final Map<String, Object> map = new HashMap<String, Object>();
+        final Map<String, Object> map = new HashMap<>();
         map.put(ONE, 1);
         map.put(TWO, two);
         map.put(FOUR, four);
