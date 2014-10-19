@@ -76,7 +76,13 @@ public class DBUnits {
             @Override
             public String call() throws DataSetException {
 
-                return table.getValue(row, column).toString();
+                final Object value = table.getValue(row, column);
+
+                if (null == value) {
+                    return null;
+                }
+
+                return value.toString();
             }
         });
     }

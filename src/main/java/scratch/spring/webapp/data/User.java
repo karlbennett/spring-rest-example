@@ -149,7 +149,10 @@ public class User implements Serializable {
 
         // Remove any ID's to make sure we actually attempt a create and not an update.
         id = null;
-        address.setId(null);
+
+        if (null != address ) {
+            address.setId(null);
+        }
 
         return repository.save(this);
     }

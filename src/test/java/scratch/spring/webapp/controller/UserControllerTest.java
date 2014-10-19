@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import scratch.spring.webapp.config.TestScratchConfiguration;
+import scratch.spring.webapp.data.Address;
 import scratch.spring.webapp.data.User;
 import scratch.spring.webapp.data.UserSteps;
 
@@ -35,7 +36,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static scratch.spring.webapp.controller.Tests.UserMatcher;
 import static scratch.spring.webapp.controller.Tests.assertBadRequest;
 import static scratch.spring.webapp.controller.Tests.assertConstraintViolation;
 import static scratch.spring.webapp.controller.Tests.assertMissingBody;
@@ -43,6 +43,7 @@ import static scratch.spring.webapp.controller.Tests.assertNoFound;
 import static scratch.spring.webapp.controller.Tests.assertValidationError;
 import static scratch.spring.webapp.controller.Tests.json;
 import static scratch.spring.webapp.controller.Tests.user;
+import static scratch.spring.webapp.controller.Tests.equalTo;
 import static scratch.spring.webapp.data.Users.EMAIL_ONE;
 import static scratch.spring.webapp.data.Users.FIRST_NAME_ONE;
 import static scratch.spring.webapp.data.Users.LAST_NAME_ONE;
@@ -80,7 +81,7 @@ public class UserControllerTest {
 
         final User user = userOne();
 
-        final MvcResult result = assertUserCreated(user, post("/users"));
+        final MvcResult result = assertUserCreated(post("/users"), user);
 
         steps.then_the_user_should_be_created(user(result));
     }
@@ -138,7 +139,7 @@ public class UserControllerTest {
         final User user = userOne();
         user.setFirstName(persistedUser.getFirstName());
 
-        final MvcResult result = assertUserCreated(user, post("/users"));
+        final MvcResult result = assertUserCreated(post("/users"), user);
 
         steps.then_the_user_should_be_created(user(result));
     }
@@ -149,7 +150,32 @@ public class UserControllerTest {
         final User user = userOne();
         user.setLastName(persistedUser.getLastName());
 
-        final MvcResult result = assertUserCreated(user, post("/users"));
+        final MvcResult result = assertUserCreated(post("/users"), user);
+
+        steps.then_the_user_should_be_created(user(result));
+    }
+
+    @Test
+    public void I_can_create_two_users_with_the_same_phone_number() throws Exception {
+
+        final User user = userOne();
+        user.setPhoneNumber(persistedUser.getPhoneNumber());
+
+        final MvcResult result = assertUserCreated(post("/users"), user);
+
+        steps.then_the_user_should_be_created(user(result));
+    }
+
+    @Test
+    public void I_can_create_two_users_with_the_same_address() throws Exception {
+
+        final Address address = persistedUser.getAddress();
+        address.setId(null); // Set the ID to null so the comparison doesn't fail from the new generated ID.
+
+        final User user = userOne();
+        user.setAddress(address);
+
+        final MvcResult result = assertUserCreated(post("/users"), user);
 
         steps.then_the_user_should_be_created(user(result));
     }
@@ -182,9 +208,31 @@ public class UserControllerTest {
     }
 
     @Test
+    public void I_can_create_a_user_with_no_phone_number() throws Exception {
+
+        final User user = userOne();
+        user.setPhoneNumber(null);
+
+        final MvcResult result = assertUserCreated(post("/users"), user);
+
+        steps.then_the_user_should_be_created(user(result));
+    }
+
+    @Test
+    public void I_can_create_a_user_with_no_address() throws Exception {
+
+        final User user = userOne();
+        user.setAddress(null);
+
+        final MvcResult result = assertUserCreated(post("/users"), user);
+
+        steps.then_the_user_should_be_created(user(result));
+    }
+
+    @Test
     public void I_can_retrieve_a_user() throws Exception {
 
-        assertUserOk(persistedUser, get(format("/users/%d", persistedUser.getId())));
+        assertUserOk(get(format("/users/%d", persistedUser.getId())), persistedUser);
     }
 
     @Test
@@ -208,10 +256,14 @@ public class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(APPLICATION_JSON))
                 .andExpect(jsonPath("$").value(hasSize(4)))
-                .andExpect(jsonPath("$[0]").value(new UserMatcher(persistedUser)))
-                .andExpect(jsonPath("$[1]").value(new UserMatcher(userOne)))
-                .andExpect(jsonPath("$[2]").value(new UserMatcher(userTwo)))
-                .andExpect(jsonPath("$[3]").value(new UserMatcher(userThree)));
+                .andExpect(jsonPath("$[0]").value(equalTo(persistedUser)))
+                .andExpect(jsonPath("$[0].address").value(equalTo(persistedUser.getAddress())))
+                .andExpect(jsonPath("$[1]").value(equalTo(userOne)))
+                .andExpect(jsonPath("$[1].address").value(equalTo(userOne.getAddress())))
+                .andExpect(jsonPath("$[2]").value(equalTo(userTwo)))
+                .andExpect(jsonPath("$[2].address").value(equalTo(userTwo.getAddress())))
+                .andExpect(jsonPath("$[3]").value(equalTo(userThree)))
+                .andExpect(jsonPath("$[3].address").value(equalTo(userThree.getAddress())));
     }
 
     @Test
@@ -221,7 +273,7 @@ public class UserControllerTest {
         persistedUser.setFirstName(FIRST_NAME_ONE);
         persistedUser.setLastName(LAST_NAME_ONE);
 
-        final MvcResult result = assertUserUpdated(persistedUser, put(format("/users/%d", persistedUser.getId())));
+        final MvcResult result = assertUserUpdated(put(format("/users/%d", persistedUser.getId())), persistedUser);
 
         steps.then_the_user_should_be_updated(user(result));
     }
@@ -261,7 +313,7 @@ public class UserControllerTest {
         final User user = steps.given_a_user_has_been_persisted(userOne());
         user.setFirstName(persistedUser.getFirstName());
 
-        final MvcResult result = assertUserUpdated(user, put(format("/users/%d", user.getId())));
+        final MvcResult result = assertUserUpdated(put(format("/users/%d", user.getId())), user);
 
         steps.then_the_user_should_be_updated(user(result));
     }
@@ -272,7 +324,7 @@ public class UserControllerTest {
         final User user = steps.given_a_user_has_been_persisted(userOne());
         user.setLastName(persistedUser.getLastName());
 
-        final MvcResult result = assertUserUpdated(user, put(format("/users/%d", user.getId())));
+        final MvcResult result = assertUserUpdated(put(format("/users/%d", user.getId())), user);
 
         steps.then_the_user_should_be_updated(user(result));
     }
@@ -331,7 +383,7 @@ public class UserControllerTest {
     @Test
     public void I_can_delete_a_user() throws Exception {
 
-        assertUserOk(persistedUser, delete(format("/users/%d", persistedUser.getId())));
+        assertUserOk(delete(format("/users/%d", persistedUser.getId())), persistedUser);
 
         steps.then_the_user_should_no_longer_be_persisted(persistedUser);
     }
@@ -364,29 +416,30 @@ public class UserControllerTest {
         return asyncDispatch(result);
     }
 
-    private MvcResult assertUserCreated(User user, MockHttpServletRequestBuilder builder) throws Exception {
+    private MvcResult assertUserCreated(MockHttpServletRequestBuilder builder, User user) throws Exception {
 
-        return assertUser(user, builder.content(json(user)))
+        return assertUser(builder.content(json(user)), user)
                 .andExpect(status().isCreated())
                 .andReturn();
     }
 
-    private MvcResult assertUserUpdated(User user, MockHttpServletRequestBuilder builder) throws Exception {
+    private MvcResult assertUserUpdated(MockHttpServletRequestBuilder builder, User user) throws Exception {
 
-        return assertUserOk(user, builder.content(json(user)));
+        return assertUserOk(builder.content(json(user)), user);
     }
 
-    private MvcResult assertUserOk(User user, MockHttpServletRequestBuilder builder) throws Exception {
+    private MvcResult assertUserOk(MockHttpServletRequestBuilder builder, User user) throws Exception {
 
-        return assertUser(user, builder)
+        return assertUser(builder, user)
                 .andExpect(status().isOk())
                 .andReturn();
     }
 
-    private ResultActions assertUser(User user, MockHttpServletRequestBuilder builder) throws Exception {
+    private ResultActions assertUser(MockHttpServletRequestBuilder builder, User user) throws Exception {
 
         return mockMvc.perform(async(builder))
                 .andExpect(content().contentType(APPLICATION_JSON))
-                .andExpect(jsonPath("$").value(new UserMatcher(user)));
+                .andExpect(jsonPath("$").value(equalTo(user)))
+                .andExpect(jsonPath("$.address").value(equalTo(user.getAddress())));
     }
 }

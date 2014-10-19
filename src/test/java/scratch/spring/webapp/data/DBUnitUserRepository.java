@@ -69,11 +69,13 @@ public class DBUnitUserRepository {
 
         final ITable userTable = retrieveUser(id);
 
-        final ITable addressTable = retrieveAddress(Long.valueOf(columnValue(userTable, ADDRESS_ID)));
+        final String addressId = columnValue(userTable, ADDRESS_ID);
 
-        if (0 >= addressTable.getRowCount()) {
+        if (null == addressId) {
             return mapUser(userTable);
         }
+
+        final ITable addressTable = retrieveAddress(Long.valueOf(addressId));
 
         final User user = mapUser(userTable);
         user.setAddress(mapAddress(addressTable));
