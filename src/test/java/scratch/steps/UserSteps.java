@@ -13,7 +13,7 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static scratch.steps.StatusMatcher.*;
+import static scratch.steps.StatusMatcher.statusEquals;
 import static scratch.steps.UserFields.ID;
 
 @ContextConfiguration(classes = CucumberScratchConfiguration.class)
@@ -46,14 +46,6 @@ public class UserSteps {
         }
 
         user.set(propertyPath, value);
-    }
-
-    @When("^the user has an \"([^\"]*)\" of the last created user$")
-    public void the_user_has_an_of_the_last_created_user(String propertyPath) throws Throwable {
-
-        final ClientResponse response = responses.created().latest();
-
-        the_user_has_an_of(propertyPath, response.readEntity(Map.class).get(ID).toString());
     }
 
     @Then("^I should receive a status code of (\\d+)$")
@@ -90,5 +82,11 @@ public class UserSteps {
                 retrievedUsers.size());
 
         assertEquals("the retrieved users equal create users.", createdUsers, retrievedUsers);
+    }
+
+    @When("^the user has no \"([^\"]*)\" field$")
+    public void the_user_has_no_field(String fieldName) {
+
+        user.remove(fieldName);
     }
 }

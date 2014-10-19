@@ -113,13 +113,16 @@ public class PropertyObject {
     }
 
     /**
-     * Set the property at the supplied property path.
+     * Set the property value at the supplied property path.
      */
     public void set(String propertyPath, Object value) {
 
         traverse(map, propertyPath.split(DOT), value, new SetLeaf(), new CreateBranch());
     }
 
+    /**
+     * Remove the property at the supplied property path.
+     */
     @SuppressWarnings("unchecked")
     public <T> T remove(String propertyPath) {
 

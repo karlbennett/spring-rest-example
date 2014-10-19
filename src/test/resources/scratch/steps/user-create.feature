@@ -6,20 +6,17 @@ Feature: User - Create
     And the user has a "firstName" of "Test"
     And the user has a "lastName" of "User"
     And the user has a "phoneNumber" of "5551234"
+    And the user has a "address" of "null"
 
   Scenario: I create a new user and the user is persisted correctly.
-    When I create the user
+    Given I create the user
     Then I should receive a status code of 201
     And the response body should contain the new user
     And the new user should be persisted
 
   Scenario Outline: I create a user with no phone number value and the creation succeeds.
-    Given there is a new user
-    And the user has an "email" of "test_one@email.test"
-    And the user has a "firstName" of "Test"
-    And the user has a "lastName" of "User"
-    And the user has a "phoneNumber" of "<phone-number>"
-    And I create the user
+    Given the user has a "phoneNumber" of "<phone-number>"
+    When I create the user
     Then I should receive a status code of 201
     And the response body should contain the new user
     And the new user should be persisted
@@ -29,21 +26,12 @@ Feature: User - Create
     | null         |
 
   Scenario: I create a user with no phone number field and the creation succeeds.
-    Given there is a new user
-    And the user has an "email" of "test_one@email.test"
-    And the user has a "firstName" of "Test"
-    And the user has a "lastName" of "User"
-    And I create the user
+    Given the user has no "phoneNumber" field
+    When I create the user
     Then I should receive a status code of 201
     And the user has a "phoneNumber" of "null"
     And the response body should contain the new user
     And the new user should be persisted
-
-  Scenario: I create a new user with an existing id and the creation fails.
-    Given I create the user
-    When the user has an "id" of the last created user
-    And I create the user again
-    Then I should receive a status code of 400
 
   Scenario: I create the same user twice and the second creation fails.
     Given I create the user
@@ -57,6 +45,7 @@ Feature: User - Create
     And the user has a "firstName" of "Test2"
     And the user has a "lastName" of "User2"
     And the user has a "phoneNumber" of "5551235"
+    And the user has a "address" of "null"
     And I create the user
     Then I should receive a status code of 400
 
@@ -67,6 +56,7 @@ Feature: User - Create
     And the user has a "firstName" of "<first-name>"
     And the user has a "lastName" of "<last-name>"
     And the user has a "phoneNumber" of "<phone_number>"
+    And the user has a "address" of "null"
     And I create the user
     Then I should receive a status code of 201
     And the response body should contain the new user
@@ -79,11 +69,9 @@ Feature: User - Create
     | Test       | User      | 5551234      |
 
   Scenario Outline: I create a user with missing values and the creation fails.
-    Given there is a new user
-    And the user has an "email" of "<email>"
+    Given the user has an "email" of "<email>"
     And the user has a "firstName" of "<first-name>"
     And the user has a "lastName" of "<last-name>"
-    And the user has a "phoneNumber" of "5551234"
     When I create the user
     Then I should receive a status code of 400
   Examples:
@@ -96,18 +84,14 @@ Feature: User - Create
     | test_one@email.test | Test       | null      |
 
   Scenario Outline: I create a user with missing fields and the creation fails.
-    Given there is a new user
-    And the user has an "<email>" of "test_one@email.test"
-    And the user has a "<first-name>" of "Test"
-    And the user has a "<last-name>" of "User"
-    And the user has a "phoneNumber" of "5551234"
+    Given the user has no "<field-name>" field
     When I create the user
     Then I should receive a status code of 400
   Examples:
-    | email | first-name | last-name |
-    |       | firstName  | lastName  |
-    | email |            | lastName  |
-    | email | firstName  |           |
+    | field-name |
+    | email      |
+    | firstName  |
+    | lastName   |
 
   Scenario: I create a user with an invalid field and the creation fails.
     Given the user has an "invalid" of "true"

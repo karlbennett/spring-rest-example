@@ -150,7 +150,7 @@ public class User implements Serializable {
         // Remove any ID's to make sure we actually attempt a create and not an update.
         id = null;
 
-        if (null != address ) {
+        if (null != address) {
             address.setId(null);
         }
 

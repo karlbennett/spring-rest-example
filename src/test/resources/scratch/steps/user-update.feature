@@ -6,12 +6,14 @@ Feature: User - Update
     And the user has a "firstName" of "Test"
     And the user has a "lastName" of "User"
     And the user has a "phoneNumber" of "5551234"
+    And the user has a "address" of "null"
     And I create the user
     And there is another new user
     And the user has an "email" of "test_two@email.test"
     And the user has a "firstName" of "Test2"
     And the user has a "lastName" of "User2"
     And the user has a "phoneNumber" of "5551235"
+    And the user has a "address" of "null"
     And I create the user
 
   Scenario Outline: I update an existing user and the user is updated correctly.
@@ -62,11 +64,10 @@ Feature: User - Update
     | null         |
 
   Scenario: I update an existing user with the no phone number field and the user is updated correctly.
-    Given the user has an "email" of "test_two@email.test"
-    And the user has a "firstName" of "Test2"
-    And the user has a "lastName" of "User2"
+    Given the user has no "phoneNumber" field
     When I update the user
     Then I should receive a status code of 200
+    And the user has a "phoneNumber" of "null"
     And the response body should contain the updated user
     And the user should be updated
 
@@ -96,18 +97,14 @@ Feature: User - Update
     | test_one@email.test | Test       | null      |
 
   Scenario Outline: I update an existing user with missing fields and the update fails.
-    Given there is a new user
-    And the user has an "<email>" of "test_one@email.test"
-    And the user has a "<first-name>" of "Test"
-    And the user has a "<last-name>" of "User"
-    And the user has a "phoneNumber" of "5551235"
+    Given the user has no "<field-name>" field
     When I update the user
     Then I should receive a status code of 400
   Examples:
-    | email | first-name | last-name |
-    |       | firstName  | lastName  |
-    | email |            | lastName  |
-    | email | firstName  |           |
+    | field-name |
+    | email      |
+    | firstName  |
+    | lastName   |
 
   Scenario: I update an existing user with an empty user and the update fails.
     Given there is a new user
