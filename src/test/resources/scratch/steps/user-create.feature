@@ -6,7 +6,7 @@ Feature: User - Create
     And the user has a "firstName" of "Test"
     And the user has a "lastName" of "User"
     And the user has a "phoneNumber" of "5551234"
-    And the user has a "address.number" of "11"
+    And the user has a "address.number" of 11
     And the user has a "address.street" of "Test Road"
     And the user has a "address.suburb" of "Testerton"
     And the user has a "address.city" of "Testopolis"
@@ -35,7 +35,7 @@ Feature: User - Create
     And the user has a "firstName" of "Test2"
     And the user has a "lastName" of "User2"
     And the user has a "phoneNumber" of "5551235"
-    And the user has a "address.number" of "<number>"
+    And the user has a "address.number" of <number>
     And the user has a "address.street" of "<street>"
     And the user has a "address.suburb" of "<suburb>"
     And the user has a "address.city" of "<city>"
@@ -69,16 +69,16 @@ Feature: User - Create
     Given the user has no "address.<field-name>" field
     When I create the user
     Then I should receive a status code of 201
-    And the user has a "address.<field-name>" of "null"
+    And the user has a "address.<field-name>" of <null>
     And the response body should contain the new user
     And the new user should be persisted
   Examples:
-    | field-name |
-    | number     |
-    | street     |
-    | suburb     |
-    | city       |
-    | postcode   |
+    | field-name | null   |
+    | number     | null   |
+    | street     | "null" |
+    | suburb     | "null" |
+    | city       | "null" |
+    | postcode   | "null" |
 
   Scenario: I create the same user twice and the second creation fails.
     Given I create the user
@@ -92,7 +92,7 @@ Feature: User - Create
     And the user has a "firstName" of "Test2"
     And the user has a "lastName" of "User2"
     And the user has a "phoneNumber" of "5551235"
-    And the user has a "address.number" of "22"
+    And the user has a "address.number" of 22
     And the user has a "address.street" of "Test1 Road"
     And the user has a "address.suburb" of "Testerton1"
     And the user has a "address.city" of "Testopolis1"
@@ -106,7 +106,7 @@ Feature: User - Create
     And the user has a "firstName" of "<first-name>"
     And the user has a "lastName" of "<last-name>"
     And the user has a "phoneNumber" of "<phone_number>"
-    And the user has a "address.number" of "22"
+    And the user has a "address.number" of 22
     And the user has a "address.street" of "Test1 Road"
     And the user has a "address.suburb" of "Testerton1"
     And the user has a "address.city" of "Testopolis1"
@@ -128,7 +128,7 @@ Feature: User - Create
     And the user has a "firstName" of "Test2"
     And the user has a "lastName" of "User2"
     And the user has a "phoneNumber" of "5551235"
-    And the user has a "address.number" of "<number>"
+    And the user has a "address.number" of <number>
     And the user has a "address.street" of "<street>"
     And the user has a "address.suburb" of "<suburb>"
     And the user has a "address.city" of "<city>"

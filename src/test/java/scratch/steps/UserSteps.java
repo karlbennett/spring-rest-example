@@ -33,7 +33,35 @@ public class UserSteps {
     }
 
     @Given("^the user has a[n]? \"([^\"]*)\" of \"([^\"]*)\"$")
-    public void the_user_has_an_of(String propertyPath, String value) {
+    public void the_user_has_an_of(final String propertyPath, final String value) {
+
+        the_user_has_an_of(user, propertyPath, value, new Runnable() {
+            @Override
+            public void run() {
+
+                user.set(propertyPath, value);
+            }
+        });
+    }
+
+    @Given("^the user has a[n]? \"([^\"]*)\" of ?(\\w*)$")
+    public void the_user_has_a_of(final String propertyPath, final String value) {
+
+        the_user_has_an_of(user, propertyPath, value, new Runnable() {
+            @Override
+            public void run() {
+
+                if ("".equals(value)) {
+                    user.set(propertyPath, null);
+                    return;
+                }
+
+                user.set(propertyPath, Integer.valueOf(value));
+            }
+        });
+    }
+
+    private static void the_user_has_an_of(PropertyObject user, String propertyPath, String value, Runnable setter) {
 
         if ("".equals(propertyPath)) {
             // We ignore empty property names so that it is possible to write Scenario Examples that don't set some
@@ -46,7 +74,7 @@ public class UserSteps {
             return;
         }
 
-        user.set(propertyPath, value);
+        setter.run();
     }
 
     @Then("^I should receive a status code of (\\d+)$")

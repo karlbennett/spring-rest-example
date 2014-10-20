@@ -126,28 +126,13 @@ public class PropertyObjectTest {
         assertEquals("value five.six should be correct.", SIX_VALUE, propertyObject.get(FIVE_SIX));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testGetInvalidLayerOneProperty() {
 
-        propertyObject.get("invalid");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetInvalidLayerTwoProperty() {
-
-        propertyObject.get(ONE + ".invalid");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetInvalidLayerThreeProperty() {
-
-        propertyObject.get(ONE_TWO + ".invalid");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetInvalidMultiLayerProperty() {
-
-        propertyObject.get("invalid1.invalid2.invalid3");
+        assertNull("getting an invalid property should return null", propertyObject.get("invalid"));
+        assertNull("getting an invalid property should return null.", propertyObject.get(ONE + ".invalid"));
+        assertNull("getting an invalid property should return null.", propertyObject.get(ONE_TWO + ".invalid"));
+        assertNull("getting an invalid property should return null.", propertyObject.get("invalid1.invalid2.invalid3"));
     }
 
     @Test
@@ -336,28 +321,14 @@ public class PropertyObjectTest {
         });
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testRemoveInvalidLayerOneProperty() {
 
-        propertyObject.remove("invalid");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testRemoveInvalidLayerTwoProperty() {
-
-        propertyObject.remove(ONE + ".invalid");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testRemoveInvalidLayerThreeProperty() {
-
-        propertyObject.remove(ONE_TWO + ".invalid");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testRemoveInvalidMultiLayerProperty() {
-
-        propertyObject.remove("invalid1.invalid2.invalid3");
+        assertNull("removing an invalid property should return null.", propertyObject.remove("invalid"));
+        assertNull("removing an invalid property should return null.", propertyObject.remove(ONE + ".invalid"));
+        assertNull("removing an invalid property should return null.", propertyObject.remove(ONE_TWO + ".invalid"));
+        assertNull("removing an invalid property should return null.",
+                propertyObject.remove("invalid1.invalid2.invalid3"));
     }
 
     @Test
@@ -398,6 +369,15 @@ public class PropertyObjectTest {
 
         assertEquals("the property object should be empty.", Collections.<String, Object>emptyMap(),
                 propertyObject.toMap());
+    }
+
+    @Test
+    public void testEquality() {
+
+        final PropertyObject other = new PropertyObject(MAP);
+
+        assertEquals("two property object built from the same map should be equal", propertyObject, other);
+        assertEquals("a copied porperty object should be equal to the original", propertyObject, copiedPropertyObject);
     }
 
     private static void assertException(Class<? extends Exception> type, Callable<Void> callable) {

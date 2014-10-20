@@ -6,7 +6,7 @@ Feature: User - Update
     And the user has a "firstName" of "Test"
     And the user has a "lastName" of "User"
     And the user has a "phoneNumber" of "5551234"
-    And the user has a "address.number" of "11"
+    And the user has a "address.number" of 11
     And the user has a "address.street" of "Test Road"
     And the user has a "address.suburb" of "Testerton"
     And the user has a "address.city" of "Testopolis"
@@ -17,7 +17,7 @@ Feature: User - Update
     And the user has a "firstName" of "Test2"
     And the user has a "lastName" of "User2"
     And the user has a "phoneNumber" of "5551235"
-    And the user has a "address.number" of "22"
+    And the user has a "address.number" of 22
     And the user has a "address.street" of "Test1 Road"
     And the user has a "address.suburb" of "Testerton1"
     And the user has a "address.city" of "Testopolis1"
@@ -43,7 +43,7 @@ Feature: User - Update
     | test_three@email.test | Test3      | User3     | 5551236      |
 
   Scenario Outline: I update a users address and the user is updated correctly.
-    Given the user has a "address.number" of "<number>"
+    Given the user has a "address.number" of <number>
     And the user has a "address.street" of "<street>"
     And the user has a "address.suburb" of "<suburb>"
     And the user has a "address.city" of "<city>"
@@ -77,7 +77,7 @@ Feature: User - Update
     | test_two@email.test | Test2      | User2     | 5551234      |
 
   Scenario Outline: I update a users address with the existing values and the user is updated correctly.
-    Given the user has a "address.number" of "<number>"
+    Given the user has a "address.number" of <number>
     And the user has a "address.street" of "<street>"
     And the user has a "address.suburb" of "<suburb>"
     And the user has a "address.city" of "<city>"
@@ -110,7 +110,7 @@ Feature: User - Update
     | null         |
 
   Scenario Outline: I update a users address with empty values and the user is updated correctly.
-    Given the user has a "address.number" of "<number>"
+    Given the user has a "address.number" of <number>
     And the user has a "address.street" of "<street>"
     And the user has a "address.suburb" of "<suburb>"
     And the user has a "address.city" of "<city>"
@@ -145,16 +145,16 @@ Feature: User - Update
     Given the user has no "address.<field-name>" field
     When I update the user
     Then I should receive a status code of 200
-    And the user has a "address.<field-name>" of "null"
+    And the user has a "address.<field-name>" of <null>
     And the response body should contain the updated user
     And the user should be updated
   Examples:
-    | field-name |
-    | number     |
-    | street     |
-    | suburb     |
-    | city       |
-    | postcode   |
+    | field-name | null   |
+    | number     | null   |
+    | street     | "null" |
+    | suburb     | "null" |
+    | city       | "null" |
+    | postcode   | "null" |
 
   Scenario: I update a user with an existing email and the update fails.
     Given the user has an "email" of "test_one@email.test"

@@ -6,7 +6,7 @@ Feature: User - Retrieve
     And the user has a "firstName" of "Test"
     And the user has a "lastName" of "User"
     And the user has a "phoneNumber" of "5551234"
-    And the user has a "address.number" of "11"
+    And the user has a "address.number" of 11
     And the user has a "address.street" of "Test Road"
     And the user has a "address.suburb" of "Testerton"
     And the user has a "address.city" of "Testopolis"
@@ -17,7 +17,7 @@ Feature: User - Retrieve
     And the user has a "firstName" of "Test2"
     And the user has a "lastName" of "User2"
     And the user has a "phoneNumber" of "5551235"
-    And the user has a "address.number" of "22"
+    And the user has a "address.number" of 22
     And the user has a "address.street" of "Test1 Road"
     And the user has a "address.suburb" of "Testerton1"
     And the user has a "address.city" of "Testopolis1"
