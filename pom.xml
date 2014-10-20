@@ -21,11 +21,11 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
-        <spring.version>4.1.0.RELEASE</spring.version>
-        <hibernate.version>4.3.4.Final</hibernate.version>
-        <jackson.version>2.3.2</jackson.version>
-        <slf4j.version>1.7.6</slf4j.version>
-        <cucumber.version>1.1.5</cucumber.version>
+        <spring.version>4.1.1.RELEASE</spring.version>
+        <hibernate.version>4.3.6.Final</hibernate.version>
+        <jackson.version>2.4.3</jackson.version>
+        <slf4j.version>1.7.7</slf4j.version>
+        <cucumber.version>1.1.8</cucumber.version>
         <reports.version>2.7</reports.version>
         <jacoco.version>0.7.2.201409121644</jacoco.version>
         <javadoc.version>2.10.1</javadoc.version>
@@ -39,7 +39,7 @@
                 <!--Make sure we compile all the Java source as 1.7.-->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+                <version>3.2</version>
                 <configuration>
                     <compilerVersion>1.7</compilerVersion>
                     <fork>true</fork>
@@ -95,7 +95,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>2.4</version>
+                <version>2.5</version>
                 <configuration>
                     <!-- Tell the Maven WAR plugin to ignore the fact that we no longer have a web.xml file. -->
                     <failOnMissingWebXml>false</failOnMissingWebXml>
@@ -106,7 +106,7 @@
                 <!-- Add the Maven Failsafe Plugin so that the integration tests run. -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.16</version>
+                <version>2.17</version>
                 <executions>
                     <execution>
                         <goals>
@@ -196,7 +196,7 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
-            <version>1.5.0.RELEASE</version>
+            <version>1.7.0.RELEASE</version>
         </dependency>
 
         <!-- JEE API so that the servlet interfaces can be accessed. -->
@@ -234,7 +234,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>5.1.0.Final</version>
+            <version>5.1.2.Final</version>
         </dependency>
 
         <!-- Jackson JSON object mapping library for converting request and response data. -->
@@ -297,7 +297,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
-            <version>1.9.5</version>
+            <version>1.10.8</version>
             <scope>test</scope>
         </dependency>
 
@@ -343,7 +343,7 @@
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-client</artifactId>
-            <version>2.6</version>
+            <version>2.13</version>
             <scope>test</scope>
         </dependency>
 
@@ -351,7 +351,7 @@
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-jackson</artifactId>
-            <version>2.6</version>
+            <version>2.13</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
