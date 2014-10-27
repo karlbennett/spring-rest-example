@@ -10,6 +10,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -236,7 +237,12 @@ public class UserControllerTest {
     @Test
     public void I_can_retrieve_a_user() throws Exception {
 
-        assertUserOk(get(format("/users/%d", persistedUser.getId())), persistedUser);
+        mockMvc.perform(async(get(format("/users/%d", persistedUser.getId()))))
+                .andExpect(content().contentType(APPLICATION_JSON))
+                .andExpect(jsonPath("$").value(equalTo(persistedUser)))
+                .andExpect(jsonPath("$.address").value(equalTo(persistedUser.getAddress())))
+                .andExpect(status().isOk())
+                .andReturn();
     }
 
     @Test
@@ -387,7 +393,7 @@ public class UserControllerTest {
     @Test
     public void I_can_delete_a_user() throws Exception {
 
-        assertUserOk(delete(format("/users/%d", persistedUser.getId())), persistedUser);
+        assertUserNoContent(delete(format("/users/%d", persistedUser.getId())));
 
         steps.then_the_user_should_no_longer_be_persisted(persistedUser);
     }
@@ -421,20 +427,15 @@ public class UserControllerTest {
 
     private void assertUserUpdated(MockHttpServletRequestBuilder builder, User user) throws Exception {
 
-        mockMvc.perform(async(builder.content(json(user))))
+        assertUserNoContent(builder.content(json(user)));
+    }
+
+    private ResultActions assertUserNoContent(MockHttpServletRequestBuilder builder) throws Exception {
+
+        return mockMvc.perform(async(builder))
                 .andExpect(status().isNoContent())
                 .andExpect(content().contentType(APPLICATION_JSON))
                 .andExpect(content().string(isEmptyString()));
-    }
-
-    private MvcResult assertUserOk(MockHttpServletRequestBuilder builder, User user) throws Exception {
-
-        return mockMvc.perform(async(builder))
-                .andExpect(content().contentType(APPLICATION_JSON))
-                .andExpect(jsonPath("$").value(equalTo(user)))
-                .andExpect(jsonPath("$.address").value(equalTo(user.getAddress())))
-                .andExpect(status().isOk())
-                .andReturn();
     }
 
     private RequestBuilder async(MockHttpServletRequestBuilder requestBuilder)

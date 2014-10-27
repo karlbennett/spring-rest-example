@@ -133,14 +133,17 @@ public class UserController {
      *          if no user exists with the supplied id.
      */
     @RequestMapping(value = "/{id}", method = DELETE, produces = APPLICATION_JSON_VALUE)
-    public Callable<User> delete(@PathVariable final Long id) {
+    @ResponseStatus(NO_CONTENT)
+    public Callable<String> delete(@PathVariable final Long id) {
 
-        return new Callable<User>() {
+        return new Callable<String>() {
 
             @Override
-            public User call() throws Exception {
+            public String call() throws Exception {
 
-                return User.retrieve(id).delete();
+                User.retrieve(id).delete();
+
+                return "";
             }
         };
     }
