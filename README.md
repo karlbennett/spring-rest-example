@@ -3,6 +3,19 @@ scratch-spring-webapp
 
 A very simple webapp that can be used to quickly try out code within a Java Servlet 3.0 web container.
 
+#### Build
+
+To build the application and run the unit tests use the following command.
+
+    mvn clean verify
+
+To run the Cucumber tests against the application run the following.
+
+    mvn clean verify -P cucumber
+
+*NOTE:* The cucumber tests are help within an external dependency that must be installed into your local maven
+repository. This project can be found [here](https://github.com/karlbennett/scratch-cucumber-rest).
+
 The webapp can be run with the following command (Note: "`tomcat7`" this is required for async support):
 
     mvn tomcat7:run
