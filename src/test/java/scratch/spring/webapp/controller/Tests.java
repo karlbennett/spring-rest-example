@@ -3,7 +3,6 @@ package scratch.spring.webapp.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.minidev.json.JSONObject;
-import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
@@ -17,6 +16,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import static java.util.Collections.emptyMap;
 import static org.hamcrest.Matchers.containsString;
@@ -39,6 +39,11 @@ public class Tests {
 
             throw new RuntimeException(e);
         }
+    }
+
+    public static Long id(MvcResult result) throws UnsupportedEncodingException {
+
+        return user(result).getId();
     }
 
     public static User user(MvcResult result) throws UnsupportedEncodingException {
@@ -108,6 +113,10 @@ public class Tests {
 
     public static Matcher<JSONObject> equalTo(Address address) {
         return new AddressMatcher(address);
+    }
+
+    public static Matcher<JSONObject> hasKeys(Set<String> keys) {
+        return new KeyMatcher(keys);
     }
 
     private static boolean isNotEqual(final Object expected, JSONObject item, String key) {
@@ -185,7 +194,7 @@ public class Tests {
         }
     }
 
-    private static class AddressMatcher extends BaseMatcher<JSONObject> {
+    private static class AddressMatcher extends TypeSafeMatcher<JSONObject> {
 
         private final Address address;
 
@@ -194,9 +203,7 @@ public class Tests {
         }
 
         @Override
-        public boolean matches(Object item) {
-
-            final JSONObject jsonObject = (JSONObject) item;
+        public boolean matchesSafely(JSONObject jsonObject) {
 
             if (noAddressSupplied()) {
                 return noAddressReturned(jsonObject);
@@ -258,6 +265,26 @@ public class Tests {
             map.put("postcode", address.getPostcode());
 
             return map;
+        }
+    }
+
+    private static class KeyMatcher extends TypeSafeMatcher<JSONObject> {
+
+        private final Set<String> keys;
+
+        private KeyMatcher(Set<String> keys) {
+            this.keys = keys;
+        }
+
+        @Override
+        public boolean matchesSafely(JSONObject jsonObject) {
+
+            return keys.equals(jsonObject.keySet());
+        }
+
+        @Override
+        public void describeTo(Description description) {
+            description.appendValue(keys);
         }
     }
 }

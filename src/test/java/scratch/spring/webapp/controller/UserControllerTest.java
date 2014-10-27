@@ -20,6 +20,7 @@ import scratch.spring.webapp.data.User;
 import scratch.spring.webapp.data.UserSteps;
 
 import static java.lang.String.format;
+import static java.util.Collections.singleton;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
@@ -42,6 +43,8 @@ import static scratch.spring.webapp.controller.Tests.assertMissingBody;
 import static scratch.spring.webapp.controller.Tests.assertNoFound;
 import static scratch.spring.webapp.controller.Tests.assertValidationError;
 import static scratch.spring.webapp.controller.Tests.equalTo;
+import static scratch.spring.webapp.controller.Tests.hasKeys;
+import static scratch.spring.webapp.controller.Tests.id;
 import static scratch.spring.webapp.controller.Tests.json;
 import static scratch.spring.webapp.controller.Tests.user;
 import static scratch.spring.webapp.data.Users.EMAIL_ONE;
@@ -83,7 +86,7 @@ public class UserControllerTest {
 
         final MvcResult result = assertUserCreated(post("/users"), user);
 
-        steps.then_the_user_should_be_created(user(result));
+        steps.then_the_user_should_be_created(id(result), user);
     }
 
     @Test
@@ -97,7 +100,7 @@ public class UserControllerTest {
                 .andExpect(jsonPath("id").value(not(equalTo(user.getId()))))
                 .andReturn();
 
-        steps.then_the_user_should_be_created(user(result));
+        steps.then_the_user_should_be_created(id(result), user);
     }
 
     @Test
@@ -117,11 +120,13 @@ public class UserControllerTest {
 
         final User user = userOne();
 
-        final User createdUser = user(mockMvc.perform(async(post("/users").content(json(user))))
+        final String json = json(user);
+
+        user(mockMvc.perform(async(post("/users").content(json)))
                 .andExpect(status().isCreated())
                 .andReturn());
 
-        assertConstraintViolation(mockMvc.perform(async(post("/users").content(json(createdUser)))));
+        assertConstraintViolation(mockMvc.perform(async(post("/users").content(json))));
     }
 
     @Test
@@ -141,7 +146,7 @@ public class UserControllerTest {
 
         final MvcResult result = assertUserCreated(post("/users"), user);
 
-        steps.then_the_user_should_be_created(user(result));
+        steps.then_the_user_should_be_created(id(result), user);
     }
 
     @Test
@@ -152,7 +157,7 @@ public class UserControllerTest {
 
         final MvcResult result = assertUserCreated(post("/users"), user);
 
-        steps.then_the_user_should_be_created(user(result));
+        steps.then_the_user_should_be_created(id(result), user);
     }
 
     @Test
@@ -163,7 +168,7 @@ public class UserControllerTest {
 
         final MvcResult result = assertUserCreated(post("/users"), user);
 
-        steps.then_the_user_should_be_created(user(result));
+        steps.then_the_user_should_be_created(id(result), user);
     }
 
     @Test
@@ -177,7 +182,7 @@ public class UserControllerTest {
 
         final MvcResult result = assertUserCreated(post("/users"), user);
 
-        steps.then_the_user_should_be_created(user(result));
+        steps.then_the_user_should_be_created(id(result), user);
     }
 
     @Test
@@ -215,7 +220,7 @@ public class UserControllerTest {
 
         final MvcResult result = assertUserCreated(post("/users"), user);
 
-        steps.then_the_user_should_be_created(user(result));
+        steps.then_the_user_should_be_created(id(result), user);
     }
 
     @Test
@@ -226,7 +231,7 @@ public class UserControllerTest {
 
         final MvcResult result = assertUserCreated(post("/users"), user);
 
-        steps.then_the_user_should_be_created(user(result));
+        steps.then_the_user_should_be_created(id(result), user);
     }
 
     @Test
@@ -418,7 +423,9 @@ public class UserControllerTest {
 
     private MvcResult assertUserCreated(MockHttpServletRequestBuilder builder, User user) throws Exception {
 
-        return assertUser(builder.content(json(user)), user)
+        return mockMvc.perform(async(builder.content(json(user))))
+                .andExpect(content().contentType(APPLICATION_JSON))
+                .andExpect(jsonPath("$").value(hasKeys(singleton("id"))))
                 .andExpect(status().isCreated())
                 .andReturn();
     }

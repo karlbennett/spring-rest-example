@@ -19,9 +19,18 @@ public class UserSteps {
         dbUnitRepository.deleteAll();
     }
 
-    public void then_the_user_should_be_created(User user) {
+    public void then_the_user_should_be_created(Long id, User expected) {
 
-        assertEquals("the user should be created.", user, dbUnitRepository.findOne(user.getId()));
+        final User actual = dbUnitRepository.findOne(id);
+
+        expected.setId(id);
+
+        final Address address = expected.getAddress();
+        if (null != address) {
+            address.setId(actual.getAddress().getId());
+        }
+
+        assertEquals("the user should be created.", expected, actual);
     }
 
     public void then_the_user_should_be_updated(User user) {

@@ -11,6 +11,8 @@ import scratch.spring.webapp.data.User;
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -43,14 +45,14 @@ public class UserController {
      */
     @RequestMapping(method = POST, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(CREATED)
-    public Callable<User> create(@Valid @RequestBody final User user) {
+    public Callable<Map<String, Object>> create(@Valid @RequestBody final User user) {
 
-        return new Callable<User>() {
+        return new Callable<Map<String, Object>>() {
 
             @Override
-            public User call() throws Exception {
+            public Map<String, Object> call() throws Exception {
 
-                return user.create();
+                return Collections.<String, Object>singletonMap("id", user.create().getId());
             }
         };
     }
