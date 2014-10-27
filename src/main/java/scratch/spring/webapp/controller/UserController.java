@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -106,16 +107,19 @@ public class UserController {
      *          if no user exists with the supplied id.
      */
     @RequestMapping(value = "/{id}", method = PUT, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    public Callable<User> update(@PathVariable Long id, @Valid @RequestBody final User user) {
+    @ResponseStatus(NO_CONTENT)
+    public Callable<String> update(@PathVariable Long id, @Valid @RequestBody final User user) {
 
         user.setId(id);
 
-        return new Callable<User>() {
+        return new Callable<String>() {
 
             @Override
-            public User call() throws Exception {
+            public String call() throws Exception {
 
-                return user.update();
+                user.update();
+
+                return "";
             }
         };
     }

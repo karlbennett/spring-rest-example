@@ -10,7 +10,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -278,9 +277,9 @@ public class UserControllerTest {
         persistedUser.setFirstName(FIRST_NAME_ONE);
         persistedUser.setLastName(LAST_NAME_ONE);
 
-        final MvcResult result = assertUserUpdated(put(format("/users/%d", persistedUser.getId())), persistedUser);
+        assertUserUpdated(put(format("/users/%d", persistedUser.getId())), persistedUser);
 
-        steps.then_the_user_should_be_updated(user(result));
+        steps.then_the_user_should_be_updated(persistedUser);
     }
 
     @Test
@@ -318,9 +317,9 @@ public class UserControllerTest {
         final User user = steps.given_a_user_has_been_persisted(userOne());
         user.setFirstName(persistedUser.getFirstName());
 
-        final MvcResult result = assertUserUpdated(put(format("/users/%d", user.getId())), user);
+        assertUserUpdated(put(format("/users/%d", user.getId())), user);
 
-        steps.then_the_user_should_be_updated(user(result));
+        steps.then_the_user_should_be_updated(persistedUser);
     }
 
     @Test
@@ -329,9 +328,9 @@ public class UserControllerTest {
         final User user = steps.given_a_user_has_been_persisted(userOne());
         user.setLastName(persistedUser.getLastName());
 
-        final MvcResult result = assertUserUpdated(put(format("/users/%d", user.getId())), user);
+        assertUserUpdated(put(format("/users/%d", user.getId())), user);
 
-        steps.then_the_user_should_be_updated(user(result));
+        steps.then_the_user_should_be_updated(persistedUser);
     }
 
     @Test
@@ -411,16 +410,6 @@ public class UserControllerTest {
                 .andExpect(content().string(isEmptyString()));
     }
 
-    private RequestBuilder async(MockHttpServletRequestBuilder requestBuilder) throws Exception {
-
-        final MvcResult result = mockMvc.perform(requestBuilder.accept(APPLICATION_JSON).contentType(APPLICATION_JSON))
-                .andExpect(request().asyncStarted())
-                .andExpect(request().asyncResult(notNullValue()))
-                .andReturn();
-
-        return asyncDispatch(result);
-    }
-
     private MvcResult assertUserCreated(MockHttpServletRequestBuilder builder, User user) throws Exception {
 
         return mockMvc.perform(async(builder.content(json(user))))
@@ -430,23 +419,32 @@ public class UserControllerTest {
                 .andReturn();
     }
 
-    private MvcResult assertUserUpdated(MockHttpServletRequestBuilder builder, User user) throws Exception {
+    private void assertUserUpdated(MockHttpServletRequestBuilder builder, User user) throws Exception {
 
-        return assertUserOk(builder.content(json(user)), user);
+        mockMvc.perform(async(builder.content(json(user))))
+                .andExpect(status().isNoContent())
+                .andExpect(content().contentType(APPLICATION_JSON))
+                .andExpect(content().string(isEmptyString()));
     }
 
     private MvcResult assertUserOk(MockHttpServletRequestBuilder builder, User user) throws Exception {
 
-        return assertUser(builder, user)
+        return mockMvc.perform(async(builder))
+                .andExpect(content().contentType(APPLICATION_JSON))
+                .andExpect(jsonPath("$").value(equalTo(user)))
+                .andExpect(jsonPath("$.address").value(equalTo(user.getAddress())))
                 .andExpect(status().isOk())
                 .andReturn();
     }
 
-    private ResultActions assertUser(MockHttpServletRequestBuilder builder, User user) throws Exception {
+    private RequestBuilder async(MockHttpServletRequestBuilder requestBuilder)
+            throws Exception {
 
-        return mockMvc.perform(async(builder))
-                .andExpect(content().contentType(APPLICATION_JSON))
-                .andExpect(jsonPath("$").value(equalTo(user)))
-                .andExpect(jsonPath("$.address").value(equalTo(user.getAddress())));
+        final MvcResult result = mockMvc.perform(requestBuilder.accept(APPLICATION_JSON).contentType(APPLICATION_JSON))
+                .andExpect(request().asyncStarted())
+                .andExpect(request().asyncResult(notNullValue()))
+                .andReturn();
+
+        return asyncDispatch(result);
     }
 }
