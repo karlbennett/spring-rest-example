@@ -1,4 +1,4 @@
-scratch-spring-webapp
+scratch-spring-rest
 ==============
 
 A very simple webapp that can be used to quickly try out code within a Java Servlet 3.0 web container.
@@ -15,6 +15,8 @@ To run the Cucumber tests against the application run the following.
 
 *NOTE:* The cucumber tests are help within an external dependency that must be installed into your local maven
 repository. This project can be found [here](https://github.com/karlbennett/scratch-cucumber-rest).
+
+#### Run
 
 The webapp can be run with the following command (Note: "`tomcat7`" this is required for async support):
 
