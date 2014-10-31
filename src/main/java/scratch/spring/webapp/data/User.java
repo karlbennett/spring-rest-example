@@ -88,7 +88,7 @@ public class User implements Serializable {
     private String phoneNumber;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "addressId")
+    @JoinColumn(name = "address_id")
     private Address address;
 
 

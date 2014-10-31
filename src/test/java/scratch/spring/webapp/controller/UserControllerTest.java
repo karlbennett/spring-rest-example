@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -14,7 +14,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import scratch.spring.webapp.config.TestScratchConfiguration;
+import scratch.spring.webapp.Application;
 import scratch.spring.webapp.data.Address;
 import scratch.spring.webapp.data.User;
 import scratch.spring.webapp.data.UserSteps;
@@ -55,7 +55,7 @@ import static scratch.spring.webapp.data.Users.userThree;
 import static scratch.spring.webapp.data.Users.userTwo;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestScratchConfiguration.class)
+@SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration("classpath:")
 public class UserControllerTest {
 
@@ -191,7 +191,12 @@ public class UserControllerTest {
         final User user = userOne();
         user.setEmail(null);
 
-        assertValidationError(mockMvc.perform(async(post("/users").content(json(user)))));
+        assertValidationError(mockMvc.perform(post("/users")
+                .accept(APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
+                .content(json(user))),
+                "email.null"
+        );
     }
 
     @Test
@@ -200,7 +205,12 @@ public class UserControllerTest {
         final User user = userOne();
         user.setFirstName(null);
 
-        assertValidationError(mockMvc.perform(async(post("/users").content(json(user)))));
+        assertValidationError(mockMvc.perform(post("/users")
+                .accept(APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
+                .content(json(user))),
+                "firstName.null"
+        );
     }
 
     @Test
@@ -209,7 +219,12 @@ public class UserControllerTest {
         final User user = userOne();
         user.setLastName(null);
 
-        assertValidationError(mockMvc.perform(async(post("/users").content(json(user)))));
+        assertValidationError(mockMvc.perform(post("/users")
+                .accept(APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
+                .content(json(user))),
+                "lastName.null"
+        );
     }
 
     @Test
@@ -369,7 +384,13 @@ public class UserControllerTest {
         persistedUser.setEmail(null);
 
         assertValidationError(
-                mockMvc.perform(async(put(format("/users/%d", persistedUser.getId())).content(json(persistedUser)))));
+                mockMvc.perform(put(format("/users/%d", persistedUser.getId()))
+                        .accept(APPLICATION_JSON)
+                        .contentType(APPLICATION_JSON)
+                        .content(json(persistedUser))
+                ),
+                "email.null"
+        );
     }
 
     @Test
@@ -378,7 +399,14 @@ public class UserControllerTest {
         persistedUser.setFirstName(null);
 
         assertValidationError(
-                mockMvc.perform(async(put(format("/users/%d", persistedUser.getId())).content(json(persistedUser)))));
+                mockMvc.perform(
+                        put(format("/users/%d", persistedUser.getId()))
+                                .accept(APPLICATION_JSON)
+                                .contentType(APPLICATION_JSON)
+                                .content(json(persistedUser))
+                ),
+                "firstName.null"
+        );
     }
 
     @Test
@@ -387,7 +415,12 @@ public class UserControllerTest {
         persistedUser.setLastName(null);
 
         assertValidationError(
-                mockMvc.perform(async(put(format("/users/%d", persistedUser.getId())).content(json(persistedUser)))));
+                mockMvc.perform(put(format("/users/%d", persistedUser.getId()))
+                        .accept(APPLICATION_JSON)
+                        .contentType(APPLICATION_JSON)
+                        .content(json(persistedUser))),
+                "lastName.null"
+        );
     }
 
     @Test

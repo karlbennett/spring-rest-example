@@ -67,23 +67,24 @@ public class Tests {
 
     public static void assertConstraintViolation(ResultActions resultActions) throws Exception {
 
-        assertDataError(resultActions, containsString("ConstraintViolationException"));
+        assertBadRequest(resultActions, Matchers.equalTo("DataIntegrityViolationException"),
+                containsString("ConstraintViolationException"));
     }
 
-    public static void assertValidationError(ResultActions resultActions) throws Exception {
+    public static void assertValidationError(ResultActions resultActions, String message) throws Exception {
 
-        assertDataError(resultActions, containsString("PropertyValueException"));
+        assertDataError(resultActions, containsString(message));
     }
 
     public static void assertDataError(ResultActions resultActions, Matcher<String> messageMatcher) throws Exception {
 
-        assertBadRequest(resultActions, Matchers.equalTo("DataIntegrityViolationException"), messageMatcher);
+        assertBadRequest(resultActions, Matchers.equalTo("MethodArgumentNotValidException"), messageMatcher);
     }
 
     public static void assertMissingBody(ResultActions resultActions) throws Exception {
 
         assertBadRequest(resultActions, Matchers.equalTo("HttpMessageNotReadableException"),
-                containsString("Required request body content is missing"));
+                containsString("Could not read JSON: No content to map due to end-of-input"));
     }
 
     public static void assertBadRequest(ResultActions resultActions, Matcher<String> errorMatcher,

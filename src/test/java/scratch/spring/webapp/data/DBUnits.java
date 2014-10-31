@@ -10,15 +10,15 @@ import java.util.concurrent.Callable;
 
 public class DBUnits {
 
-    public static final String USER = "User";
+    public static final String USER = "user";
     public static final String ADDRESS = "address";
 
     public static final String ID = "id";
     public static final String EMAIL = "email";
-    public static final String FIRST_NAME = "firstName";
-    public static final String LAST_NAME = "lastName";
-    public static final String PHONE_NUMBER = "phoneNumber";
-    public static final String ADDRESS_ID = "addressId";
+    public static final String FIRST_NAME = "first_name";
+    public static final String LAST_NAME = "last_name";
+    public static final String PHONE_NUMBER = "phone_number";
+    public static final String ADDRESS_ID = "address_id";
 
     public static final String NUMBER = "number";
     public static final String STREET = "street";
