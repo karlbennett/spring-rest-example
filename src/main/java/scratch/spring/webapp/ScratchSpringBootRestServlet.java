@@ -2,14 +2,12 @@ package scratch.spring.webapp;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.embedded.ServletRegistrationBean;
-import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.web.servlet.DispatcherServlet;
+import scratch.ScratchSpringBootServlet;
 import scratch.spring.webapp.data.User;
 import scratch.spring.webapp.data.UserRepository;
 
@@ -21,22 +19,9 @@ import javax.annotation.PostConstruct;
  * @author Karl Bennett
  */
 @Configuration
-@EnableAutoConfiguration
-@ComponentScan
-public class Application extends SpringBootServletInitializer {
+@Import(ScratchSpringBootServlet.class)
+public class ScratchSpringBootRestServlet {
 
-    /**
-     * This override will start up Spring Boot if this class is instantiated inside of a JEE
-     * {@link javax.servlet.Servlet}.
-     */
-    @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(Application.class);
-    }
-
-    /**
-     * Configure the servlet context for this webapp. All it's endpoints will fall under {@code /rest}.
-     */
     @Bean
     public ServletRegistrationBean dispatcherRegistration(DispatcherServlet dispatcherServlet) {
         final ServletRegistrationBean registration = new ServletRegistrationBean(dispatcherServlet);
@@ -58,6 +43,6 @@ public class Application extends SpringBootServletInitializer {
      */
     public static void main(String[] args) {
 
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(ScratchSpringBootRestServlet.class, args);
     }
 }

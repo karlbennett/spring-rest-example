@@ -3,9 +3,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.1.8.RELEASE</version>
+        <groupId>scratch</groupId>
+        <artifactId>scratch-spring-boot-servlet-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
     </parent>
 
     <name>scratch-spring-rest</name>
@@ -14,94 +14,15 @@
         A simple pre-baked Spring Boot webapp to play with.
     </description>
 
-    <groupId>scratch</groupId>
-
     <artifactId>scratch-spring-rest</artifactId>
 
     <packaging>war</packaging>
 
     <version>1.0-SNAPSHOT</version>
 
-    <url>https://github.com/karlbennett/scratch-webapp</url>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>1.7</java.version>
-        <project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
-        <reports.version>2.7</reports.version>
-        <jacoco.version>0.7.2.201409121644</jacoco.version>
-    </properties>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.5</version>
-                <configuration>
-                    <!-- Tell the Maven WAR plugin to ignore the fact that we no longer have a web.xml file. -->
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-                </configuration>
-            </plugin>
-            <plugin>
-                <!-- Set the version of the reports plugin to use. -->
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>${reports.version}</version>
-            </plugin>
-            <plugin>
-                <!-- Enable Jacoco test coverage reports. -->
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>${jacoco.version}</version>
-                <executions>
-                    <execution>
-                        <!-- Enable instrumentation of the code before the tests run. -->
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-
-    <reporting>
-        <!-- Configure the Maven source control report. -->
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>${reports.version}</version>
-                <configuration>
-                    <webAccessUrl>https://github.com/karlbennett/${project.artifactId}</webAccessUrl>
-                </configuration>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
-            <!-- Configure the linking of the JavaDoc and Jacoco reports in the generated Maven site. -->
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>${jacoco.version}</version>
-            </plugin>
-        </plugins>
-    </reporting>
+    <url>https://github.com/karlbennett/scratch-spring-rest</url>
 
     <dependencies>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -115,17 +36,12 @@
             <version>[2.3.2]</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
         <!-- This dependency is required to use the Spring MVC test jsonPath() methods. -->
         <dependency>
             <groupId>com.jayway.jsonpath</groupId>
             <artifactId>json-path</artifactId>
             <version>[0.9.1]</version>
+            <scope>test</scope>
         </dependency>
 
         <!-- Database setup utility for importing and clearing test data. -->

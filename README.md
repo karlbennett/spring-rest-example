@@ -3,6 +3,10 @@ scratch-spring-rest
 
 A very simple webapp that can be used to quickly try out code within a Spring Boot project.
 
+#### Build
+
+To build this project you will first have to build and install the [`scratch-parent`](https://github.com/karlbennett/scratch-parent) project.
+
 #### Run
 
 The webapp can be run with the following command:
