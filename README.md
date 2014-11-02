@@ -6,6 +6,7 @@ A very simple webapp that can be used to quickly try out code within a Spring Bo
 #### Build
 
 To build this project you will first have to build and install the [`scratch-parent`](https://github.com/karlbennett/scratch-parent) to get access to the parent pom that is used to configure the project.
+
 Then you will need to build and install the [`scratch-user-api`](https://github.com/karlbennett/scratch-user-api) project. This contains the common user API that all the `scratch-*-rest` projects implement.
 
 Once you have built and installed the above you will be able to build this project with:
