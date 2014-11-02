@@ -1,12 +1,14 @@
 package scratch.spring.webapp.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import scratch.spring.webapp.data.User;
+import scratch.user.User;
+import scratch.user.Users;
 
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletResponse;
@@ -32,6 +34,9 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 @RequestMapping("/users")
 public class UserController {
 
+    @Autowired
+    private Users users;
+
     /**
      * Persist a new user using the user object that has been deserialised from the {@code JSON} in the body of the
      * {@code POST} request.
@@ -53,7 +58,7 @@ public class UserController {
             @Override
             public Map<String, Object> call() throws Exception {
 
-                return Collections.<String, Object>singletonMap("id", user.create().getId());
+                return Collections.<String, Object>singletonMap("id", users.create(user));
             }
         };
     }
@@ -74,7 +79,7 @@ public class UserController {
             @Override
             public User call() throws Exception {
 
-                return User.retrieve(id);
+                return users.retrieve(id);
             }
         };
     }
@@ -92,7 +97,7 @@ public class UserController {
             @Override
             public Iterable<User> call() throws Exception {
 
-                return User.all();
+                return users.retrieve();
             }
         };
     }
@@ -117,7 +122,7 @@ public class UserController {
             @Override
             public String call() throws Exception {
 
-                user.update();
+                users.update(user);
 
                 return "";
             }
@@ -141,7 +146,7 @@ public class UserController {
             @Override
             public String call() throws Exception {
 
-                User.retrieve(id).delete();
+                users.delete(id);
 
                 return "";
             }

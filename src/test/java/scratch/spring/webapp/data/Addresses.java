@@ -1,5 +1,7 @@
 package scratch.spring.webapp.data;
 
+import scratch.user.Address;
+
 /**
  * Data for user persistence tests.
  *

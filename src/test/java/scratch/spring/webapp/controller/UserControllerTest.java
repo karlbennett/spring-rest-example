@@ -15,9 +15,9 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import scratch.spring.webapp.ScratchSpringBootRestServlet;
-import scratch.spring.webapp.data.Address;
-import scratch.spring.webapp.data.User;
 import scratch.spring.webapp.data.UserSteps;
+import scratch.user.Address;
+import scratch.user.User;
 
 import static java.lang.String.format;
 import static java.util.Collections.singleton;
@@ -355,13 +355,13 @@ public class UserControllerTest {
     }
 
     @Test
-    public void I_cannot_update_a_user_with_a_invalid_id() throws Exception {
+    public void I_cannot_update_a_user_with_an_invalid_id() throws Exception {
 
         persistedUser.setId(-1L);
 
         assertNoFound(
                 mockMvc.perform(async(put(format("/users/%d", persistedUser.getId())).content(json(persistedUser)))),
-                equalTo("EntityNotFoundException"), equalTo(format("%s has not yet been persisted.", persistedUser)));
+                equalTo("EntityNotFoundException"), equalTo("A user with the ID (-1) could not be found."));
 
         assertBadRequest(
                 mockMvc.perform(put("/users/invalid").contentType(APPLICATION_JSON).content(json(persistedUser))),

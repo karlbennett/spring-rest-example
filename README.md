@@ -5,7 +5,12 @@ A very simple webapp that can be used to quickly try out code within a Spring Bo
 
 #### Build
 
-To build this project you will first have to build and install the [`scratch-parent`](https://github.com/karlbennett/scratch-parent) project.
+To build this project you will first have to build and install the [`scratch-parent`](https://github.com/karlbennett/scratch-parent) to get access to the parent pom that is used to configure the project.
+Then you will need to build and install the [`scratch-user-api`](https://github.com/karlbennett/scratch-user-api) project. This contains the common user API that all the `scratch-*-rest` projects implement.
+
+Once you have built and installed the above you will be able to build this project with:
+
+    mvn clean verify
 
 #### Run
 
@@ -17,7 +22,7 @@ Or after building the project with `mvn clean verify` you can run the executable
 
     java -jar target/scratch-spring-rest-1.0-SNAPSHOT.war
 
-This will start the server which can be accessed at [http://localhost:8080/rest/](http://localhost:8080/rest/ "scratch-spring-webapp")
+This will start the server which can be accessed at [http://localhost:8080/rest/](http://localhost:8080/rest/ "scratch-spring-rest")
 
 It is also possible to carry out CRUD operations on simple users:
 
@@ -25,7 +30,15 @@ It is also possible to carry out CRUD operations on simple users:
     $ curl -XPOST -H "Accept:application/json" -H "Content-Type:application/json" http://localhost:8080/rest/users -d '{
         "email": "some.one@there.com",
         "firstName": "Some",
-        "lastName": "One"
+        "lastName": "One",
+        "phoneNumber": "5551234",
+        "address": {
+            "number": 3,
+            "street": "That Road",
+            "suburb": "This Place",
+            "city": "Your City",
+            "postcode": "ABC123"
+        }
     }'
 
 ###### Retrieve
@@ -36,14 +49,23 @@ It is also possible to carry out CRUD operations on simple users:
     $ curl -XPUT -H "Content-Type:application/json" http://localhost:8080/rest/users/1 -d '{
         "email": "some.one@there.com",
         "firstName": "Some",
-        "lastName": "Two"
+        "lastName": "Two",
+        "phoneNumber": "5551234",
+            "address": {
+                "id": 1,
+                "number": 3,
+                "street": "That Road",
+                "suburb": "This Place",
+                "city": "Your City",
+                "postcode": "ABC123"
+            }
     }'
 
 ###### Delete
     $ curl -XDELETE -H "Accept:application/json" http://localhost:8080/rest/users/1
 
 
-The  webapp only contains six classes:
+The  webapp only contains five classes:
 
 The controller class that handles the `/rest/` request mapping.
 
@@ -57,11 +79,11 @@ The the application class that starts and configures Spring Boot.
 
 [`scratch.spring.webapp.Application`](https://github.com/karlbennett/scratch-spring-webapp/blob/master/src/main/java/rest/webapp/Application.java "Application")
     
-The the domain class that can be persisted into an in memory database using the CRUD endpoints.
+The the Spring Data repository implementation of the `Users` interface.
 
-[`scratch.spring.webapp.data.User`](https://github.com/karlbennett/scratch-spring-webapp/blob/master/src/main/java/rest/webapp/data/User.java "User")
+[`scratch.spring.webapp.data.RepositoryUsers`](https://github.com/karlbennett/scratch-spring-webapp/blob/master/src/main/java/rest/webapp/data/RepositoryUsers.java "RepositoryUsers")
 
-The repository class that is used to persisted the User class.
+The repository class that is used to persisted the `User` class.
 
 [`scratch.spring.webapp.data.UserRepository`](https://github.com/karlbennett/scratch-spring-webapp/blob/master/src/main/java/rest/webapp/data/UserRepository.java "UserRepository")
 

@@ -1,5 +1,7 @@
 package scratch.spring.webapp.data;
 
+import scratch.user.User;
+
 import static scratch.spring.webapp.data.Addresses.address;
 import static scratch.spring.webapp.data.Addresses.addressOne;
 import static scratch.spring.webapp.data.Addresses.addressThree;
@@ -35,11 +37,6 @@ public class Users {
     public static User user() {
 
         return new User(EMAIL, FIRST_NAME, LAST_NAME, PHONE_NUMBER, address());
-    }
-
-    public static User user(UserRepository repository) {
-
-        return new User(repository, EMAIL, FIRST_NAME, LAST_NAME, PHONE_NUMBER, address());
     }
 
     public static User userOne() {

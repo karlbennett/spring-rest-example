@@ -8,6 +8,8 @@ import org.dbunit.dataset.DefaultDataSet;
 import org.dbunit.dataset.DefaultTable;
 import org.dbunit.dataset.ITable;
 import org.dbunit.operation.DatabaseOperation;
+import scratch.user.Address;
+import scratch.user.User;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;

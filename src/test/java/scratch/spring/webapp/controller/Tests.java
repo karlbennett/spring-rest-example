@@ -9,8 +9,8 @@ import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
-import scratch.spring.webapp.data.Address;
-import scratch.spring.webapp.data.User;
+import scratch.user.Address;
+import scratch.user.User;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
