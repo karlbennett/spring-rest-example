@@ -442,11 +442,18 @@ public class UserControllerTest {
     }
 
     @Test
-    public void I_cannot_delete_a_user_with_no_id() throws Exception {
+    public void I_cannot_delete_all_users() throws Exception {
 
-        mockMvc.perform(delete("/users"))
-                .andExpect(status().isMethodNotAllowed())
-                .andExpect(content().string(isEmptyString()));
+        final User userOne = steps.given_a_user_has_been_persisted(userOne());
+        final User userTwo = steps.given_a_user_has_been_persisted(userTwo());
+        final User userThree = steps.given_a_user_has_been_persisted(userThree());
+
+        assertUserNoContent(delete("/users"));
+
+        steps.then_the_user_should_no_longer_be_persisted(persistedUser);
+        steps.then_the_user_should_no_longer_be_persisted(userOne);
+        steps.then_the_user_should_no_longer_be_persisted(userTwo);
+        steps.then_the_user_should_no_longer_be_persisted(userThree);
     }
 
     private MvcResult assertUserCreated(MockHttpServletRequestBuilder builder, User user) throws Exception {

@@ -66,7 +66,7 @@ It is also possible to carry out CRUD operations on simple users:
     $ curl -XDELETE -H "Accept:application/json" http://localhost:8080/rest/users/1
 
 
-The  webapp only contains five classes:
+The  webapp only contains four classes:
 
 The controller class that handles the `/rest/` request mapping.
 
@@ -79,10 +79,6 @@ The controller class that handles the `/rest/users` and `/rest/users/{id}` reque
 The the application class that starts and configures Spring Boot.
 
 [`scratch.spring.webapp.Application`](https://github.com/karlbennett/scratch-spring-webapp/blob/master/src/main/java/rest/webapp/Application.java "Application")
-    
-The the Spring Data repository implementation of the `Users` interface.
-
-[`scratch.spring.webapp.data.RepositoryUsers`](https://github.com/karlbennett/scratch-spring-webapp/blob/master/src/main/java/rest/webapp/data/RepositoryUsers.java "RepositoryUsers")
 
 The repository class that is used to persisted the `User` class.
 
