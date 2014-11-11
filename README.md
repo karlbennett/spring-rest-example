@@ -66,7 +66,13 @@ It is also possible to carry out CRUD operations on simple users:
     $ curl -XDELETE -H "Accept:application/json" http://localhost:8080/rest/users/1
 
 
-The  webapp only contains four classes:
+The  webapp only contains seven classes:
+
+The entity classes that are used to persist the users to the database as well as to define the endpoint API.
+
+[`scratch.spring.webapp.data.Id`](https://github.com/karlbennett/scratch-spring-webapp/blob/master/src/main/java/rest/webapp/data/Id.java "Id")
+[`scratch.spring.webapp.data.User`](https://github.com/karlbennett/scratch-spring-webapp/blob/master/src/main/java/rest/webapp/data/User.java "User")
+[`scratch.spring.webapp.data.Address`](https://github.com/karlbennett/scratch-spring-webapp/blob/master/src/main/java/rest/webapp/data/Address.java "Address")
 
 The controller class that handles the `/rest/` request mapping.
 
@@ -78,7 +84,7 @@ The controller class that handles the `/rest/users` and `/rest/users/{id}` reque
 
 The the application class that starts and configures Spring Boot.
 
-[`scratch.spring.webapp.Application`](https://github.com/karlbennett/scratch-spring-webapp/blob/master/src/main/java/rest/webapp/Application.java "Application")
+[`scratch.spring.webapp.ScratchSpringBootRestServlet`](https://github.com/karlbennett/scratch-spring-webapp/blob/master/src/main/java/rest/webapp/ScratchSpringBootRestServlet.java "Application")
 
 The repository class that is used to persisted the `User` class.
 

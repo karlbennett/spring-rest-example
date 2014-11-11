@@ -15,9 +15,9 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import scratch.spring.webapp.ScratchSpringBootRestServlet;
+import scratch.spring.webapp.data.Address;
+import scratch.spring.webapp.data.User;
 import scratch.spring.webapp.data.UserSteps;
-import scratch.user.Address;
-import scratch.user.User;
 
 import static java.lang.String.format;
 import static java.util.Collections.singleton;

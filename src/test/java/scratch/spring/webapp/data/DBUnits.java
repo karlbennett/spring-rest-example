@@ -5,8 +5,6 @@ import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.DefaultTable;
 import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.datatype.DataType;
-import scratch.user.Address;
-import scratch.user.User;
 
 import java.util.concurrent.Callable;
 

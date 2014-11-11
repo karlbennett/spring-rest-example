@@ -1,7 +1,5 @@
 package scratch.spring.webapp.data;
 
-import scratch.user.User;
-
 import static scratch.spring.webapp.data.Addresses.address;
 import static scratch.spring.webapp.data.Addresses.addressOne;
 import static scratch.spring.webapp.data.Addresses.addressThree;

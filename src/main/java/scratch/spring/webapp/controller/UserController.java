@@ -7,11 +7,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import scratch.spring.webapp.data.Address;
+import scratch.spring.webapp.data.Id;
+import scratch.spring.webapp.data.User;
 import scratch.spring.webapp.data.UserRepository;
-import scratch.user.Address;
-import scratch.user.Id;
-import scratch.user.User;
-import scratch.user.Users;
 
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletResponse;
@@ -34,7 +33,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
  */
 @RestController
 @RequestMapping("/users")
-public class UserController implements Users {
+public class UserController {
 
     @Autowired
     private UserRepository repository;
@@ -60,7 +59,15 @@ public class UserController implements Users {
             @Override
             public Id call() throws Exception {
 
-                return create(user);
+                // Null out the ID's to make sure that an attempt is made at a create not an update.
+                user.setId(null);
+
+                final Address address = user.getAddress();
+                if (null != address) {
+                    address.setId(null);
+                }
+
+                return new Id(repository.save(user));
             }
         };
     }
@@ -81,7 +88,9 @@ public class UserController implements Users {
             @Override
             public User call() throws Exception {
 
-                return retrieve(id);
+                checkExists(id);
+
+                return repository.findOne(id);
             }
         };
     }
@@ -99,7 +108,7 @@ public class UserController implements Users {
             @Override
             public Iterable<User> call() throws Exception {
 
-                return retrieve();
+                return repository.findAll();
             }
         };
     }
@@ -124,7 +133,9 @@ public class UserController implements Users {
             @Override
             public String call() throws Exception {
 
-                update(user);
+                checkExists(user.getId());
+
+                repository.save(user);
 
                 return "";
             }
@@ -148,7 +159,9 @@ public class UserController implements Users {
             @Override
             public String call() throws Exception {
 
-                delete(id);
+                checkExists(id);
+
+                repository.delete(id);
 
                 return "";
             }
@@ -164,61 +177,11 @@ public class UserController implements Users {
             @Override
             public String call() throws Exception {
 
-                deleteAll();
+                repository.deleteAll();
 
                 return "";
             }
         };
-    }
-
-    @Override
-    public Id create(User user) {
-
-        // Null out the ID's to make sure that an attempt is made at a create not an update.
-        user.setId(null);
-
-        final Address address = user.getAddress();
-        if (null != address) {
-            address.setId(null);
-        }
-
-        return new Id(repository.save(user));
-    }
-
-    @Override
-    public User retrieve(Long id) {
-
-        checkExists(id);
-
-        return repository.findOne(id);
-    }
-
-    @Override
-    public Iterable<User> retrieve() {
-
-        return repository.findAll();
-    }
-
-    @Override
-    public void update(User user) {
-
-        checkExists(user.getId());
-
-        repository.save(user);
-    }
-
-    @Override
-    public void delete(Long id) {
-
-        checkExists(id);
-
-        repository.delete(id);
-    }
-
-    @Override
-    public void deleteAll() {
-
-        repository.deleteAll();
     }
 
     private void checkExists(Long id) {
