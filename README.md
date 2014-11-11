@@ -60,25 +60,25 @@ The  webapp only contains seven classes:
 
 The entity classes that are used to persist the users to the database as well as to define the endpoint API.
 
-[`scratch.spring.webapp.data.Id`](https://github.com/karlbennett/scratch-spring-webapp/tree/vanila-spring-boot/src/main/java/rest/webapp/data/Id.java "Id")
-[`scratch.spring.webapp.data.User`](https://github.com/karlbennett/scratch-spring-webapp/tree/vanila-spring-boot/src/main/java/rest/webapp/data/User.java "User")
-[`scratch.spring.webapp.data.Address`](https://github.com/karlbennett/scratch-spring-webapp/tree/vanila-spring-boot/src/main/java/rest/webapp/data/Address.java "Address")
+[`scratch.spring.webapp.data.Id`](https://github.com/karlbennett/scratch-spring-webapp/tree/vanila-spring-boot/src/main/java/scratch/spring/webapp/data/Id.java "Id")
+[`scratch.spring.webapp.data.User`](https://github.com/karlbennett/scratch-spring-webapp/tree/vanila-spring-boot/src/main/java/scratch/spring/webapp/data/User.java "User")
+[`scratch.spring.webapp.data.Address`](https://github.com/karlbennett/scratch-spring-webapp/tree/vanila-spring-boot/src/main/java/scratch/spring/webapp/data/Address.java "Address")
 
 The controller class that handles the `/rest/` request mapping.
 
-[`scratch.spring.webapp.controller.ScratchController`](https://github.com/karlbennett/scratch-spring-webapp/tree/vanila-spring-boot/src/main/java/rest/webapp/controller/ScratchController.java "ScratchController")
+[`scratch.spring.webapp.controller.ScratchController`](https://github.com/karlbennett/scratch-spring-webapp/tree/vanila-spring-boot/src/main/java/scratch/spring/webapp/controller/ScratchController.java "ScratchController")
 
 The controller class that handles the `/rest/users` and `/rest/users/{id}` request mappings.
 
-[`scratch.spring.webapp.controller.UserController`](https://github.com/karlbennett/scratch-spring-webapp/tree/vanila-spring-boot/src/main/java/rest/webapp/controller/UserController.java "UserController")
+[`scratch.spring.webapp.controller.UserController`](https://github.com/karlbennett/scratch-spring-webapp/tree/vanila-spring-boot/src/main/java/scratch/spring/webapp/controller/UserController.java "UserController")
 
 The the application class that starts and configures Spring Boot.
 
-[`scratch.spring.webapp.ScratchSpringBootRestServlet`](https://github.com/karlbennett/scratch-spring-webapp/tree/vanila-spring-boot/src/main/java/rest/webapp/ScratchSpringBootRestServlet.java "Application")
+[`scratch.spring.webapp.ScratchSpringBootRestServlet`](https://github.com/karlbennett/scratch-spring-webapp/tree/vanila-spring-boot/src/main/java/scratch/spring/webapp/ScratchSpringBootRestServlet.java "Application")
 
 The repository class that is used to persisted the `User` class.
 
-[`scratch.spring.webapp.data.UserRepository`](https://github.com/karlbennett/scratch-spring-webapp/tree/vanila-spring-boot/src/main/java/rest/webapp/data/UserRepository.java "UserRepository")
+[`scratch.spring.webapp.data.UserRepository`](https://github.com/karlbennett/scratch-spring-webapp/tree/vanila-spring-boot/src/main/java/scratch/spring/webapp/data/UserRepository.java "UserRepository")
 
 There are also two configuration files:
 
