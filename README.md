@@ -9,7 +9,7 @@ The webapp can be run with the following command:
 
     mvn spring-boot:run
 
-Or after building the project with `mvn clean verify` you can run the executable war.
+Or after building the project with `mvn clean package` you can run the executable war.
 
     java -jar target/scratch-spring-rest-1.0-SNAPSHOT.war
 
