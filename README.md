@@ -61,7 +61,9 @@ The  webapp only contains seven classes:
 The entity classes that are used to persist the users to the database as well as to define the endpoint API.
 
 [`scratch.spring.webapp.data.Id`](https://github.com/karlbennett/scratch-spring-webapp/tree/vanila-spring-boot/src/main/java/scratch/spring/webapp/data/Id.java "Id")
+
 [`scratch.spring.webapp.data.User`](https://github.com/karlbennett/scratch-spring-webapp/tree/vanila-spring-boot/src/main/java/scratch/spring/webapp/data/User.java "User")
+
 [`scratch.spring.webapp.data.Address`](https://github.com/karlbennett/scratch-spring-webapp/tree/vanila-spring-boot/src/main/java/scratch/spring/webapp/data/Address.java "Address")
 
 The controller class that handles the `/rest/` request mapping.
