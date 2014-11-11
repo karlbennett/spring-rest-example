@@ -86,6 +86,6 @@ There are also two configuration files:
 
 The maven [`pom.xml`](https://github.com/karlbennett/scratch-spring-webapp/tree/vanila-spring-boot/pom.xml "pom.xml") file, this contains the plugin configurations and the dependencies for the project.
 
-The [`application.properties`](https://github.com/karlbennett/scratch-spring-webapp/tree/vanila-spring-boot/application.properties "application.properties") file, this currently only contains the log levels for the application, but could contain any properties that are relevant to the application.
+The [`application.properties`](https://github.com/karlbennett/scratch-spring-webapp/tree/vanila-spring-boot/src/main/resources/application.properties "application.properties") file, this currently only contains the log levels for the application, but could contain any properties that are relevant to the application.
 
 That is the entire project, have fun :)
