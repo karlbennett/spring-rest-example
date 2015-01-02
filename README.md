@@ -1,7 +1,7 @@
 scratch-spring-rest
 ==============
 
-A very simple webapp that can be used to quickly try out code within a Spring Boot project.
+A very simple webapp that can be used to quickly try out code within a Spring project.
 
 #### Run
 

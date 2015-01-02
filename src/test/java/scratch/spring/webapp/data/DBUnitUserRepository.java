@@ -65,7 +65,7 @@ public class DBUnitUserRepository {
         return (S) createdUser;
     }
 
-    public User findOne(Long id) {
+    public User findOne(Id id) {
 
         final ITable userTable = retrieveUser(id);
 
@@ -83,7 +83,7 @@ public class DBUnitUserRepository {
         return user;
     }
 
-    public boolean exists(Long id) {
+    public boolean exists(Id id) {
 
         return 1 == retrieveUser(id).getRowCount();
     }
@@ -119,9 +119,9 @@ public class DBUnitUserRepository {
         });
     }
 
-    private ITable retrieveUser(Long id) {
+    private ITable retrieveUser(Id id) {
 
-        return retrieve(USER, format("SELECT * FROM User WHERE id = %d", id));
+        return retrieve(USER, format("SELECT * FROM User WHERE id = %d", id.getId()));
     }
 
     private ITable retrieveUser(String email) {

@@ -24,11 +24,11 @@ public class Id implements Serializable {
     }
 
     public Id(Id id) {
-        this.id = id.getId();
+        this(id.getId());
     }
 
     public Id(Long id) {
-        this.id = id;
+        setId(id);
     }
 
     public Long getId() {

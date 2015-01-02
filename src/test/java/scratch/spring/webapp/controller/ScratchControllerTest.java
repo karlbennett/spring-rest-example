@@ -3,42 +3,46 @@ package scratch.spring.webapp.controller;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 import scratch.spring.webapp.ScratchSpringBootRestServlet;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Response;
+import java.util.Map;
+
+import static java.lang.String.format;
+import static java.util.Collections.singletonMap;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static org.junit.Assert.assertEquals;
+
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = ScratchSpringBootRestServlet.class)
 @WebAppConfiguration("classpath:")
+@IntegrationTest({"server.port=0", "management.port=0"})
 public class ScratchControllerTest {
 
-    @Autowired
-    private WebApplicationContext wac;
+    @Value("${local.server.port}")
+    private int port;
 
-    private MockMvc mockMvc;
+    private WebTarget target;
 
     @Before
-    public void setup() {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+    public void setUp() {
+
+        target = ClientBuilder.newClient().target(format("http://localhost:%d/rest/", port));
     }
 
     @Test
-    public void testHandle() throws Exception {
+    public void the_scratch_endpoint_returns_the_correct_response() throws Exception {
 
-        mockMvc.perform(get("/"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_JSON))
-                .andExpect(jsonPath("scratched").value(true));
+        final Response response = target.path("/").request(APPLICATION_JSON).get();
+
+        assertEquals(singletonMap("scratched", true), response.readEntity(Map.class));
     }
 }

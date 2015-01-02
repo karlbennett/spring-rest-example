@@ -22,6 +22,11 @@
 
     <url>https://github.com/karlbennett/scratch-spring-rest</url>
 
+    <properties>
+        <java.version>1.7</java.version>
+        <jersey.version>[2.13]</jersey.version>
+    </properties>
+
     <build>
         <plugins>
             <plugin>
@@ -67,12 +72,17 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- This dependency is required to use the Spring MVC test jsonPath() methods. -->
+        <!-- The Jersey client that will be used to access to the scratch REST endpoints in the integration tests. -->
         <dependency>
-            <groupId>com.jayway.jsonpath</groupId>
-            <artifactId>json-path</artifactId>
-            <version>[0.9.1]</version>
-            <scope>test</scope>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+        <!-- This dependency enables automatic JSON serialisation and deserialisation in the Jersey client. -->
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jackson</artifactId>
+            <version>${jersey.version}</version>
         </dependency>
 
         <!-- Database setup utility for importing and clearing test data. -->

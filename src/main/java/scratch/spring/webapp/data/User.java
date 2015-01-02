@@ -52,16 +52,16 @@ public class User extends Id implements Serializable {
 
     public User(User user) {
         this(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getPhoneNumber(),
-                new Address(user.getAddress()));
+                user.getAddress());
     }
 
     public User(Long id, String email, String firstName, String lastName, String phoneNumber, Address address) {
         super(id);
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
+        setEmail(email);
+        setFirstName(firstName);
+        setLastName(lastName);
+        setPhoneNumber(phoneNumber);
+        setAddress(address);
     }
 
     public String getEmail() {
@@ -97,11 +97,17 @@ public class User extends Id implements Serializable {
     }
 
     public Address getAddress() {
-        return address;
+
+        if (null == address) {
+            return null;
+        }
+
+        return new Address(address);
     }
 
     public void setAddress(Address address) {
-        this.address = address;
+
+        this.address = null == address ? null : new Address(address);
     }
 
     @Override
@@ -119,9 +125,6 @@ public class User extends Id implements Serializable {
 
         final User that = (User) object;
 
-        if (address != null ? !address.equals(that.address) : that.address != null) {
-            return false;
-        }
         if (email != null ? !email.equals(that.email) : that.email != null) {
             return false;
         }
@@ -132,6 +135,9 @@ public class User extends Id implements Serializable {
             return false;
         }
         if (phoneNumber != null ? !phoneNumber.equals(that.phoneNumber) : that.phoneNumber != null) {
+            return false;
+        }
+        if (address != null ? !address.equals(that.address) : that.address != null) {
             return false;
         }
 
