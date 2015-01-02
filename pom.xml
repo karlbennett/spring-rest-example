@@ -8,13 +8,13 @@
         <version>1.1.8.RELEASE</version>
     </parent>
 
-    <name>scratch-spring-rest</name>
+    <name>spring-rest-example</name>
 
     <description>
         A simple pre-baked Spring Boot webapp to play with.
     </description>
 
-    <artifactId>scratch-spring-rest</artifactId>
+    <artifactId>spring-rest-example</artifactId>
 
     <packaging>war</packaging>
 

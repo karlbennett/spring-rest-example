@@ -9,7 +9,7 @@ import scratch.spring.webapp.data.UserSteps;
 import javax.sql.DataSource;
 
 @Configuration
-public class TestScratchConfiguration {
+public class TestConfiguration {
 
     @Bean
     @Autowired

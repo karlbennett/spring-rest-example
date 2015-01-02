@@ -9,7 +9,7 @@ import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import scratch.spring.webapp.ScratchSpringBootRestServlet;
+import scratch.spring.webapp.SpringBootRestServlet;
 import scratch.spring.webapp.data.Id;
 import scratch.spring.webapp.data.User;
 import scratch.spring.webapp.data.UserSteps;
@@ -44,7 +44,7 @@ import static scratch.spring.webapp.data.Users.userThree;
 import static scratch.spring.webapp.data.Users.userTwo;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = ScratchSpringBootRestServlet.class)
+@SpringApplicationConfiguration(classes = SpringBootRestServlet.class)
 @WebAppConfiguration("classpath:")
 @IntegrationTest({"server.port=0", "management.port=0"})
 public class UserControllerTest {

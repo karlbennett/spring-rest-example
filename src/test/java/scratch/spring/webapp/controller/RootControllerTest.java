@@ -8,7 +8,7 @@ import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import scratch.spring.webapp.ScratchSpringBootRestServlet;
+import scratch.spring.webapp.SpringBootRestServlet;
 
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
@@ -22,10 +22,10 @@ import static org.junit.Assert.assertEquals;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = ScratchSpringBootRestServlet.class)
+@SpringApplicationConfiguration(classes = SpringBootRestServlet.class)
 @WebAppConfiguration("classpath:")
 @IntegrationTest({"server.port=0", "management.port=0"})
-public class ScratchControllerTest {
+public class RootControllerTest {
 
     @Value("${local.server.port}")
     private int port;
@@ -43,6 +43,6 @@ public class ScratchControllerTest {
 
         final Response response = target.path("/").request(APPLICATION_JSON).get();
 
-        assertEquals(singletonMap("scratched", true), response.readEntity(Map.class));
+        assertEquals(singletonMap("running", true), response.readEntity(Map.class));
     }
 }

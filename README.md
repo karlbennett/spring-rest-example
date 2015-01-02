@@ -1,4 +1,4 @@
-scratch-spring-rest
+spring-rest-example
 ==============
 
 A very simple webapp that can be used to quickly try out code within a Spring project.
@@ -76,7 +76,7 @@ The controller class that handles the `/rest/users` and `/rest/users/{id}` reque
 
 The the application class that starts and configures Spring Boot.
 
-[`scratch.spring.webapp.ScratchSpringBootRestServlet`](https://github.com/karlbennett/scratch-spring-webapp/tree/vanila-spring-boot/src/main/java/scratch/spring/webapp/ScratchSpringBootRestServlet.java "Application")
+[`scratch.spring.webapp.SpringBootRestServlet`](https://github.com/karlbennett/scratch-spring-webapp/tree/vanila-spring-boot/src/main/java/scratch/spring/webapp/SpringBootRestServlet.java "SpringBootRestServlet")
 
 The repository class that is used to persisted the `User` class.
 

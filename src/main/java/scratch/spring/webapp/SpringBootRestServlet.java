@@ -13,17 +13,17 @@ import org.springframework.web.servlet.DispatcherServlet;
 /**
  * This is the bootstrap that starts up the whole Spring Boot framework.
  *
- * It's position in the package hierarchy is very significant. We are pulling the using autoconfiguration to setup our
- * datasource so this class must be placed in package lower than {@code scratch.spring.webapp.data}. This is so that
- * the {@link EnableAutoConfiguration} component scanning will pick up the {@link scratch.spring.webapp.data.User} and
- * other entity classes.
+ * It's position in the package hierarchy is very important. We are using auto-configuration to setup our datasource so
+ * this class must be placed in a package higher than {@code scratch.spring.webapp.data}. This is so that the
+ * {@link EnableAutoConfiguration} component scanning will pick up the {@link scratch.spring.webapp.data.User} and other
+ * entity classes.
  *
  * @author Karl Bennett
  */
 @Configuration
 @EnableAutoConfiguration
 @ComponentScan
-public class ScratchSpringBootRestServlet extends SpringBootServletInitializer {
+public class SpringBootRestServlet extends SpringBootServletInitializer {
 
     /**
      * This override will start up Spring Boot if this class is instantiated inside of a JEE
@@ -31,7 +31,7 @@ public class ScratchSpringBootRestServlet extends SpringBootServletInitializer {
      */
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(ScratchSpringBootRestServlet.class);
+        return application.sources(SpringBootRestServlet.class);
     }
 
     @Bean
@@ -46,6 +46,6 @@ public class ScratchSpringBootRestServlet extends SpringBootServletInitializer {
      */
     public static void main(String[] args) {
 
-        SpringApplication.run(ScratchSpringBootRestServlet.class, args);
+        SpringApplication.run(SpringBootRestServlet.class, args);
     }
 }

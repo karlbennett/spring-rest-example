@@ -19,7 +19,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
  */
 @Controller
 @RequestMapping("/")
-public class ScratchController {
+public class RootController {
 
     /**
      * Map any request to the servlet root to this method.
@@ -33,9 +33,9 @@ public class ScratchController {
     @ResponseBody
     public Map<Object, Object> handle(HttpServletRequest request, HttpServletResponse response) {
 
-        Map<Object, Object> body = new HashMap<Object, Object>();
+        Map<Object, Object> body = new HashMap<>();
 
-        body.put("scratched", true);
+        body.put("running", true);
 
         return body;
     }
