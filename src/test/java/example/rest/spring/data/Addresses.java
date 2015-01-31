@@ -1,4 +1,4 @@
-package scratch.spring.webapp.data;
+package example.rest.spring.data;
 
 /**
  * Data for user persistence tests.

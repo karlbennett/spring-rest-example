@@ -1,5 +1,9 @@
-package scratch.spring.webapp.controller;
+package example.rest.spring.controller;
 
+import example.rest.spring.SpringBootRestServlet;
+import example.rest.spring.data.Id;
+import example.rest.spring.data.User;
+import example.rest.spring.data.UserSteps;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,10 +13,6 @@ import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import scratch.spring.webapp.SpringBootRestServlet;
-import scratch.spring.webapp.data.Id;
-import scratch.spring.webapp.data.User;
-import scratch.spring.webapp.data.UserSteps;
 
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
@@ -23,6 +23,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static example.rest.spring.data.Users.EMAIL_ONE;
+import static example.rest.spring.data.Users.FIRST_NAME_ONE;
+import static example.rest.spring.data.Users.LAST_NAME_ONE;
+import static example.rest.spring.data.Users.userOne;
+import static example.rest.spring.data.Users.userThree;
+import static example.rest.spring.data.Users.userTwo;
 import static java.lang.String.format;
 import static javax.ws.rs.client.Entity.entity;
 import static javax.ws.rs.core.Response.Status;
@@ -36,12 +42,6 @@ import static org.hamcrest.Matchers.isEmptyString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertThat;
-import static scratch.spring.webapp.data.Users.EMAIL_ONE;
-import static scratch.spring.webapp.data.Users.FIRST_NAME_ONE;
-import static scratch.spring.webapp.data.Users.LAST_NAME_ONE;
-import static scratch.spring.webapp.data.Users.userOne;
-import static scratch.spring.webapp.data.Users.userThree;
-import static scratch.spring.webapp.data.Users.userTwo;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = SpringBootRestServlet.class)

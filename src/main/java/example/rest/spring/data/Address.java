@@ -1,4 +1,4 @@
-package scratch.spring.webapp.data;
+package example.rest.spring.data;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -41,11 +41,11 @@ public class Address extends Id implements Serializable {
 
     public Address(Long id, Integer number, String street, String suburb, String city, String postcode) {
         super(id);
-        this.number = number;
-        this.street = street;
-        this.suburb = suburb;
-        this.city = city;
-        this.postcode = postcode;
+        setNumber(number);
+        setStreet(street);
+        setSuburb(suburb);
+        setCity(city);
+        setPostcode(postcode);
     }
 
     public Integer getNumber() {

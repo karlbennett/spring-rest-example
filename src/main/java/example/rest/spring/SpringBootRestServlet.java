@@ -1,4 +1,4 @@
-package scratch.spring.webapp;
+package example.rest.spring;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -12,10 +12,10 @@ import org.springframework.web.servlet.DispatcherServlet;
 
 /**
  * This is the bootstrap that starts up the whole Spring Boot framework.
- *
+ * <p/>
  * It's position in the package hierarchy is very important. We are using auto-configuration to setup our datasource so
- * this class must be placed in a package higher than {@code scratch.spring.webapp.data}. This is so that the
- * {@link EnableAutoConfiguration} component scanning will pick up the {@link scratch.spring.webapp.data.User} and other
+ * this class must be placed in a package higher than {@code example.rest.spring.data}. This is so that the
+ * {@link EnableAutoConfiguration} component scanning will pick up the {@link example.rest.spring.data.User} and other
  * entity classes.
  *
  * @author Karl Bennett

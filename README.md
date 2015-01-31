@@ -11,9 +11,9 @@ The webapp can be run with the following command:
 
 Or after building the project with `mvn clean package` you can run the executable war.
 
-    java -jar target/scratch-spring-rest-1.0-SNAPSHOT.war
+    java -jar target/example-spring-rest-1.0-SNAPSHOT.war
 
-This will start the server which can be accessed at [http://localhost:8080/rest/](http://localhost:8080/rest/ "scratch-spring-rest")
+This will start the server which can be accessed at [http://localhost:8080/rest/](http://localhost:8080/rest/ "example-spring-rest")
 
 It is also possible to carry out CRUD operations on simple users:
 
@@ -60,32 +60,32 @@ The  webapp only contains seven classes:
 
 The entity classes that are used to persist the users to the database as well as to define the endpoint API.
 
-[`scratch.spring.webapp.data.Id`](https://github.com/karlbennett/scratch-spring-webapp/tree/vanila-spring-boot/src/main/java/scratch/spring/webapp/data/Id.java "Id")
+[`example.rest.spring.data.Id`](https://github.com/karlbennett/spring-rest-example/blob/master/src/main/java/example/rest/spring/data/Id.java "Id")
 
-[`scratch.spring.webapp.data.User`](https://github.com/karlbennett/scratch-spring-webapp/tree/vanila-spring-boot/src/main/java/scratch/spring/webapp/data/User.java "User")
+[`example.rest.spring.data.User`](https://github.com/karlbennett/spring-rest-example/blob/master/src/main/java/example/rest/spring/data/User.java "User")
 
-[`scratch.spring.webapp.data.Address`](https://github.com/karlbennett/scratch-spring-webapp/tree/vanila-spring-boot/src/main/java/scratch/spring/webapp/data/Address.java "Address")
+[`example.rest.spring.data.Address`](https://github.com/karlbennett/spring-rest-example/blob/master/src/main/java/example/rest/spring/data/Address.java "Address")
 
 The controller class that handles the `/rest/` request mapping.
 
-[`scratch.spring.webapp.controller.ScratchController`](https://github.com/karlbennett/scratch-spring-webapp/tree/vanila-spring-boot/src/main/java/scratch/spring/webapp/controller/ScratchController.java "ScratchController")
+[`example.rest.spring.controller.ScratchController`](https://github.com/karlbennett/spring-rest-example/blob/master/src/main/java/example/rest/spring/controller/ScratchController.java "ScratchController")
 
 The controller class that handles the `/rest/users` and `/rest/users/{id}` request mappings.
 
-[`scratch.spring.webapp.controller.UserController`](https://github.com/karlbennett/scratch-spring-webapp/tree/vanila-spring-boot/src/main/java/scratch/spring/webapp/controller/UserController.java "UserController")
+[`example.rest.spring.controller.UserController`](https://github.com/karlbennett/spring-rest-example/blob/master/src/main/java/example/rest/spring/controller/UserController.java "UserController")
 
 The the application class that starts and configures Spring Boot.
 
-[`scratch.spring.webapp.SpringBootRestServlet`](https://github.com/karlbennett/scratch-spring-webapp/tree/vanila-spring-boot/src/main/java/scratch/spring/webapp/SpringBootRestServlet.java "SpringBootRestServlet")
+[`example.rest.spring.SpringBootRestServlet`](https://github.com/karlbennett/spring-rest-example/blob/master/src/main/java/example/rest/spring/SpringBootRestServlet.java "SpringBootRestServlet")
 
 The repository class that is used to persisted the `User` class.
 
-[`scratch.spring.webapp.data.UserRepository`](https://github.com/karlbennett/scratch-spring-webapp/tree/vanila-spring-boot/src/main/java/scratch/spring/webapp/data/UserRepository.java "UserRepository")
+[`example.rest.spring.data.UserRepository`](https://github.com/karlbennett/spring-rest-example/blob/master/src/main/java/example/rest/spring/data/UserRepository.java "UserRepository")
 
 There are also two configuration files:
 
-The maven [`pom.xml`](https://github.com/karlbennett/scratch-spring-webapp/tree/vanila-spring-boot/pom.xml "pom.xml") file, this contains the plugin configurations and the dependencies for the project.
+The maven [`pom.xml`](https://github.com/karlbennett/spring-rest-example/blob/master/pom.xml "pom.xml") file, this contains the plugin configurations and the dependencies for the project.
 
-The [`application.properties`](https://github.com/karlbennett/scratch-spring-webapp/tree/vanila-spring-boot/src/main/resources/application.properties "application.properties") file, this currently only contains the log levels for the application, but could contain any properties that are relevant to the application.
+The [`application.properties`](https://github.com/karlbennett/spring-rest-example/blob/master/src/main/resources/application.properties "application.properties") file, this currently only contains the log levels for the application, but could contain any properties that are relevant to the application.
 
 That is the entire project, have fun :)

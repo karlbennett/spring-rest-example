@@ -1,4 +1,4 @@
-package scratch.spring.webapp.data;
+package example.rest.spring.data;
 
 import org.springframework.data.repository.CrudRepository;
 

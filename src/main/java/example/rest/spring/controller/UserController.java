@@ -1,5 +1,9 @@
-package scratch.spring.webapp.controller;
+package example.rest.spring.controller;
 
+import example.rest.spring.data.Address;
+import example.rest.spring.data.Id;
+import example.rest.spring.data.User;
+import example.rest.spring.data.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -7,10 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import scratch.spring.webapp.data.Address;
-import scratch.spring.webapp.data.Id;
-import scratch.spring.webapp.data.User;
-import scratch.spring.webapp.data.UserRepository;
 
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletResponse;
@@ -41,7 +41,7 @@ public class UserController {
     /**
      * Persist a new user using the user object that has been deserialised from the {@code JSON} in the body of the
      * {@code POST} request.
-     *
+     * <p/>
      * This operation will fail if a user exists with the emil supplied in the new user. Also if an ID is supplied it
      * will be ignored.
      *

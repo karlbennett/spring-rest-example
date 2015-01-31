@@ -1,12 +1,12 @@
-package scratch.spring.webapp.data;
+package example.rest.spring.data;
 
 import javax.ws.rs.core.Response;
 
+import static example.rest.spring.data.Users.user;
 import static javax.ws.rs.core.Response.Status.CREATED;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static scratch.spring.webapp.data.Users.user;
 
 public class UserSteps {
 
